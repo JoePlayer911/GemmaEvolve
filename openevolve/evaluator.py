@@ -25,6 +25,7 @@ from openevolve.llm.ensemble import LLMEnsemble
 from openevolve.utils.async_utils import TaskPool, run_in_executor
 from openevolve.prompt.sampler import PromptSampler
 from openevolve.utils.format_utils import format_metrics_safe
+from openevolve.utils.profiling import profile_step
 
 logger = logging.getLogger(__name__)
 
@@ -162,10 +163,12 @@ class Evaluator:
                 # Run evaluation
                 if self.config.cascade_evaluation:
                     # Run cascade evaluation
-                    result = await self._cascade_evaluate(temp_file_path)
+                    with profile_step("cascade_evaluate"):
+                        result = await self._cascade_evaluate(temp_file_path)
                 else:
                     # Run direct evaluation
-                    result = await self._direct_evaluate(temp_file_path)
+                    with profile_step("direct_evaluate"):
+                        result = await self._direct_evaluate(temp_file_path)
 
                 # Process the result based on type
                 eval_result = self._process_evaluation_result(result)
@@ -187,7 +190,8 @@ class Evaluator:
                 # Add LLM feedback if configured
                 llm_eval_result = None
                 if self.config.use_llm_feedback and self.llm_ensemble:
-                    llm_result = await self._llm_evaluate(program_code, program_id=program_id)
+                    with profile_step("llm_critic"):
+                        llm_result = await self._llm_evaluate(program_code, program_id=program_id)
                     llm_eval_result = self._process_evaluation_result(llm_result)
 
                     # Combine metrics
@@ -395,7 +399,8 @@ class Evaluator:
                     loop = asyncio.get_event_loop()
                     return await loop.run_in_executor(None, module.evaluate_stage1, program_path)
 
-                stage1_result = await asyncio.wait_for(run_stage1(), timeout=self.config.timeout)
+                with profile_step("cascade_stage_1"):
+                    stage1_result = await asyncio.wait_for(run_stage1(), timeout=self.config.timeout)
                 stage1_eval_result = self._process_evaluation_result(stage1_result)
             except asyncio.TimeoutError:
                 logger.warning(f"Stage 1 evaluation timed out after {self.config.timeout}s")
@@ -436,7 +441,8 @@ class Evaluator:
                     loop = asyncio.get_event_loop()
                     return await loop.run_in_executor(None, module.evaluate_stage2, program_path)
 
-                stage2_result = await asyncio.wait_for(run_stage2(), timeout=self.config.timeout)
+                with profile_step("cascade_stage_2"):
+                    stage2_result = await asyncio.wait_for(run_stage2(), timeout=self.config.timeout)
                 stage2_eval_result = self._process_evaluation_result(stage2_result)
             except asyncio.TimeoutError:
                 logger.warning(f"Stage 2 evaluation timed out after {self.config.timeout}s")
@@ -498,7 +504,8 @@ class Evaluator:
                     loop = asyncio.get_event_loop()
                     return await loop.run_in_executor(None, module.evaluate_stage3, program_path)
 
-                stage3_result = await asyncio.wait_for(run_stage3(), timeout=self.config.timeout)
+                with profile_step("cascade_stage_3"):
+                    stage3_result = await asyncio.wait_for(run_stage3(), timeout=self.config.timeout)
                 stage3_eval_result = self._process_evaluation_result(stage3_result)
             except asyncio.TimeoutError:
                 logger.warning(f"Stage 3 evaluation timed out after {self.config.timeout}s")

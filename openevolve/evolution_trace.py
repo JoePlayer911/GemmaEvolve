@@ -41,6 +41,7 @@ class EvolutionTrace:
     generation: Optional[int] = None
     artifacts: Optional[Dict[str, Any]] = None
     metadata: Optional[Dict[str, Any]] = None
+    execution_time: Optional[Dict[str, float]] = None
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert trace to dictionary format"""
@@ -135,6 +136,7 @@ class EvolutionTracer:
         artifacts: Optional[Dict[str, Any]] = None,
         island_id: Optional[int] = None,
         metadata: Optional[Dict[str, Any]] = None,
+        execution_time: Optional[Dict[str, float]] = None,
     ) -> None:
         """
         Log an evolution trace entry
@@ -148,6 +150,7 @@ class EvolutionTracer:
             artifacts: Any artifacts from evaluation
             island_id: Island ID if using island-based evolution
             metadata: Additional metadata
+            execution_time: Execution timing data
         """
         if not self.enabled:
             return
@@ -165,6 +168,7 @@ class EvolutionTracer:
                 generation=child_program.generation,
                 artifacts=artifacts,
                 metadata=metadata,
+                execution_time=execution_time,
             )
 
             # Optionally include code

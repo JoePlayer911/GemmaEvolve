@@ -230,6 +230,7 @@ class OpenEvolve:
         Returns:
             Best program found
         """
+        start_time = time.time()
         max_iterations = iterations or self.config.max_iterations
 
         # Determine starting iteration
@@ -347,6 +348,9 @@ class OpenEvolve:
                 self.evolution_tracer.close()
                 logger.info("Evolution tracer closed")
 
+            total_duration = time.time() - start_time
+            logger.info(f"Total execution time: {total_duration:.2f}s")
+
         # Get the best program
         best_program = None
         if self.database.best_program_id:
@@ -386,7 +390,7 @@ class OpenEvolve:
                 and self.parallel_controller.early_stopping_triggered
             ):
                 logger.info(
-                    f"🛑 Evolution complete via early stopping. Best program has metrics: "
+                    f"[EARLY STOP] Evolution complete via early stopping. Best program has metrics: "
                     f"{format_metrics_safe(best_program.metrics)}"
                 )
             else:

@@ -10,6 +10,7 @@ from typing import Dict, List, Optional, Tuple
 from openevolve.llm.base import LLMInterface
 from openevolve.llm.openai import OpenAILLM
 from openevolve.config import LLMModelConfig
+from openevolve.llm.gguf_model import GGUFLLM
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +22,14 @@ class LLMEnsemble:
         self.models_cfg = models_cfg
 
         # Initialize models from the configuration
-        self.models = [model_cfg.init_client(model_cfg) if model_cfg.init_client else OpenAILLM(model_cfg) for model_cfg in models_cfg]
+        def _init_model(cfg: LLMModelConfig) -> LLMInterface:
+            if cfg.init_client:
+                return cfg.init_client(cfg)
+            if cfg.model_path:
+                return GGUFLLM(cfg)
+            return OpenAILLM(cfg)
+
+        self.models = [_init_model(model_cfg) for model_cfg in models_cfg]
 
         # Extract and normalize model weights
         self.weights = [model.weight for model in models_cfg]

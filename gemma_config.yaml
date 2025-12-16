@@ -1,0 +1,47 @@
+# gemma_config.yaml
+# Complete configuration for running OpenEvolve with local Gemma
+
+# LLM Configuration
+llm:
+  # The model name logic will detect the .gguf extension, 
+  # but providing 'model_path' is the most explicit way.
+  models:
+    - name: "gemma-local"
+      model_path: "e:\\Project\\AI\\GemmaEvolve\\gemma-3-4b-it-UD-Q4_K_XL.gguf"
+      
+      # GGUF Specific Settings
+      n_ctx: 32768            # Context window size
+      n_gpu_layers: 0        # 0 = CPU only. Increase if you have a GPU (e.g., 33 for full offload if VRAM permits)
+      
+      # Generation Parameters
+      temperature: 0.7
+      top_p: 0.95
+      max_tokens: 2048
+      
+      # System Prompt
+      system_message: |
+        You are an expert Python programmer. Write high-quality, efficient code.
+        Always provide the complete code in a single block.
+
+  # Use the same model for evaluation
+  evaluator_models:
+    - name: "gemma-local" 
+      model_path: "e:\\Project\\AI\\GemmaEvolve\\gemma-3-4b-it-UD-Q4_K_XL.gguf"
+      n_ctx: 4096
+      n_gpu_layers: 0
+
+# General Settings
+max_iterations: 10
+language: python
+file_suffix: .py
+project_name: "gemma_test"
+
+# Database & Evolution Settings
+database:
+  population_size: 10 # Smaller population for local execution speed
+  num_islands: 1
+  programs_per_island: 10
+
+evaluator:
+  timeout: 30
+  parallel_evaluations: 1 # Keep serial for local CPU to avoid thrashing

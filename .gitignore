@@ -1,55 +1,45 @@
-results/
-examples/lm_eval/prompts/system_message.txt
-examples/lm_eval/prompts/evaluator_system_message.txt
-
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
 *.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+dist/
+build/
 
-# Virtual environments
+# Virtual Environments
 venv/
+venv-wsl/
 env/
 ENV/
 
+# Model files (too large for GitHub)
+*.gguf
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+
+# OpenEvolve outputs
+examples/*/openevolve_output/
+**/openevolve_output/
+
 # IDE
-.idea/
 .vscode/
+.idea/
 *.swp
 *.swo
+*~
 
-# Output files
-examples/*/output/
-openevolve_output*/
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
 *.log
 
-# Test cache
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Misc
-.DS_Store
-.venv
-
-# For SR
-secrets.yaml
-problems
+# Data
+*.db
+*.sqlite

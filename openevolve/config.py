@@ -45,6 +45,11 @@ class LLMModelConfig:
     # Reasoning parameters
     reasoning_effort: Optional[str] = None
 
+    # GGUF / Local Model parameters
+    model_path: Optional[str] = None
+    n_ctx: int = 4096
+    n_gpu_layers: int = 0
+
 
 @dataclass
 class LLMConfig(LLMModelConfig):
