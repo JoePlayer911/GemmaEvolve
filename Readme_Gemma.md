@@ -75,7 +75,13 @@ This should load the Gemma model and respond to a test prompt.
 
 ## Running OpenEvolve with Gemma
 
-### Quick Start (Windows)
+### Linux (Recommended)
+Use the provided shell script:
+```bash
+./run_gemma_debug.sh
+```
+
+### Windows
 Use the provided batch file:
 ```bash
 run_gemma_debug.bat
@@ -131,6 +137,7 @@ GemmaEvolve/
 │       └── evaluator.py              # Fitness evaluation
 ├── run_model.py                      # Test model loading
 ├── run_gemma_debug.bat              # Windows quick-start script
+├── run_gemma_debug.sh               # Linux quick-start script
 └── Readme_Gemma.md                  # This file
 ```
 

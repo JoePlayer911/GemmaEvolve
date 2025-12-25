@@ -8,7 +8,7 @@ import multiprocessing as mp
 import pickle
 import signal
 import time
-from concurrent.futures import Future, ProcessPoolExecutor
+from concurrent.futures import Future, ProcessPoolExecutor, ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FutureTimeoutError
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -385,9 +385,23 @@ class ProcessParallelController:
             )
             executor_kwargs["mp_context"] = mp.get_context("spawn")
 
-        # Create process pool with initializer
-        self.executor = ProcessPoolExecutor(**executor_kwargs)
-        logger.info(f"Started process pool with {self.num_workers} processes")
+        if self.num_workers > 1:
+            # Create process pool with initializer
+            self.executor = ProcessPoolExecutor(**executor_kwargs)
+            logger.info(f"Started process pool with {self.num_workers} processes")
+        else:
+            # Serial execution setup with ThreadPoolExecutor
+            # This runs in a separate thread but same process, avoiding spawn issues
+            # AND allowing asyncio.run() to work (since thread has no loop)
+            logger.info("Configured for serial execution (single worker) - using ThreadPoolExecutor")
+            
+            # Use ThreadPoolExecutor
+            # Note: ThreadPoolExecutor supports initializer since Python 3.7
+            self.executor = ThreadPoolExecutor(
+                 max_workers=1,
+                 initializer=_worker_init,
+                 initargs=executor_kwargs["initargs"]
+            )
 
     def stop(self) -> None:
         """Stop the process pool"""

@@ -7,18 +7,18 @@ log_level: "DEBUG"  # Enable detailed debug logging to track all operations
 llm:
   models:
     - name: "gemma-local"
-      model_path: "e:\\Project\\AI\\GemmaEvolve\\gemma-3-4b-it-UD-Q4_K_XL.gguf"
-      n_ctx: 32768  # Increased from 4096 to better utilize model capacity (trained with 131k)
-      n_gpu_layers: 0
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      n_ctx: 4096  # Increased from 4096 to better utilize model capacity (trained with 131k)
+      n_gpu_layers: 6
       temperature: 0.7
       top_p: 0.95
-      max_tokens: 4096  # Increased from 2048 to match larger context
+      max_tokens: 16384 # Increased from 2048 to match larger context
       
   evaluator_models:
     - name: "gemma-local" 
-      model_path: "e:\\Project\\AI\\GemmaEvolve\\gemma-3-4b-it-UD-Q4_K_XL.gguf"
-      n_ctx: 32768  # Increased from 4096 to better utilize model capacity
-      n_gpu_layers: 0
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      n_ctx: 4096  # Increased from 4096 to better utilize model capacity
+      n_gpu_layers: 6
 
 # Prompt configuration
 prompt:

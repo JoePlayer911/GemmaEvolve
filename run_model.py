@@ -2,7 +2,7 @@ from llama_cpp import Llama
 import os
 
 # Define the model path
-model_path = "gemma-3-4b-it-UD-Q4_K_XL.gguf"
+model_path = "gemma-3-12b-it-Q8_0.gguf"
 
 # Check if model exists
 if not os.path.exists(model_path):

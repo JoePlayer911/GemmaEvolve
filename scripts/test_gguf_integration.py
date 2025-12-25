@@ -19,7 +19,7 @@ async def main():
     print("Testing GGUF Integration...")
 
     # Path to the GGUF model - using the one from user request
-    model_path = "e:\\Project\\AI\\GemmaEvolve\\gemma-3-4b-it-UD-Q4_K_XL.gguf"
+    model_path = "e:\\Project\\AI\\GemmaEvolve\\gemma-3-12b-it-Q8_0.gguf"
     
     # Configure model
     config = LLMModelConfig(
