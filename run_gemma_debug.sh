@@ -11,17 +11,19 @@ echo
 
 # Run with DEBUG log level
 ./venv/bin/python3 -m openevolve.cli \
-  examples/function_minimization/initial_program.py \
-  examples/function_minimization/evaluator.py \
-  --config examples/function_minimization/gemma_config.yaml \
-  --iterations 50 \
-  --log-level DEBUG
+  examples/circle_packing/initial_program.py \
+  examples/circle_packing/evaluator.py \
+  --config examples/circle_packing/gemma_config.yaml \
+  --iterations 5 \
+  --log-level DEBUG \
+  
+# --checkpoint examples/circle_packing/openevolve_output/checkpoints/checkpoint_5
 
 echo
 echo "========================================"
 echo "Run complete!"
 echo "========================================"
-echo "Check examples/function_minimization/openevolve_output for results:"
+echo "Check examples/circle_packing/openevolve_output for results:"
 echo " - logs/        - Detailed execution logs"
 echo " - best/        - Best solution found"
 echo " - checkpoints/ - Intermediate checkpoints"

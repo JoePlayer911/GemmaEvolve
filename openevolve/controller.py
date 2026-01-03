@@ -132,9 +132,10 @@ class OpenEvolve:
         if not hasattr(self.config, "file_suffix") or self.config.file_suffix == ".py":
             self.config.file_suffix = self.file_extension
 
-        # Initialize components
-        self.llm_ensemble = LLMEnsemble(self.config.llm.models)
-        self.llm_evaluator_ensemble = LLMEnsemble(self.config.llm.evaluator_models)
+        # Lazy initialization for LLMs to save VRAM when not needed (e.g. resuming)
+        self.llm_ensemble = None 
+        self.llm_evaluator_ensemble = None
+        self.evaluator = None
 
         self.prompt_sampler = PromptSampler(self.config.prompt)
         self.evaluator_prompt_sampler = PromptSampler(self.config.prompt)
@@ -144,17 +145,10 @@ class OpenEvolve:
         if self.config.random_seed is not None:
             self.config.database.random_seed = self.config.random_seed
 
-        self.config.database.novelty_llm = self.llm_ensemble
+        # Don't set novelty_llm in database yet to avoid serializing it or loading it
+        self.config.database.novelty_llm = None 
         self.database = ProgramDatabase(self.config.database)
 
-        self.evaluator = Evaluator(
-            self.config.evaluator,
-            evaluation_file,
-            self.llm_evaluator_ensemble,
-            self.evaluator_prompt_sampler,
-            database=self.database,
-            suffix=Path(self.initial_program_path).suffix,
-        )
         self.evaluation_file = evaluation_file
 
         logger.info(f"Initialized OpenEvolve with {initial_program_path}")
@@ -255,6 +249,24 @@ class OpenEvolve:
             logger.info("Adding initial program to database")
             initial_program_id = str(uuid.uuid4())
 
+            # Lazy init LLM just for this step
+            logger.info("Initializing LLM for initial program evaluation...")
+            self.llm_ensemble = LLMEnsemble(self.config.llm.models)
+            
+            if self.config.llm.models == self.config.llm.evaluator_models:
+                 self.llm_evaluator_ensemble = self.llm_ensemble
+            else:
+                 self.llm_evaluator_ensemble = LLMEnsemble(self.config.llm.evaluator_models)
+            
+            self.evaluator = Evaluator(
+                self.config.evaluator,
+                self.evaluation_file,
+                self.llm_evaluator_ensemble,
+                self.evaluator_prompt_sampler,
+                database=self.database,
+                suffix=Path(self.initial_program_path).suffix,
+            )
+
             # Evaluate the initial program
             initial_metrics = await self.evaluator.evaluate_program(
                 self.initial_program_code, initial_program_id
@@ -291,6 +303,27 @@ class OpenEvolve:
                 f"Skipping initial program addition (resuming from iteration {start_iteration} "
                 f"with {len(self.database.programs)} existing programs)"
             )
+
+        # Release Controller's LLM resources (if any) before starting Parallel Controller
+        # This prevents OOM when Main Process and Worker Process both try to hold the model in VRAM
+        if hasattr(self, "evaluator") and self.evaluator is not None:
+            del self.evaluator
+            self.evaluator = None
+        if hasattr(self, "llm_ensemble") and self.llm_ensemble is not None:
+            del self.llm_ensemble
+            self.llm_ensemble = None
+        if hasattr(self, "llm_evaluator_ensemble") and self.llm_evaluator_ensemble is not None:
+            del self.llm_evaluator_ensemble
+            self.llm_evaluator_ensemble = None
+            
+        # Remove reference from database too
+        if hasattr(self, "database"):
+             self.database.config.novelty_llm = None
+        
+        # Force garbage collection
+        import gc
+        gc.collect()
+        logger.info("Released Controller LLM resources to free VRAM for workers")
 
         # Initialize improved parallel processing
         try:

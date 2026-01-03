@@ -80,6 +80,10 @@ Use the provided shell script:
 ```bash
 ./run_gemma_debug.sh
 ```
+To clear VRAM cache, run:
+```bash
+pkill -9 python
+```
 
 ### Windows
 Use the provided batch file:

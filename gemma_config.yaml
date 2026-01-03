@@ -7,16 +7,16 @@ llm:
   # but providing 'model_path' is the most explicit way.
   models:
     - name: "gemma-local"
-      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q4_K_M.gguf"
       
       # GGUF Specific Settings
-      n_ctx: 32768            # Context window size
-      n_gpu_layers: 0        # 0 = CPU only. Increase if you have a GPU (e.g., 33 for full offload if VRAM permits)
+      n_ctx: 8192            # Context window size
+      n_gpu_layers: -1       # -1 = Offload all layers to GPU
       
       # Generation Parameters
       temperature: 0.7
       top_p: 0.95
-      max_tokens: 2048
+      max_tokens: 4196
       
       # System Prompt
       system_message: |
@@ -26,10 +26,10 @@ llm:
   # Use the same model for evaluation
   evaluator_models:
     - name: "gemma-local" 
-      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
-      n_ctx: 4096
-      n_gpu_layers: 0
-
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q4_K_M.gguf"
+      n_ctx: 8192
+      n_gpu_layers: -1
+      
 # General Settings
 max_iterations: 10
 language: python
@@ -44,4 +44,4 @@ database:
 
 evaluator:
   timeout: 30
-  parallel_evaluations: 1 # Keep serial for local CPU to avoid thrashing
+  parallel_evaluations: 4 # Use 4 concurrent workers (one per GPU)

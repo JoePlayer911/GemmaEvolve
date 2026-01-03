@@ -2,7 +2,7 @@ from llama_cpp import Llama
 import os
 
 # Define the model path
-model_path = "gemma-3-12b-it-Q8_0.gguf"
+model_path = "gemma-3-12b-it-Q4_K_M.gguf"
 
 # Check if model exists
 if not os.path.exists(model_path):
@@ -16,9 +16,9 @@ print(f"Loading model from {model_path}...")
 try:
     llm = Llama(
         model_path=model_path,
-        n_gpu_layers=0, # Force CPU
+        n_gpu_layers=-1, # GPU
         verbose=True,
-        n_ctx=16384 # Adjust context window as needed
+        n_ctx=4096 
     )
 except Exception as e:
     print(f"Failed to load model: {e}")

@@ -36,9 +36,19 @@ class SerializableResult:
     execution_time: Optional[Dict[str, float]] = None
 
 
-def _worker_init(config_dict: dict, evaluation_file: str, parent_env: dict = None) -> None:
+def _worker_init(config_dict: dict, evaluation_file: str, parent_env: dict = None, gpu_queue: mp.Queue = None, model_load_lock: Any = None) -> None:
     """Initialize worker process with necessary components"""
     import os
+
+    # Assign GPU if queue is provided
+    if gpu_queue:
+        try:
+            gpu_id = gpu_queue.get(timeout=1.0)
+            os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
+            print(f"Worker process {os.getpid()} pinned to GPU {gpu_id}")
+        except Exception as e:
+            print(f"Worker process {os.getpid()} failed to get GPU: {e}")
+
 
     # Set environment from parent process
     if parent_env:
@@ -49,6 +59,9 @@ def _worker_init(config_dict: dict, evaluation_file: str, parent_env: dict = Non
     global _worker_evaluator
     global _worker_llm_ensemble
     global _worker_prompt_sampler
+    global _worker_model_load_lock
+
+    _worker_model_load_lock = model_load_lock
 
     # Store config for later use
     # Reconstruct Config object from nested dictionaries
@@ -100,11 +113,20 @@ def _lazy_init_worker_components():
     global _worker_evaluator
     global _worker_llm_ensemble
     global _worker_prompt_sampler
+    
+    import os
 
     if _worker_llm_ensemble is None:
         from openevolve.llm.ensemble import LLMEnsemble
-
-        _worker_llm_ensemble = LLMEnsemble(_worker_config.llm.models)
+        
+        # Serialize model loading to avoid OOM/resource contention
+        if _worker_model_load_lock:
+             with _worker_model_load_lock:
+                 logger.info(f"Worker {os.getpid()} acquiring lock to load model...")
+                 _worker_llm_ensemble = LLMEnsemble(_worker_config.llm.models)
+                 logger.info(f"Worker {os.getpid()} loaded model and released lock.")
+        else:
+             _worker_llm_ensemble = LLMEnsemble(_worker_config.llm.models)
 
     if _worker_prompt_sampler is None:
         from openevolve.prompt.sampler import PromptSampler
@@ -117,7 +139,12 @@ def _lazy_init_worker_components():
         from openevolve.prompt.sampler import PromptSampler
 
         # Create evaluator-specific components
-        evaluator_llm = LLMEnsemble(_worker_config.llm.evaluator_models)
+        if _worker_config.llm.evaluator_models == _worker_config.llm.models and _worker_llm_ensemble is not None:
+             evaluator_llm = _worker_llm_ensemble
+             logger.info("Reusing generator LLM ensemble for evaluator to save memory")
+        else:
+             evaluator_llm = LLMEnsemble(_worker_config.llm.evaluator_models)
+
         evaluator_prompt = PromptSampler(_worker_config.prompt)
         evaluator_prompt.set_templates("evaluator_system_message")
 
@@ -315,14 +342,31 @@ class ProcessParallelController:
         self.file_suffix = file_suffix
 
         self.executor: Optional[ProcessPoolExecutor] = None
-        self.shutdown_event = mp.Event()
         self.early_stopping_triggered = False
 
         # Number of worker processes
         self.num_workers = config.evaluator.parallel_evaluations
         self.num_islands = config.database.num_islands
+        
+        # Use spawn context for everything to ensure compatibility with CUDA
+        self.mp_ctx = mp.get_context("spawn")
+        
+        self.shutdown_event = self.mp_ctx.Event()
+        self.model_load_lock = self.mp_ctx.Lock()
+        
+        # GPU Management
+        self.gpu_queue = self.mp_ctx.Queue()
+        # Assume 4 GPUs based on user request "I have 4 GPUs to use"
+        # We fill the queue with GPU IDs to be consumed by workers
+        available_gpus = [0, 1, 2, 3]
+        
+        # Fill queue with enough IDs for the workers. 
+        # If num_workers > 4, we might wrap around or share GPUs, but here we assume 1:1 mapping as per plan.
+        # We fill it cyclically ensuring each worker gets one.
+        for i in range(self.num_workers):
+            self.gpu_queue.put(available_gpus[i % len(available_gpus)])
 
-        logger.info(f"Initialized process parallel controller with {self.num_workers} workers")
+        logger.info(f"Initialized process parallel controller with {self.num_workers} workers on {len(available_gpus)} GPUs")
 
     def _serialize_config(self, config: Config) -> dict:
         """Serialize config object to a dictionary that can be pickled"""
@@ -373,35 +417,24 @@ class ProcessParallelController:
         executor_kwargs = {
             "max_workers": self.num_workers,
             "initializer": _worker_init,
-            "initargs": (config_dict, self.evaluation_file, current_env),
+            "initargs": (config_dict, self.evaluation_file, current_env, self.gpu_queue, self.model_load_lock),
         }
+        # Always use spawn for CUDA compatibility
+        # Forking after CUDA init in parent causes segfaults/errors in child
+        executor_kwargs["mp_context"] = mp.get_context("spawn")
+        
         if sys.version_info >= (3, 11):
             logger.info(f"Set max {self.config.max_tasks_per_child} tasks per child")
             executor_kwargs["max_tasks_per_child"] = self.config.max_tasks_per_child
-        elif self.config.max_tasks_per_child is not None:
-            logger.warn(
-                "max_tasks_per_child is only supported in Python 3.11+. "
-                "Ignoring max_tasks_per_child and using spawn start method."
-            )
-            executor_kwargs["mp_context"] = mp.get_context("spawn")
 
-        if self.num_workers > 1:
-            # Create process pool with initializer
+        if self.num_workers >= 1:
+            # Always use ProcessPoolExecutor for isolation, even for single worker
+            # This prevents CUDA context persistence issues/VRAM fragmentation 
+            # when re-loading models in the same process
             self.executor = ProcessPoolExecutor(**executor_kwargs)
             logger.info(f"Started process pool with {self.num_workers} processes")
         else:
-            # Serial execution setup with ThreadPoolExecutor
-            # This runs in a separate thread but same process, avoiding spawn issues
-            # AND allowing asyncio.run() to work (since thread has no loop)
-            logger.info("Configured for serial execution (single worker) - using ThreadPoolExecutor")
-            
-            # Use ThreadPoolExecutor
-            # Note: ThreadPoolExecutor supports initializer since Python 3.7
-            self.executor = ThreadPoolExecutor(
-                 max_workers=1,
-                 initializer=_worker_init,
-                 initargs=executor_kwargs["initargs"]
-            )
+             raise ValueError("num_workers must be >= 1")
 
     def stop(self) -> None:
         """Stop the process pool"""
