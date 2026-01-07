@@ -360,13 +360,25 @@ class ProcessParallelController:
         # We fill the queue with GPU IDs to be consumed by workers
         available_gpus = [0, 1, 2, 3]
         
-        # Fill queue with enough IDs for the workers. 
-        # If num_workers > 4, we might wrap around or share GPUs, but here we assume 1:1 mapping as per plan.
-        # We fill it cyclically ensuring each worker gets one.
+        # Assign GPUs to workers
+        # We divide available GPUs among workers
+        gpus_per_worker = max(1, len(available_gpus) // max(1, self.num_workers))
+        
+        logger.info(f"Assigning {gpus_per_worker} GPUs per worker")
+        
         for i in range(self.num_workers):
-            self.gpu_queue.put(available_gpus[i % len(available_gpus)])
+            # Calculate slice of GPUs for this worker
+            worker_gpus = []
+            for j in range(gpus_per_worker):
+                # Simple round-robin assignment with grouping
+                gpu_idx = (i * gpus_per_worker + j) % len(available_gpus)
+                worker_gpus.append(available_gpus[gpu_idx])
+            
+            # Create comma-separated string (e.g., "0,1" or "2,3")
+            gpu_str = ",".join(map(str, worker_gpus))
+            self.gpu_queue.put(gpu_str)
 
-        logger.info(f"Initialized process parallel controller with {self.num_workers} workers on {len(available_gpus)} GPUs")
+        logger.info(f"Initialized process parallel controller with {self.num_workers} workers on {len(available_gpus)} GPUs (Strategy: {gpus_per_worker} GPUs/worker)")
 
     def _serialize_config(self, config: Config) -> dict:
         """Serialize config object to a dictionary that can be pickled"""

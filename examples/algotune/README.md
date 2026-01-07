@@ -141,7 +141,7 @@ evaluator:
 ```yaml
 evaluator:
   timeout: 200
-  parallel_evaluations: 4  # Faster throughput
+  parallel_evaluations: 2  # Faster throughput
 ```
 
 ## Key Learnings

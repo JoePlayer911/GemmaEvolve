@@ -53,7 +53,7 @@ evaluator:
   timeout: 300
   max_retries: 3
   cascade_evaluation: true
-  parallel_evaluations: 4
+  parallel_evaluations: 2
 
 # Evolution settings
 diff_based_evolution: true

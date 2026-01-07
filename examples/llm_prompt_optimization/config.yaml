@@ -69,6 +69,6 @@ database:
 evaluator:
   timeout: 1800
   max_retries: 3
-  parallel_evaluations: 4
+  parallel_evaluations: 2
   cascade_evaluation: true  # Two-stage cascading evaluation
   cascade_thresholds: [0.9]  # Stage 1 must achieve 90% accuracy to proceed to stage 2

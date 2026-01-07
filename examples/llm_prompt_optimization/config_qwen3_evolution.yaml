@@ -58,7 +58,7 @@ database:
 evaluator:
   timeout: 1800  # 30 minutes timeout for complex evaluations
   max_retries: 3
-  parallel_evaluations: 4  # Parallel evaluation for speed
+  parallel_evaluations: 2  # Parallel evaluation for speed
   cascade_evaluation: true  # Use cascading to save API calls
   cascade_thresholds: [0.9]  # Only 2 stages, must achieve 90% in stage 1 to proceed
   

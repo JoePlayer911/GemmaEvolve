@@ -33,7 +33,7 @@ evaluator:
   timeout: 120
   cascade_evaluation: true
   cascade_thresholds: [0.3, 0.6]
-  parallel_evaluations: 4
+  parallel_evaluations: 2
   use_llm_feedback: false
 
 # Evolution settings
