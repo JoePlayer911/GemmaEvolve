@@ -14,9 +14,9 @@ echo
   examples/circle_packing/initial_program.py \
   examples/circle_packing/evaluator.py \
   --config examples/circle_packing/gemma_config.yaml \
-  --iterations 50 \
+  --iterations 100 \
   --log-level DEBUG \
-  --checkpoint examples/circle_packing/openevolve_output/checkpoints/checkpoint_50
+  --checkpoint examples/circle_packing/openevolve_output/checkpoints/checkpoint_115
 
 echo
 echo "========================================"

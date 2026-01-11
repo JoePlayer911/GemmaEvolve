@@ -11,6 +11,7 @@ import shutil
 import time
 import uuid
 from dataclasses import asdict, dataclass, field, fields
+import threading
 
 # FileLock removed - no longer needed with threaded parallel processing
 from typing import Any, Dict, List, Optional, Set, Tuple, Union
@@ -192,6 +193,9 @@ class ProgramDatabase:
         self.novelty_llm = config.novelty_llm
         self.embedding_client = EmbeddingClient(config.embedding_model) if config.embedding_model else None
         self.similarity_threshold = config.similarity_threshold
+
+        # Lock for thread safety
+        self.lock = threading.RLock()
             
 
     def add(
@@ -401,11 +405,12 @@ class ProgramDatabase:
         Returns:
             Tuple of (parent_program, inspiration_programs)
         """
-        # Ensure valid island ID
-        island_id = island_id % len(self.islands)
+        with self.lock:
+            # Ensure valid island ID
+            island_id = island_id % len(self.islands)
 
-        # Get programs from the specific island
-        island_programs = list(self.islands[island_id])
+            # Get programs from the specific island
+            island_programs = list(self.islands[island_id])
 
         if not island_programs:
             # Island is empty, fall back to sampling from all programs
@@ -1522,9 +1527,10 @@ class ProgramDatabase:
             parent_id = random.choice(archive_programs_in_island)
             return self.programs[parent_id]
         else:
-            # Fall back to any valid archive program if island has none
-            parent_id = random.choice(valid_archive)
-            return self.programs[parent_id]
+            # Fall back to weighted sampling from island if archive has no programs from this island
+            # This ensures we still return a program from the requested island
+            logger.debug(f"Archive has no programs from island {island_id}, falling back to weighted island sampling")
+            return self._sample_from_island_weighted(island_id)
 
     def _sample_inspirations(self, parent: Program, n: int = 5) -> List[Program]:
         """
