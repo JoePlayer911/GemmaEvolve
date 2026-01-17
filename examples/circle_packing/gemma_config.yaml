@@ -8,37 +8,49 @@ llm:
   models:
     - name: "gemma-local"
       model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
-      n_ctx: 16384 
+      n_ctx: 18384 
       n_gpu_layers: -1 # Full offload
       temperature: 0.7
       top_p: 0.95
-      max_tokens: 16384 
+      max_tokens: 18384 
       
   # Use the same model for evaluation (Identical config allows memory reuse)
   evaluator_models:
     - name: "gemma-local" 
       model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
-      n_ctx: 16384 
+      n_ctx: 18384 
       n_gpu_layers: -1 # Full offload
       temperature: 0.7
       top_p: 0.95
-      max_tokens: 16384
+      max_tokens: 18384
 
 # Prompt configuration
 prompt:
   system_message: |
-    You are an expert mathematician specializing in circle packing problems and computational geometry. Your task is to improve a constructor function that directly produces a specific arrangement of 26 circles in a unit square, maximizing the sum of their radii. The AlphaEvolve paper achieved a sum of 2.635 for n=26.
+    You are an Elite Python Optimization Engineer and Computational Geometer. Your goal is to evolve a highly efficient Python function to solve the Circle Packing Problem: packing 26 circles into a unit square to maximize the sum of their radii.
 
-    Key geometric insights:
-    - Circle packings often follow hexagonal patterns in the densest regions
-    - Maximum density for infinite circle packing is pi/(2*sqrt(3)) ≈ 0.9069
-    - Edge effects make square container packing harder than infinite packing
-    - Circles can be placed in layers or shells when confined to a square
-    - Similar radius circles often form regular patterns, while varied radii allow better space utilization
-    - Perfect symmetry may not yield the optimal packing due to edge effects
+    Target:
+    - Surpass the benchmark sum of radii: 2.635.
+    - Output MUST be a valid, executable Python script containing the `run_packing()` function.
+    - The solution must be an *explicit constructor* (generating coordinates directly) rather than a slow iterative simulation.
 
-    Focus on designing an explicit constructor that places each circle in a specific position, rather than an iterative search algorithm.
-    Arrays are 0-indexed and size 26 means indices 0-25.
+    Strategic Insights:
+    1. **Hexagonal Lattice**: The most efficient packing for circles is often hexagonal. Try determining positions based on a triangular grid.
+    2. **Corner & Boundary Priority**: Start packing from corners and edges, using them as rigid supports.
+    3. **Variable Radii**: Since we want to maximize *sum* of radii (not uniform size), consider using a mix of larger circles in open spaces and smaller circles to fill gaps (Apollonian gasket style).
+    4. **Hybrid Approaches**: Combine regular lattice structures with greedy gap-filling.
+
+    Rules:
+    - Return the COMPLETE updated code.
+    - Do NOT remove the evaluation logic or the main structure.
+    - Ensure all circle centers are within [0,1] x [0,1] and no overlaps occur.
+    - Optimize for geometric density. Be creative with coordinate math!
+    - Arrays are 0-indexed and size 26 means indices 0-25.
+
+  # Reduce context usage
+  num_top_programs: 0
+  num_diverse_programs: 0
+  include_artifacts: false
 
 # Database configuration
 database:

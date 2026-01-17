@@ -180,7 +180,19 @@ def _run_iteration_worker(
                 parent_artifacts = db_snapshot["artifacts"].get(parent_id)
 
                 # Get island-specific programs for context
-                parent_island = parent.metadata.get("island", db_snapshot["current_island"])
+                # Handle possible missing island metadata
+                if "island" in parent.metadata:
+                    parent_island = parent.metadata["island"]
+                else:
+                    parent_island = db_snapshot["current_island"]
+                
+                # Verify bounds before access to debug the IndexError
+                num_islands_in_snapshot = len(db_snapshot["islands"])
+                if parent_island >= num_islands_in_snapshot:
+                    logger.warning(f"Fixed out-of-bounds parent_island {parent_island} (num_islands={num_islands_in_snapshot})")
+                    # Fallback to valid island to prevent crash
+                    parent_island = parent_island % num_islands_in_snapshot
+                    
                 island_programs = [
                     programs[pid] for pid in db_snapshot["islands"][parent_island] if pid in programs
                 ]

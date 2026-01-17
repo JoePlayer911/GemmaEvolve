@@ -685,6 +685,10 @@ class ProgramDatabase:
         if len(self.island_generations) != len(self.islands):
             self.island_generations = [0] * len(self.islands)
 
+        # Ensure island_feature_maps list has correct length
+        while len(self.island_feature_maps) < len(self.islands):
+            self.island_feature_maps.append({})
+        
         # Ensure island_best_programs list has correct length
         if len(self.island_best_programs) != len(self.islands):
             self.island_best_programs = [None] * len(self.islands)
@@ -693,6 +697,10 @@ class ProgramDatabase:
 
         # Log the reconstructed island status
         self.log_island_status()
+
+        # Ensure current_island is within valid bounds
+        if self.islands:
+            self.current_island = self.current_island % len(self.islands)
 
     def _reconstruct_islands(self, saved_islands: List[List[str]]) -> None:
         """

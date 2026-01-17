@@ -30,6 +30,11 @@ llm:
       
 # General Settings
 max_iterations: 10
+# Early Stopping
+# target_score: 0.95        # Stop if this score is reached (optional)
+# early_stopping_patience: 5 # Stop if no improvement after N iterations (optional)
+# convergence_threshold: 0.001 # Minimum improvement to reset patience
+# early_stopping_metric: "combined_score" # Metric to track for improvement
 language: python
 file_suffix: .py
 project_name: "gemma_test"

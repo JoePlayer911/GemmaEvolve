@@ -34,7 +34,12 @@ def parse_args() -> argparse.Namespace:
     )
 
     parser.add_argument(
-        "--target-score", "-t", help="Target score to reach", type=float, default=None
+        "--target-score",
+        "--target_score",
+        "-t",
+        help="Target score to reach",
+        type=float,
+        default=None,
     )
 
     parser.add_argument(
@@ -56,6 +61,29 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--primary-model", help="Primary LLM model name", default=None)
 
     parser.add_argument("--secondary-model", help="Secondary LLM model name", default=None)
+
+    parser.add_argument(
+        "--early-stopping-patience",
+        "--early_stopping_patience",
+        help="Stop if no improvement after N iterations",
+        type=int,
+        default=None,
+    )
+
+    parser.add_argument(
+        "--convergence-threshold",
+        "--convergence_threshold",
+        help="Minimum improvement to reset patience",
+        type=float,
+        default=None,
+    )
+
+    parser.add_argument(
+        "--early-stopping-metric",
+        "--early_stopping_metric",
+        help="Metric to track for early stopping",
+        default=None,
+    )
 
     return parser.parse_args()
 
@@ -102,6 +130,23 @@ async def main_async() -> int:
             print(f"Applied CLI model overrides - active models:")
             for i, model in enumerate(config.llm.models):
                 print(f"  Model {i+1}: {model.name} (weight: {model.weight})")
+
+    # Apply early stopping overrides
+    if args.early_stopping_patience is not None:
+        config.early_stopping_patience = args.early_stopping_patience
+        print(f"Using early stopping patience: {config.early_stopping_patience}")
+    
+    if args.convergence_threshold is not None:
+        config.convergence_threshold = args.convergence_threshold
+        print(f"Using convergence threshold: {config.convergence_threshold}")
+        
+    if args.early_stopping_metric is not None:
+        config.early_stopping_metric = args.early_stopping_metric
+        print(f"Using early stopping metric: {config.early_stopping_metric}")
+
+    if args.target_score is not None:
+        config.target_score = args.target_score
+        print(f"Using target score: {config.target_score}")
 
     # Initialize OpenEvolve
     try:
