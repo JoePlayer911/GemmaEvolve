@@ -1,0 +1,84 @@
+# Configuration for Verilog optimization example
+max_iterations: 50
+checkpoint_interval: 10
+log_level: "INFO"
+language: "verilog"
+file_suffix: ".v"
+
+# LLM configuration
+llm:
+  models:
+    - name: "gemma-local"
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      n_ctx: 16384 
+      n_gpu_layers: -1
+      temperature: 0.7
+      top_p: 0.95
+      max_tokens: 4096
+      
+  # Use the same model for evaluation
+  evaluator_models:
+    - name: "gemma-local" 
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      n_ctx: 16384 
+      n_gpu_layers: -1
+      temperature: 0.7
+      top_p: 0.95
+      max_tokens: 4096
+
+# Prompt configuration
+prompt:
+  system_message: |
+    You are an expert Hardware Design Engineer specializing in Verilog. Your task is to implement a highly efficient Verilog module.
+
+    Target:
+    - Implement the module `popcount16` which counts the number of 1s in a 16-bit input vector.
+    - The module interface MUST be: `module popcount16 (input [15:0] in, output reg [4:0] out);`
+    - Optimize for conciseness and clarity.
+
+    CRITICAL VERILOG SYNTAX RULES:
+    - All procedural assignments (=) MUST be inside an `always` block.
+    - Use `always @(*)` for combinational logic.
+    - Do NOT write assignments like `result = 0;` directly inside the module body.
+    - The output `out` is declared as `reg`, so assign it inside `always @(*) begin ... end`.
+
+    EXAMPLE OF CORRECT SYNTAX:
+    ```verilog
+    module popcount16 (input [15:0] in, output reg [4:0] out);
+      integer i;
+      always @(*) begin
+        out = 0;
+        for (i = 0; i < 16; i = i + 1) begin
+          out = out + in[i];
+        end
+      end
+    endmodule
+    ```
+
+    Rules:
+    - Output the COMPLETE Verilog module ONLY.
+    - Do NOT include the testbench.
+    - Ensure strict Verilog-2001 compliance.
+
+  # Reduce context usage
+  num_top_programs: 0
+  num_diverse_programs: 0
+  include_artifacts: false
+
+# Database configuration
+database:
+  population_size: 10 
+  archive_size: 5
+  num_islands: 2
+  programs_per_island: 5
+  elite_selection_ratio: 0.2
+  exploitation_ratio: 0.7
+
+# Evaluator configuration
+evaluator:
+  timeout: 30
+  parallel_evaluations: 2
+
+# Evolution settings
+diff_based_evolution: false # Full rewrites are often better for small hardware modules
+max_code_length: 5000

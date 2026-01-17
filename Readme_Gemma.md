@@ -76,32 +76,26 @@ This should load the Gemma model and respond to a test prompt.
 ## Running OpenEvolve with Gemma
 
 ### Linux (Recommended)
+Verilog evolve run:
+./run_gemma_verilog.sh
+
 Use the provided shell script:
-```bash
 ./run_gemma_debug.sh
-```
+
 To clear VRAM cache, run:
-```bash
 pkill -9 python
-```
 
 ### Windows
 Use the provided batch file:
-```bash
 run_gemma_debug.bat
-```
 
 ### Manual Execution
 
 **Full 50-iteration evolution with debug logging:**
-```bash
 python -m openevolve.cli examples/function_minimization/initial_program.py examples/function_minimization/evaluator.py --config examples/function_minimization/gemma_config.yaml --iterations 50 --log-level DEBUG
-```
 
 **Quick test (5 iterations):**
-```bash
 python -m openevolve.cli examples/function_minimization/initial_program.py examples/function_minimization/evaluator.py --config examples/function_minimization/gemma_config.yaml --iterations 5
-```
 
 ## Configuration
 
@@ -130,7 +124,6 @@ The Gemma-specific configuration is in `examples/function_minimization/gemma_con
 
 ## Project Structure
 
-```
 GemmaEvolve/
 ├── gemma-3-4b-it-UD-Q4_K_XL.gguf    # Model file (not in repo)
 ├── openevolve/                       # Core OpenEvolve package
@@ -143,7 +136,6 @@ GemmaEvolve/
 ├── run_gemma_debug.bat              # Windows quick-start script
 ├── run_gemma_debug.sh               # Linux quick-start script
 └── Readme_Gemma.md                  # This file
-```
 
 ## Next Steps
 
