@@ -2,11 +2,11 @@
 
 module testbench;
 
-  reg [15:0] in;
-  wire [4:0] out;
+  reg [31:0] in;
+  wire [31:0] out;
   
   // Instantiate the Unit Under Test (UUT)
-  popcount16 uut (
+  TopModule uut (
     .in(in), 
     .out(out)
   );
@@ -14,50 +14,43 @@ module testbench;
   integer i;
   integer correct_count;
   integer total_tests;
-  reg [4:0] expected;
-  integer j;
+  reg [31:0] expected;
 
-  // Function to calculate expected popcount
-  function [4:0] calc_popcount;
-    input [15:0] val;
-    integer k;
+  // Function to calculate expected byte reversal
+  function [31:0] calc_reversal;
+    input [31:0] val;
     begin
-      calc_popcount = 0;
-      for (k = 0; k < 16; k = k + 1) begin
-        if (val[k]) calc_popcount = calc_popcount + 1;
-      end
+      calc_reversal = {val[7:0], val[15:8], val[23:16], val[31:24]};
     end
   endfunction
 
   initial begin
-    $dumpfile("waveform.vcd");
-    $dumpvars(0, testbench);
+    `ifdef DUMP_WAVEFORM
+      $dumpfile("waveform.vcd");
+      $dumpvars(0, testbench);
+    `endif
 
     correct_count = 0;
     total_tests = 100;
 
     // Test specific cases
-    in = 16'h0000; #10;
-    expected = calc_popcount(in);
+    in = 32'h12345678; #10;
+    expected = calc_reversal(in);
     check_result();
 
-    in = 16'hFFFF; #10;
-    expected = calc_popcount(in);
+    in = 32'h00000000; #10;
+    expected = calc_reversal(in);
     check_result();
 
-    in = 16'hAAAA; #10;
-    expected = calc_popcount(in);
-    check_result();
-
-    in = 16'h5555; #10;
-    expected = calc_popcount(in);
+    in = 32'hFFFFFFFF; #10;
+    expected = calc_reversal(in);
     check_result();
 
     // Random tests
-    for (i = 0; i < total_tests - 4; i = i + 1) begin
+    for (i = 0; i < total_tests - 3; i = i + 1) begin
       in = $random;
       #10;
-      expected = calc_popcount(in);
+      expected = calc_reversal(in);
       check_result();
     end
 
@@ -77,7 +70,7 @@ module testbench;
       if (out === expected) begin
         correct_count = correct_count + 1;
       end else begin
-        $display("ERROR: in=%h, out=%d, expected=%d", in, out, expected);
+        $display("ERROR: in=%h, out=%d, expected=%h", in, out, expected);
       end
     end
   endtask

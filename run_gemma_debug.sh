@@ -14,9 +14,9 @@ echo
   examples/circle_packing/initial_program.py \
   examples/circle_packing/evaluator.py \
   --config examples/circle_packing/gemma_config.yaml \
-  --iterations 130 \
+  --iterations 1000 \
   --log-level DEBUG \
-  --checkpoint examples/circle_packing/openevolve_output/checkpoints/checkpoint_1146 \
+  --checkpoint examples/circle_packing/openevolve_output/checkpoints/checkpoint_1406 \
   --target_score 1 \
   --early_stopping_metric "combined_score"
 
