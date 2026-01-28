@@ -1,0 +1,97 @@
+# Configuration for Verilog optimization
+max_iterations: 50
+checkpoint_interval: 10
+log_level: "INFO"
+language: "verilog"
+file_suffix: ".v"
+
+# LLM configuration
+llm:
+  models:
+    - name: "gemma-local"
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      n_ctx: 8192
+      n_gpu_layers: -1
+      temperature: 0.7
+      top_p: 0.95
+      max_tokens: 4096
+      
+  # Use the same model for evaluation
+  evaluator_models:
+    - name: "gemma-local" 
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      n_ctx: 8192
+      n_gpu_layers: -1
+      temperature: 0.7
+      top_p: 0.95
+      max_tokens: 4096
+
+# Prompt configuration
+prompt:
+  system_message: |
+    You are an expert Hardware Design Engineer. Your task is to implement a Verilog module based on the following description.
+
+    Description:
+    This is a combinational circuit. Read the simulation waveforms to
+    determine what the circuit does, then implement it.
+    
+      time            a               b               q
+      0ns             0               0               0
+      5ns             0               0               0
+      10ns            0               0               0
+      15ns            0               0               0
+      20ns            0               0               0
+      25ns            0               1               0
+      30ns            0               1               0
+      35ns            1               0               0
+      40ns            1               0               0
+      45ns            1               1               1
+      50ns            1               1               1
+      55ns            0               0               0
+      60ns            0               0               0
+      65ns            0               1               0
+      70ns            0               1               0
+      75ns            1               0               0
+      80ns            1               0               0
+      85ns            1               1               1
+      90ns            1               1               1
+
+    Interface:
+    module TopModule (
+      input a,
+      input b,
+      output q
+    );
+
+    Requirements:
+    - Implement the module logic using `assign` statements where possible.
+    - Follow Verilog-2001 standards.
+    - Output ONLY the Verilog module code.
+    - Do NOT include the testbench.
+
+  # Reduce context usage
+  num_top_programs: 0
+  num_diverse_programs: 0
+  include_artifacts: false
+
+# Database configuration
+database:
+  population_size: 10 
+  archive_size: 5
+  num_islands: 1
+  programs_per_island: 10
+  elite_selection_ratio: 0.2
+  exploitation_ratio: 0.7
+  
+  # Embedding model (CPU offloaded)
+  embedding_model: "embedding_models/Nomic-Embed-Code/nomic-embed-code-q5_k_m.gguf"
+  similarity_threshold: 0.95
+
+# Evaluator configuration
+evaluator:
+  timeout: 30
+  parallel_evaluations: 2
+
+# Evolution settings
+diff_based_evolution: false 
+max_code_length: 5000

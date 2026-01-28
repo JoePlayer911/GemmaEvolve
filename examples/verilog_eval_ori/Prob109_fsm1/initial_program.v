@@ -1,0 +1,8 @@
+module TopModule (
+  input clk,
+  input in,
+  input areset,
+  output out
+);
+
+endmodule

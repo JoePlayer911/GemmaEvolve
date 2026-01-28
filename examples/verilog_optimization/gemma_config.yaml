@@ -61,6 +61,10 @@ database:
   programs_per_island: 5
   elite_selection_ratio: 0.2
   exploitation_ratio: 0.7
+  
+  # Embedding model (CPU offloaded)
+  embedding_model: "embedding_models/Nomic-Embed-Code/nomic-embed-code-q5_k_m.gguf"
+  similarity_threshold: 0.95
 
 # Evaluator configuration
 evaluator:

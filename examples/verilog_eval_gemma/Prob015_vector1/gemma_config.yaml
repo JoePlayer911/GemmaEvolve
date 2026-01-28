@@ -1,0 +1,71 @@
+# Configuration for Verilog optimization
+max_iterations: 50
+checkpoint_interval: 10
+log_level: "INFO"
+language: "verilog"
+file_suffix: ".v"
+
+# LLM configuration
+llm:
+  models:
+    - name: "gemma-local"
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      n_ctx: 8192
+      n_gpu_layers: -1
+      temperature: 0.7
+      top_p: 0.95
+      max_tokens: 4096
+      
+  evaluator_models:
+    - name: "gemma-local" 
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      n_ctx: 8192
+      n_gpu_layers: -1
+      temperature: 0.7
+      top_p: 0.95
+      max_tokens: 4096
+
+# Prompt configuration
+prompt:
+  system_message: |
+    You are an expert Hardware Design Engineer. Your task is to implement a Verilog module.
+
+    Description:
+    The circuit takes a 16-bit input and splits it into two 8-bit outputs: the lower byte (bits [7:0]) and the upper byte (bits [15:8]).
+
+    Interface:
+    module TopModule (
+  input [15:0] in,
+  output [7:0] out_hi,
+  output [7:0] out_lo
+);
+
+    Requirements:
+    - Implement the module logic using `assign` statements where possible.
+    - Follow Verilog-2001 standards.
+    - Output ONLY the Verilog module code.
+
+  num_top_programs: 0
+  num_diverse_programs: 0
+  include_artifacts: false
+
+# Database configuration
+database:
+  population_size: 10 
+  archive_size: 5
+  num_islands: 1
+  programs_per_island: 10
+  elite_selection_ratio: 0.2
+  exploitation_ratio: 0.7
+  
+  embedding_model: "embedding_models/Nomic-Embed-Code/nomic-embed-code-q5_k_m.gguf"
+  similarity_threshold: 0.95
+
+# Evaluator configuration
+evaluator:
+  timeout: 30
+  parallel_evaluations: 2
+
+# Evolution settings
+diff_based_evolution: false 
+max_code_length: 5000

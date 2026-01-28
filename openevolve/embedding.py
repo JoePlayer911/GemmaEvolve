@@ -5,7 +5,7 @@ Original source: https://github.com/SakanaAI/ShinkaEvolve/blob/main/shinka/llm/e
 
 import os
 import openai
-from typing import Union, List
+from typing import Union, List, Any
 import logging
 
 logger = logging.getLogger(__name__)
@@ -38,7 +38,18 @@ class EmbeddingClient:
         """
         self.client, self.model = self._get_client_model(model_name)
     
-    def _get_client_model(self, model_name: str) -> tuple[openai.OpenAI, str]:
+    def _get_client_model(self, model_name: str) -> tuple[Union[openai.OpenAI, Any], str]:
+        if model_name.endswith(".gguf") and os.path.exists(model_name):
+            try:
+                from llama_cpp import Llama
+                # Force CPU offload to save VRAM as requested
+                logger.info(f"Loading local embedding model on CPU: {model_name}")
+                client = Llama(model_path=model_name, embedding=True, n_gpu_layers=0, verbose=False)
+                return client, "local"
+            except ImportError:
+                logger.error("llama-cpp-python not installed. Cannot load GGUF embedding model.")
+                raise
+
         if model_name in OPENAI_EMBEDDING_MODELS:
             # Use OPENAI_EMBEDDING_API_KEY if set, otherwise fall back to OPENAI_API_KEY
             # This allows users to use OpenRouter for LLMs while using OpenAI for embeddings
@@ -77,7 +88,21 @@ class EmbeddingClient:
             single_code = True
         else:
             single_code = False
+            
         try:
+            # Local GGUF handling
+            if self.model == "local":
+                # Llama.cpp create_embedding expects string, not list, so loop it
+                embeddings = []
+                for c in code:
+                    response = self.client.create_embedding(c)
+                    embeddings.append(response['data'][0]['embedding'])
+                
+                if single_code:
+                    return embeddings[0]
+                return embeddings
+
+            # OpenAI/Azure handling
             response = self.client.embeddings.create(
                 model=self.model, input=code, encoding_format="float"
             )

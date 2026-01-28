@@ -1,0 +1,7 @@
+module TopModule (
+  input d,
+  input ena,
+  output logic q
+);
+
+endmodule

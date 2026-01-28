@@ -1,0 +1,95 @@
+# Configuration for Verilog optimization
+max_iterations: 50
+checkpoint_interval: 10
+log_level: "INFO"
+language: "verilog"
+file_suffix: ".v"
+
+# LLM configuration
+llm:
+  models:
+    - name: "gemma-local"
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      n_ctx: 8192
+      n_gpu_layers: -1
+      temperature: 0.7
+      top_p: 0.95
+      max_tokens: 4096
+      
+  # Use the same model for evaluation
+  evaluator_models:
+    - name: "gemma-local" 
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      n_ctx: 8192
+      n_gpu_layers: -1
+      temperature: 0.7
+      top_p: 0.95
+      max_tokens: 4096
+
+# Prompt configuration
+prompt:
+  system_message: |
+    You are an expert Hardware Design Engineer. Your task is to implement a Verilog module based on the following description.
+
+    Description:
+    Build a 32-bit global history shift register, including support for
+    rolling back state in response to a pipeline flush caused by a branch
+    misprediction. When a branch prediction is made (predict_valid = 1),
+    shift in predict_taken from the LSB side to update the branch history for
+    the predicted branch. (predict_history[0] is the direction of the
+    youngest branch.) When a branch misprediction occurs (train_mispredicted
+    = 1), load the branch history register with the history after the
+    completion of the mispredicted branch. This is the history before the
+    mispredicted branch (train_history) concatenated with the actual result
+    of the branch (train_taken). If both a prediction and misprediction occur
+    at the same time, the misprediction takes precedence, because the
+    pipeline flush will also flush out the branch that is currently making a
+    prediction. predict_history is the value of the branch history register.
+    areset is a positive edge triggered asynchronous reset that resets the
+    history counter to zero.
+
+    Interface:
+    module TopModule (
+      input clk,
+      input areset,
+      input predict_valid,
+      input predict_taken,
+      output logic [31:0] predict_history,
+    
+      input train_mispredicted,
+      input train_taken,
+      input [31:0] train_history
+    );
+
+    Requirements:
+    - Implement the module logic using `assign` statements where possible.
+    - Follow Verilog-2001 standards.
+    - Output ONLY the Verilog module code.
+    - Do NOT include the testbench.
+
+  # Reduce context usage
+  num_top_programs: 0
+  num_diverse_programs: 0
+  include_artifacts: false
+
+# Database configuration
+database:
+  population_size: 10 
+  archive_size: 5
+  num_islands: 1
+  programs_per_island: 10
+  elite_selection_ratio: 0.2
+  exploitation_ratio: 0.7
+  
+  # Embedding model (CPU offloaded)
+  embedding_model: "embedding_models/Nomic-Embed-Code/nomic-embed-code-q5_k_m.gguf"
+  similarity_threshold: 0.95
+
+# Evaluator configuration
+evaluator:
+  timeout: 30
+  parallel_evaluations: 2
+
+# Evolution settings
+diff_based_evolution: false 
+max_code_length: 5000

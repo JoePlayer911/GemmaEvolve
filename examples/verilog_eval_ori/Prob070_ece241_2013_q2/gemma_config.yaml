@@ -1,0 +1,84 @@
+# Configuration for Verilog optimization
+max_iterations: 50
+checkpoint_interval: 10
+log_level: "INFO"
+language: "verilog"
+file_suffix: ".v"
+
+# LLM configuration
+llm:
+  models:
+    - name: "gemma-local"
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      n_ctx: 8192
+      n_gpu_layers: -1
+      temperature: 0.7
+      top_p: 0.95
+      max_tokens: 4096
+      
+  # Use the same model for evaluation
+  evaluator_models:
+    - name: "gemma-local" 
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      n_ctx: 8192
+      n_gpu_layers: -1
+      temperature: 0.7
+      top_p: 0.95
+      max_tokens: 4096
+
+# Prompt configuration
+prompt:
+  system_message: |
+    You are an expert Hardware Design Engineer. Your task is to implement a Verilog module based on the following description.
+
+    Description:
+    A single-output digital system with four inputs (a,b,c,d) generates a
+    logic-1 when 2, 7, or 15 appears on the inputs, and a logic-0 when 0, 1,
+    4, 5, 6, 9, 10, 13, or 14 appears. The input conditions for the numbers
+    3, 8, 11, and 12 never occur in this system. For example, 7 corresponds
+    to a,b,c,d being set to 0,1,1,1, respectively. Determine the output
+    out_sop in minimum sum-of-products form, and the output out_pos in
+    minimum product-of-sums form.
+
+    Interface:
+    module TopModule (
+      input a,
+      input b,
+      input c,
+      input d,
+      output out_sop,
+      output out_pos
+    );
+
+    Requirements:
+    - Implement the module logic using `assign` statements where possible.
+    - Follow Verilog-2001 standards.
+    - Output ONLY the Verilog module code.
+    - Do NOT include the testbench.
+
+  # Reduce context usage
+  num_top_programs: 0
+  num_diverse_programs: 0
+  include_artifacts: false
+
+# Database configuration
+database:
+  population_size: 10 
+  archive_size: 5
+  num_islands: 1
+  programs_per_island: 10
+  elite_selection_ratio: 0.2
+  exploitation_ratio: 0.7
+  
+  # Embedding model (CPU offloaded)
+  embedding_model: "embedding_models/Nomic-Embed-Code/nomic-embed-code-q5_k_m.gguf"
+  similarity_threshold: 0.95
+
+# Evaluator configuration
+evaluator:
+  timeout: 30
+  parallel_evaluations: 2
+
+# Evolution settings
+diff_based_evolution: false 
+max_code_length: 5000

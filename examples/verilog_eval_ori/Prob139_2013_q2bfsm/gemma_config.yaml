@@ -1,0 +1,92 @@
+# Configuration for Verilog optimization
+max_iterations: 50
+checkpoint_interval: 10
+log_level: "INFO"
+language: "verilog"
+file_suffix: ".v"
+
+# LLM configuration
+llm:
+  models:
+    - name: "gemma-local"
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      n_ctx: 8192
+      n_gpu_layers: -1
+      temperature: 0.7
+      top_p: 0.95
+      max_tokens: 4096
+      
+  # Use the same model for evaluation
+  evaluator_models:
+    - name: "gemma-local" 
+      model_path: "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
+      n_ctx: 8192
+      n_gpu_layers: -1
+      temperature: 0.7
+      top_p: 0.95
+      max_tokens: 4096
+
+# Prompt configuration
+prompt:
+  system_message: |
+    You are an expert Hardware Design Engineer. Your task is to implement a Verilog module based on the following description.
+
+    Description:
+    Consider a finite state machine that is used to control some type of
+    motor. The FSM has inputs x and y, which come from the motor, and
+    produces outputs f and g, which control the motor. There is also a clock
+    input called clk and a reset input (synchronous, active low) called
+    resetn. The FSM has to work as follows. As long as the reset input is
+    asserted, the FSM stays in a beginning state, called state A. When the
+    reset signal is de-asserted, then after the next clock edge the FSM has
+    to set the output f to 1 for one clock cycle. Then, the FSM has to
+    monitor the x input. When x has produced the values 1, 0, 1 in three
+    successive clock cycles, then g should be set to 1 on the following clock
+    cycle. While maintaining g = 1 the FSM has to monitor the y input. If y
+    has the value 1 within at most two clock cycles, then the FSM should
+    maintain g = 1 permanently (that is, until reset). But if y does not
+    become 1 within two clock cycles, then the FSM should set g = 0
+    permanently (until reset).
+
+    Interface:
+    module TopModule (
+      input clk,
+      input resetn,
+      input x,
+      input y,
+      output f,
+      output g
+    );
+
+    Requirements:
+    - Implement the module logic using `assign` statements where possible.
+    - Follow Verilog-2001 standards.
+    - Output ONLY the Verilog module code.
+    - Do NOT include the testbench.
+
+  # Reduce context usage
+  num_top_programs: 0
+  num_diverse_programs: 0
+  include_artifacts: false
+
+# Database configuration
+database:
+  population_size: 10 
+  archive_size: 5
+  num_islands: 1
+  programs_per_island: 10
+  elite_selection_ratio: 0.2
+  exploitation_ratio: 0.7
+  
+  # Embedding model (CPU offloaded)
+  embedding_model: "embedding_models/Nomic-Embed-Code/nomic-embed-code-q5_k_m.gguf"
+  similarity_threshold: 0.95
+
+# Evaluator configuration
+evaluator:
+  timeout: 30
+  parallel_evaluations: 2
+
+# Evolution settings
+diff_based_evolution: false 
+max_code_length: 5000
