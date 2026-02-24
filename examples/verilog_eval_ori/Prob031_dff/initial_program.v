@@ -1,7 +1,0 @@
-module TopModule (
-  input clk,
-  input d,
-  output reg q
-);
-
-endmodule

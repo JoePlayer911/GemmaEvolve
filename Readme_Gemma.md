@@ -76,6 +76,9 @@ This should load the Gemma model and respond to a test prompt.
 ## Running OpenEvolve with Gemma
 
 ### Linux (Recommended)
+Verilog BENCHMARK run:
+python3 benchmark_verilog.py --limit 10 --patience 5
+
 Verilog evolve run:
 ./run_gemma_verilog.sh
 

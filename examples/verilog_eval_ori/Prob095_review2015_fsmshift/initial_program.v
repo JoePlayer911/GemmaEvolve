@@ -1,7 +1,0 @@
-module TopModule (
-  input clk,
-  input reset,
-  output shift_ena
-);
-
-endmodule

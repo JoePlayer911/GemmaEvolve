@@ -21,7 +21,7 @@ llm:
     top_p: 0.95
     max_tokens: 4096
 prompt:
-  system_message: "You are an expert Hardware Design Engineer. Your task is to implement a Verilog module.\n\nDescription:\nThe circuit should always output a LOW signal.\n\nInterface:\nmodule TopModule (\n  output zero\n);\n\nRequirements:\n- Implement the module logic using `assign` statements where possible.\n- Follow Verilog-2001 standards.\n- Output ONLY the Verilog module code.\n"
+  system_message: "You are an expert Hardware Design Engineer. Your task is to implement a Verilog module.\n\nDescription:\nImplement a 4-bit adder that takes two 4-bit inputs (x and y) and produces a 5-bit output (sum) including an overflow bit.\n\nInterface:\nmodule TopModule (\n  input [3:0] x,\n  input [3:0] y,\n  output [4:0] sum\n);\n\nRequirements:\n- Implement the module logic using `assign` statements where possible.\n- Follow Verilog-2001 standards.\n- Output ONLY the Verilog module code.\n"
   num_top_programs: 0
   num_diverse_programs: 0
   include_artifacts: false

@@ -1,7 +1,0 @@
-module TopModule (
-  input clk,
-  input x,
-  output z
-);
-
-endmodule

@@ -21,7 +21,7 @@ llm:
     top_p: 0.95
     max_tokens: 4096
 prompt:
-  system_message: "You are an expert Hardware Design Engineer. Your task is to implement a Verilog module.\n\nDescription:\nThe circuit should always output a LOW signal.\n\nInterface:\nmodule TopModule (\n  output zero\n);\n\nRequirements:\n- Implement the module logic using `assign` statements where possible.\n- Follow Verilog-2001 standards.\n- Output ONLY the Verilog module code.\n"
+  system_message: "You are an expert Hardware Design Engineer. Your task is to implement a Verilog module.\n\nDescription:\nThe circuit takes two 2-bit inputs, A and B, and outputs a single bit z. z is 1 if A and B are equal, and 0 otherwise.\n\nInterface:\nmodule TopModule (\n  input [1:0] A,\n  input [1:0] B,\n  output z\n);\n\nRequirements:\n- Implement the module logic using `assign` statements where possible.\n- Follow Verilog-2001 standards.\n- Output ONLY the Verilog module code.\n"
   num_top_programs: 0
   num_diverse_programs: 0
   include_artifacts: false

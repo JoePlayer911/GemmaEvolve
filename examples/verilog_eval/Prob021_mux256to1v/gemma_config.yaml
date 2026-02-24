@@ -21,7 +21,7 @@ llm:
     top_p: 0.95
     max_tokens: 4096
 prompt:
-  system_message: "You are an expert Hardware Design Engineer. Your task is to implement a Verilog module.\n\nDescription:\nThe circuit should always output a LOW signal.\n\nInterface:\nmodule TopModule (\n  output zero\n);\n\nRequirements:\n- Implement the module logic using `assign` statements where possible.\n- Follow Verilog-2001 standards.\n- Output ONLY the Verilog module code.\n"
+  system_message: "You are an expert Hardware Design Engineer. Your task is to implement a Verilog module.\n\nDescription:\nThe problem is to design a 4-bit multiplexer that selects one of 256 possible 4-bit inputs. The 256 inputs are packed into a 1024-bit vector, and the selection is determined by a 8-bit selector signal. Each bit of the selector corresponds to a block of 4 input bits, choosing one of the 256 input blocks.\n\nInterface:\nmodule TopModule (\n  input [1023:0] in,\n  input [7:0] sel,\n  output [3:0] out\n);\n\nRequirements:\n- Implement the module logic using `assign` statements where possible.\n- Follow Verilog-2001 standards.\n- Output ONLY the Verilog module code.\n"
   num_top_programs: 0
   num_diverse_programs: 0
   include_artifacts: false

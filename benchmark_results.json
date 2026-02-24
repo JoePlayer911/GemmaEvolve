@@ -1,0 +1,18 @@
+[
+  {
+    "problem": "Prob001_zero",
+    "baseline": {
+      "score": 1.093,
+      "accuracy": 1.0,
+      "time": 12.43591022491455,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob001_zero/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.0,
+      "accuracy": 0.0,
+      "time": 30.31961417198181,
+      "mode": "openevolve"
+    }
+  }
+]

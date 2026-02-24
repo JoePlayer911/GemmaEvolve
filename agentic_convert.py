@@ -2,17 +2,19 @@
 import os
 import shutil
 import glob
+import glob
 import re
+import yaml
 from llama_cpp import Llama
 
 # Configuration
 SOURCE_DIR = 'verilog-eval/dataset_code-complete-iccad2023'
-DEST_DIR = 'examples/verilog_eval_gemma'
+DEST_DIR = 'examples/verilog_eval'
 MODEL_PATH = "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
 CONFIG_TEMPLATE_MODEL_PATH = MODEL_PATH 
 
 # Limit for testing
-LIMIT = 3
+LIMIT = 1000
 
 def load_model():
     print(f"Loading Gemma model from {MODEL_PATH}...")
@@ -224,77 +226,72 @@ def main():
              f.write(evaluator_code)
 
         # 4. Generate Config
-        description_indented = "\n    ".join(description.splitlines())
-        config_content = f"""# Configuration for Verilog optimization
-max_iterations: 50
-checkpoint_interval: 10
-log_level: "INFO"
-language: "verilog"
-file_suffix: ".v"
+        config_data = {
+            "max_iterations": 50,
+            "checkpoint_interval": 10,
+            "log_level": "INFO",
+            "language": "verilog",
+            "file_suffix": ".v",
+            "llm": {
+                "models": [{
+                    "name": "gemma-local",
+                    "model_path": CONFIG_TEMPLATE_MODEL_PATH,
+                    "n_ctx": 8192,
+                    "n_gpu_layers": -1,
+                    "temperature": 0.7,
+                    "top_p": 0.95,
+                    "max_tokens": 4096
+                }],
+                "evaluator_models": [{
+                    "name": "gemma-local",
+                    "model_path": CONFIG_TEMPLATE_MODEL_PATH,
+                    "n_ctx": 8192,
+                    "n_gpu_layers": -1,
+                    "temperature": 0.7,
+                    "top_p": 0.95,
+                    "max_tokens": 4096
+                }]
+            },
+            "prompt": {
+                "system_message": f"""You are an expert Hardware Design Engineer. Your task is to implement a Verilog module.
 
-# LLM configuration
-llm:
-  models:
-    - name: "gemma-local"
-      model_path: "{CONFIG_TEMPLATE_MODEL_PATH}"
-      n_ctx: 8192
-      n_gpu_layers: -1
-      temperature: 0.7
-      top_p: 0.95
-      max_tokens: 4096
-      
-  evaluator_models:
-    - name: "gemma-local" 
-      model_path: "{CONFIG_TEMPLATE_MODEL_PATH}"
-      n_ctx: 8192
-      n_gpu_layers: -1
-      temperature: 0.7
-      top_p: 0.95
-      max_tokens: 4096
+Description:
+{description}
 
-# Prompt configuration
-prompt:
-  system_message: |
-    You are an expert Hardware Design Engineer. Your task is to implement a Verilog module.
+Interface:
+{module_def}
 
-    Description:
-    {description_indented}
-
-    Interface:
-    {module_def}
-
-    Requirements:
-    - Implement the module logic using `assign` statements where possible.
-    - Follow Verilog-2001 standards.
-    - Output ONLY the Verilog module code.
-
-  num_top_programs: 0
-  num_diverse_programs: 0
-  include_artifacts: false
-
-# Database configuration
-database:
-  population_size: 10 
-  archive_size: 5
-  num_islands: 1
-  programs_per_island: 10
-  elite_selection_ratio: 0.2
-  exploitation_ratio: 0.7
-  
-  embedding_model: "embedding_models/Nomic-Embed-Code/nomic-embed-code-q5_k_m.gguf"
-  similarity_threshold: 0.95
-
-# Evaluator configuration
-evaluator:
-  timeout: 30
-  parallel_evaluations: 2
-
-# Evolution settings
-diff_based_evolution: false 
-max_code_length: 5000
-"""
+Requirements:
+- Implement the module logic using `assign` statements where possible.
+- Follow Verilog-2001 standards.
+- Output ONLY the Verilog module code.
+""",
+                "num_top_programs": 0,
+                "num_diverse_programs": 0,
+                "include_artifacts": False
+            },
+            "database": {
+                "population_size": 10,
+                "archive_size": 5,
+                "num_islands": 1,
+                "programs_per_island": 10,
+                "elite_selection_ratio": 0.2,
+                "exploitation_ratio": 0.7,
+                "embedding_model": "embedding_models/Nomic-Embed-Code/nomic-embed-code-q5_k_m.gguf",
+                "similarity_threshold": 0.95
+            },
+            "evaluator": {
+                "timeout": 30,
+                "parallel_evaluations": 2
+            },
+            "diff_based_evolution": False,
+            "max_code_length": 5000
+        }
+        
+        # Use yaml dump to handle all escaping and indentation safely
+        import yaml
         with open(os.path.join(problem_dir, 'gemma_config.yaml'), 'w') as f:
-            f.write(config_content)
+            yaml.dump(config_data, f, sort_keys=False, width=1000)
 
         count += 1
         print(f"Finished {base_name}")
