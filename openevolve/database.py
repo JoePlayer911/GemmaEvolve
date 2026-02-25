@@ -986,6 +986,10 @@ class ProgramDatabase:
         """
         Use LLM to judge if a program is novel compared to a similar existing program
         """
+        # Guard: If novelty LLM was released (e.g. controller freed VRAM for workers), skip
+        if self.novelty_llm is None:
+            return True  # Assume novel when LLM is unavailable
+
         import asyncio
         from openevolve.novelty_judge import NOVELTY_SYSTEM_MSG, NOVELTY_USER_MSG
 

@@ -1,4 +1,19 @@
+#!/usr/bin/env python3
+"""
+Batch-update all verilog_eval/Prob*/evaluator.py files to:
+1. Handle both file path and code content input (OpenEvolve passes file paths)
+2. Use absolute paths for testbench.sv and ref.sv 
+3. Capture iverilog stderr properly
+4. Add partial-credit scoring
+"""
+
 import os
+import glob
+
+VERILOG_EVAL_DIR = os.path.join(os.path.dirname(__file__), "..", "examples", "verilog_eval")
+
+# The new evaluator template
+NEW_EVALUATOR_TEMPLATE = '''import os
 import subprocess
 import re
 import tempfile
@@ -41,7 +56,7 @@ def evaluate(code: str) -> dict:
                 "accuracy": 0.0,
                 "line_count": line_count,
                 "combined_score": partial_score,
-                "error": f"Compilation failed:\n{error_msg}"
+                "error": f"Compilation failed:\\n{error_msg}"
             }
 
         # Run
@@ -54,7 +69,7 @@ def evaluate(code: str) -> dict:
                 "accuracy": 0.0,
                 "line_count": len(code.strip().splitlines()),
                 "combined_score": 0.15,  # Compiled but runtime error
-                "error": f"Runtime error:\n{error_msg}"
+                "error": f"Runtime error:\\n{error_msg}"
             }
 
         # Parse Output
@@ -63,7 +78,7 @@ def evaluate(code: str) -> dict:
             accuracy = 1.0
         elif "Mismatches:" in output:
             # Parse specific counts if available
-            match = re.search(r"Mismatches: (\d+) in (\d+)", output)
+            match = re.search(r"Mismatches: (\\d+) in (\\d+)", output)
             if match:
                 errors = int(match.group(1))
                 total = int(match.group(2))
@@ -91,3 +106,33 @@ def evaluate(code: str) -> dict:
             os.remove(candidate_path)
         if os.path.exists(executable_path):
             os.remove(executable_path)
+'''
+
+def main():
+    prob_dirs = sorted(glob.glob(os.path.join(VERILOG_EVAL_DIR, "Prob*")))
+    print(f"Found {len(prob_dirs)} problem directories")
+
+    updated = 0
+    skipped = 0
+    errors = 0
+
+    for prob_dir in prob_dirs:
+        eval_path = os.path.join(prob_dir, "evaluator.py")
+        if not os.path.exists(eval_path):
+            print(f"  SKIP (no evaluator.py): {prob_dir}")
+            skipped += 1
+            continue
+
+        # Write new evaluator (overwrite all)
+        try:
+            with open(eval_path, 'w') as f:
+                f.write(NEW_EVALUATOR_TEMPLATE)
+            updated += 1
+        except Exception as e:
+            print(f"  ERROR: {eval_path}: {e}")
+            errors += 1
+
+    print(f"\nDone: {updated} updated, {skipped} skipped, {errors} errors")
+
+if __name__ == "__main__":
+    main()

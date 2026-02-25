@@ -4,15 +4,50 @@
     "baseline": {
       "score": 1.093,
       "accuracy": 1.0,
-      "time": 12.43591022491455,
+      "time": 12.136910200119019,
       "mode": "pure_gemma",
       "code_path": "examples/verilog_eval/Prob001_zero/baseline_generated.v"
     },
     "openevolve": {
-      "score": 0.0,
-      "accuracy": 0.0,
-      "time": 30.31961417198181,
-      "mode": "openevolve"
+      "score": 1.093,
+      "accuracy": 1.0,
+      "time": 17.020354509353638,
+      "mode": "openevolve",
+      "log": "logs/openevolve_Prob001_zero_20260225_104135.log"
+    }
+  },
+  {
+    "problem": "Prob002_m2014_q4i",
+    "baseline": {
+      "score": 1.093,
+      "accuracy": 1.0,
+      "time": 11.65026068687439,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob002_m2014_q4i/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.093,
+      "accuracy": 1.0,
+      "time": 16.477442264556885,
+      "mode": "openevolve",
+      "log": "logs/openevolve_Prob002_m2014_q4i_20260225_104204.log"
+    }
+  },
+  {
+    "problem": "Prob003_step_one",
+    "baseline": {
+      "score": 1.093,
+      "accuracy": 1.0,
+      "time": 12.6490478515625,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob003_step_one/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.093,
+      "accuracy": 1.0,
+      "time": 16.17167854309082,
+      "mode": "openevolve",
+      "log": "logs/openevolve_Prob003_step_one_20260225_104233.log"
     }
   }
 ]

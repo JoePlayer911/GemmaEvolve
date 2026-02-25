@@ -2,76 +2,92 @@ import os
 import subprocess
 import re
 import tempfile
-import logging
 
-logger = logging.getLogger(__name__)
-
-import subprocess
-import re
+# Resolve testbench/ref paths relative to THIS file, not the working directory.
+# This is critical because OpenEvolve worker processes run from the project root.
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def evaluate(code: str) -> dict:
-    """
-    Evaluates a Verilog module by simulating it against a reference module using Iverilog and VVP.
-    """
+    # OpenEvolve passes a FILE PATH, not code content.
+    # If the input is a file path, read the code from it.
+    if os.path.exists(code) and os.path.isfile(code):
+        with open(code, 'r') as f:
+            code = f.read()
+
+    # Write code to a temporary file
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.v', prefix='verilog_', delete=False) as f:
+        f.write(code)
+        candidate_path = f.name
+
+    executable_path = candidate_path + ".out"
+    testbench_path = os.path.join(_SCRIPT_DIR, "testbench.sv")
+    ref_path = os.path.join(_SCRIPT_DIR, "ref.sv")
+
     try:
-        exec_name = "a.out"  # Temporary executable name
-        candidate_name = "candidate.sv"
-        ref_name = "testbench.sv"
+        # Compile
+        compile_cmd = ["iverilog", "-g2012", "-o", executable_path, candidate_path, testbench_path, ref_path]
+        try:
+            subprocess.check_output(compile_cmd, stderr=subprocess.STDOUT, timeout=10)
+        except subprocess.CalledProcessError as e:
+            error_msg = e.output.decode() if e.output else "Unknown compilation error"
+            line_count = len(code.strip().splitlines())
+            # Partial credit: give evolution a gradient even on compile failure
+            partial_score = 0.0
+            if line_count > 0 and "module" in code.lower():
+                partial_score = 0.05  # Has valid-looking Verilog structure
+            if "TopModule" in code:
+                partial_score = 0.1   # Correct module name
+            return {
+                "accuracy": 0.0,
+                "line_count": line_count,
+                "combined_score": partial_score,
+                "error": f"Compilation failed:\n{error_msg}"
+            }
 
-        # Write the candidate code to a file
-        with open(candidate_name, "w") as f:
-            f.write(code)
+        # Run
+        run_cmd = ["vvp", executable_path]
+        try:
+            output = subprocess.check_output(run_cmd, stderr=subprocess.STDOUT, timeout=10).decode()
+        except subprocess.CalledProcessError as e:
+            error_msg = e.output.decode() if e.output else "Unknown runtime error"
+            return {
+                "accuracy": 0.0,
+                "line_count": len(code.strip().splitlines()),
+                "combined_score": 0.15,  # Compiled but runtime error
+                "error": f"Runtime error:\n{error_msg}"
+            }
 
-        # Compile the Verilog code
-        compile_cmd = f"iverilog -g2012 -o {exec_name} {candidate_name} {ref_name}"
-        compile_result = subprocess.run(compile_cmd, shell=True, capture_output=True, text=True)
-
-        if compile_result.returncode != 0:
-            return {"accuracy": 0.0, "line_count": 0, "combined_score": 0.0, "error": compile_result.stderr}
-
-        # Run the simulation
-        sim_result = subprocess.run(f"./{exec_name}", shell=True, capture_output=True, text=True)
-        output = sim_result.stdout
-
-        # Parse the output to determine accuracy
-        if "FAIL" in output:
-            mismatches = re.search(r"Mismatches:\s*(.*)", output)
-            if mismatches:
-                mismatch_count = int(mismatches.group(1))
-                accuracy = 1.0 - (mismatch_count / 1000.0)  # Assuming 1000 cycles
-            else:
-                accuracy = 0.0
-        elif "PASS" in output:
+        # Parse Output
+        accuracy = 0.0
+        if "PASS" in output:
             accuracy = 1.0
-        else:
-            # Check for errors based on the provided code snippet logic
-            errors_out_byte = re.search(r"stats1\.errors_out_byte = (\d+)", output)
-            errors_done = re.search(r"stats1\.errors_done = (\d+)", output)
+        elif "Mismatches:" in output:
+            # Parse specific counts if available
+            match = re.search(r"Mismatches: (\d+) in (\d+)", output)
+            if match:
+                errors = int(match.group(1))
+                total = int(match.group(2))
+                accuracy = 1.0 - (errors / total)
+        elif "TIMEOUT" in output:
+            accuracy = 0.0
 
-            if errors_out_byte and errors_done:
-                errors_out_byte = int(errors_out_byte.group(1))
-                errors_done = int(errors_done.group(1))
-                if errors_out_byte == 0 and errors_done == 0:
-                    accuracy = 1.0
-                else:
-                    accuracy = 0.0
-            else:
-                accuracy = 1.0
+        # Calculate Score
+        line_count = len(code.strip().splitlines())
+        combined_score = accuracy
+        # bonus for conciseness only if correct
+        if accuracy == 1.0:
+            combined_score += max(0, (100 - line_count) / 1000.0)
 
-        # Get line count of the candidate code
-        line_count = code.count('\n') + 1
-
-        # Combined score (simple average of accuracy and line count)
-        combined_score = (accuracy + line_count / 100.0) / 2.0
-
-        return {"accuracy": accuracy, "line_count": line_count, "combined_score": combined_score, "error": ""}
-
+        return {
+            "accuracy": accuracy,
+            "line_count": line_count,
+            "combined_score": combined_score,
+            "error": None
+        }
     except Exception as e:
         return {"accuracy": 0.0, "line_count": 0, "combined_score": 0.0, "error": str(e)}
     finally:
-        # Clean up temporary files
-        try:
-            subprocess.run(f"rm {candidate_name}", shell=True)
-            subprocess.run(f"rm {exec_name}", shell=True)
-        except:
-            pass
+        if os.path.exists(candidate_path):
+            os.remove(candidate_path)
+        if os.path.exists(executable_path):
+            os.remove(executable_path)

@@ -2,105 +2,92 @@ import os
 import subprocess
 import re
 import tempfile
-import logging
 
-logger = logging.getLogger(__name__)
-
-import subprocess
-import re
+# Resolve testbench/ref paths relative to THIS file, not the working directory.
+# This is critical because OpenEvolve worker processes run from the project root.
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def evaluate(code: str) -> dict:
-    """
-    Evaluates a Verilog module by running it against a testbench and analyzing the output.
+    # OpenEvolve passes a FILE PATH, not code content.
+    # If the input is a file path, read the code from it.
+    if os.path.exists(code) and os.path.isfile(code):
+        with open(code, 'r') as f:
+            code = f.read()
 
-    Args:
-        code: The Verilog code of the module to be evaluated.
+    # Write code to a temporary file
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.v', prefix='verilog_', delete=False) as f:
+        f.write(code)
+        candidate_path = f.name
 
-    Returns:
-        A dictionary containing the evaluation results:
-            - accuracy: The accuracy score (float between 0.0 and 1.0).
-            - line_count: The number of lines in the Verilog code.
-            - combined_score: A combined score (float, can be used for ranking).
-            - error: A string containing any error messages.
-    """
-
-    exec_name = "eval_exec"
-    testbench_file = "testbench.sv"
-    ref_file = "ref.sv"
-    candidate_file = "candidate.sv"
+    executable_path = candidate_path + ".out"
+    testbench_path = os.path.join(_SCRIPT_DIR, "testbench.sv")
+    ref_path = os.path.join(_SCRIPT_DIR, "ref.sv")
 
     try:
-        with open(candidate_file, "w") as f:
-            f.write(code)
-
-        # Compile the Verilog code
-        compile_result = subprocess.run(
-            ["iverilog", "-g2012", "-o", exec_name, candidate_file, testbench_file, ref_file],
-            capture_output=True,
-            text=True
-        )
-
-        if compile_result.returncode != 0:
+        # Compile
+        compile_cmd = ["iverilog", "-g2012", "-o", executable_path, candidate_path, testbench_path, ref_path]
+        try:
+            subprocess.check_output(compile_cmd, stderr=subprocess.STDOUT, timeout=10)
+        except subprocess.CalledProcessError as e:
+            error_msg = e.output.decode() if e.output else "Unknown compilation error"
+            line_count = len(code.strip().splitlines())
+            # Partial credit: give evolution a gradient even on compile failure
+            partial_score = 0.0
+            if line_count > 0 and "module" in code.lower():
+                partial_score = 0.05  # Has valid-looking Verilog structure
+            if "TopModule" in code:
+                partial_score = 0.1   # Correct module name
             return {
                 "accuracy": 0.0,
-                "line_count": len(code.splitlines()),
-                "combined_score": 0.0,
-                "error": compile_result.stderr
+                "line_count": line_count,
+                "combined_score": partial_score,
+                "error": f"Compilation failed:\n{error_msg}"
             }
 
-        # Run the simulation
-        simulation_result = subprocess.run(
-            [exec_name],
-            capture_output=True,
-            text=True
-        )
+        # Run
+        run_cmd = ["vvp", executable_path]
+        try:
+            output = subprocess.check_output(run_cmd, stderr=subprocess.STDOUT, timeout=10).decode()
+        except subprocess.CalledProcessError as e:
+            error_msg = e.output.decode() if e.output else "Unknown runtime error"
+            return {
+                "accuracy": 0.0,
+                "line_count": len(code.strip().splitlines()),
+                "combined_score": 0.15,  # Compiled but runtime error
+                "error": f"Runtime error:\n{error_msg}"
+            }
 
-        output = simulation_result.stdout
-        error = simulation_result.stderr
-
-        # Check for explicit mismatch counts
-        mismatch_pattern = r"Mismatches:\s*(\d+)\s*in\s*(\d+)"
-        mismatch_match = re.search(mismatch_pattern, output)
-        mismatches = int(mismatch_match.group(1)) if mismatch_match else 0
-        total = int(mismatch_match.group(2)) if mismatch_match else 0
-        
-        # Check for "FAIL" or "PASS"
-        if "FAIL" in output.upper():
-            if mismatches > 0:
-                accuracy = 0.0
-            else:
-                accuracy = 0.0
-        elif "PASS" in output.upper():
+        # Parse Output
+        accuracy = 0.0
+        if "PASS" in output:
             accuracy = 1.0
-        else:
-            # Check for errors in the simulation output
-            if "error" in output.lower() or "warning" in output.lower():
-                accuracy = 0.0
-            else:
-                accuracy = 1.0
+        elif "Mismatches:" in output:
+            # Parse specific counts if available
+            match = re.search(r"Mismatches: (\d+) in (\d+)", output)
+            if match:
+                errors = int(match.group(1))
+                total = int(match.group(2))
+                accuracy = 1.0 - (errors / total)
+        elif "TIMEOUT" in output:
+            accuracy = 0.0
 
-        if mismatches > 0 and total > 0:
-            accuracy = 1.0 - (float(mismatches) / total)
-
-        combined_score = accuracy  # Simple combined score, can be adjusted
+        # Calculate Score
+        line_count = len(code.strip().splitlines())
+        combined_score = accuracy
+        # bonus for conciseness only if correct
+        if accuracy == 1.0:
+            combined_score += max(0, (100 - line_count) / 1000.0)
 
         return {
             "accuracy": accuracy,
-            "line_count": len(code.splitlines()),
+            "line_count": line_count,
             "combined_score": combined_score,
-            "error": error
+            "error": None
         }
-
     except Exception as e:
-        return {
-            "accuracy": 0.0,
-            "line_count": len(code.splitlines()),
-            "combined_score": 0.0,
-            "error": str(e)
-        }
+        return {"accuracy": 0.0, "line_count": 0, "combined_score": 0.0, "error": str(e)}
     finally:
-        # Clean up generated files
-        try:
-            subprocess.run(["rm", "-f", candidate_file, exec_name], check=False)
-        except:
-            pass
+        if os.path.exists(candidate_path):
+            os.remove(candidate_path)
+        if os.path.exists(executable_path):
+            os.remove(executable_path)

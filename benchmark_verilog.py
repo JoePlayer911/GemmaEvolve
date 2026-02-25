@@ -8,6 +8,7 @@ import subprocess
 import glob
 import argparse
 import importlib.util
+from datetime import datetime
 from typing import Dict, Any, List
 
 # Try to import llama_cpp
@@ -21,6 +22,7 @@ except ImportError:
 DEFAULT_MODEL_PATH = "/home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf"
 DATASET_DIR = "examples/verilog_eval"
 RESULTS_FILE = "benchmark_results.json"
+LOGS_DIR = "logs"
 
 def load_config(config_path):
     with open(config_path, 'r') as f:
@@ -85,7 +87,7 @@ def run_pure_gemma(llm, problem_dir: str, config_path: str) -> Dict[str, Any]:
         "code_path": code_path
     }
 
-def run_openevolve(problem_dir: str, config_path: str, patience: int = 30, jumpstart_path: str = None) -> Dict[str, Any]:
+def run_openevolve(problem_dir: str, config_path: str, patience: int = 30, jumpstart_path: str = None, prob_name: str = "unknown") -> Dict[str, Any]:
     """Runs OpenEvolve via subprocess with early stopping."""
     start_time = time.time()
     
@@ -115,18 +117,32 @@ def run_openevolve(problem_dir: str, config_path: str, patience: int = 30, jumps
         evaluator_script,
         "--config", temp_config_path,
         "--iterations", "50", # Max iterations
-        "--log-level", "WARNING" # Reduce spam
+        "--log-level", "DEBUG" # Full debug logging to file
     ]
     
-    # Run process
+    # Create timestamped log file
+    os.makedirs(LOGS_DIR, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_filename = os.path.join(LOGS_DIR, f"openevolve_{prob_name}_{timestamp}.log")
+    print(f"  Logging DEBUG output to: {log_filename}")
+    
+    # Run process, streaming all output to the log file
     try:
-        # Capture output to parse the final result if needed
-        result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+        with open(log_filename, "w") as logfile:
+            logfile.write(f"=== OpenEvolve Debug Log ===\n")
+            logfile.write(f"Problem: {prob_name}\n")
+            logfile.write(f"Timestamp: {timestamp}\n")
+            logfile.write(f"Initial Program: {initial_program}\n")
+            logfile.write(f"Config: {temp_config_path}\n")
+            logfile.write(f"Patience: {patience}\n")
+            logfile.write(f"Command: {' '.join(cmd)}\n")
+            logfile.write(f"{'=' * 60}\n\n")
+            logfile.flush()
+            result = subprocess.run(cmd, check=True, stdout=logfile, stderr=subprocess.STDOUT, text=True)
     except subprocess.CalledProcessError as e:
         print(f"OpenEvolve failed with exit code {e.returncode}")
-        print(f"STDOUT:\n{e.stdout}")
-        print(f"STDERR:\n{e.stderr}")
-        return {"score": 0.0, "accuracy": 0.0, "time": 0.0, "mode": "openevolve_error"}
+        print(f"  Check log file for details: {log_filename}")
+        return {"score": 0.0, "accuracy": 0.0, "time": 0.0, "mode": "openevolve_error", "log": log_filename}
     finally:
         if os.path.exists(temp_config_path):
             os.remove(temp_config_path)
@@ -146,10 +162,11 @@ def run_openevolve(problem_dir: str, config_path: str, patience: int = 30, jumps
                 "score": metrics.get("combined_score", 0.0),
                 "accuracy": metrics.get("accuracy", 0.0),
                 "time": execution_time,
-                "mode": "openevolve"
+                "mode": "openevolve",
+                "log": log_filename
             }
     
-    return {"score": 0.0, "accuracy": 0.0, "time": execution_time, "mode": "openevolve_failed_read"}
+    return {"score": 0.0, "accuracy": 0.0, "time": execution_time, "mode": "openevolve_failed_read", "log": log_filename}
 
 def main():
     parser = argparse.ArgumentParser(description="Benchmark Pure Gemma vs OpenEvolve")
@@ -192,8 +209,10 @@ def main():
         # 2. OpenEvolve
         print(f"Running OpenEvolve (Patience={args.patience})...")
         jumpstart_code = baseline_res.get('code_path')
-        evolve_res = run_openevolve(problem_dir, config_path, args.patience, jumpstart_path=jumpstart_code)
+        evolve_res = run_openevolve(problem_dir, config_path, args.patience, jumpstart_path=jumpstart_code, prob_name=prob_name)
         print(f"  Result: Score={evolve_res['score']:.4f}, Time={evolve_res['time']:.2f}s")
+        if evolve_res.get('log'):
+            print(f"  Log: {evolve_res['log']}")
         
         results.append({
             "problem": prob_name,

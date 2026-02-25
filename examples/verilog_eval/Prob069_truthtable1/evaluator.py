@@ -1,75 +1,93 @@
+import os
 import subprocess
 import re
+import tempfile
+
+# Resolve testbench/ref paths relative to THIS file, not the working directory.
+# This is critical because OpenEvolve worker processes run from the project root.
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def evaluate(code: str) -> dict:
-    """
-    Evaluates a Verilog module by running it through a simulation and checking the results.
+    # OpenEvolve passes a FILE PATH, not code content.
+    # If the input is a file path, read the code from it.
+    if os.path.exists(code) and os.path.isfile(code):
+        with open(code, 'r') as f:
+            code = f.read()
 
-    Args:
-        code: The Verilog code of the module to be evaluated.
+    # Write code to a temporary file
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.v', prefix='verilog_', delete=False) as f:
+        f.write(code)
+        candidate_path = f.name
 
-    Returns:
-        A dictionary with keys: 'accuracy', 'line_count', 'combined_score', 'error'.
-    """
+    executable_path = candidate_path + ".out"
+    testbench_path = os.path.join(_SCRIPT_DIR, "testbench.sv")
+    ref_path = os.path.join(_SCRIPT_DIR, "ref.sv")
+
     try:
-        # Create a temporary Verilog file
-        with open("candidate.sv", "w") as f:
-            f.write(code)
+        # Compile
+        compile_cmd = ["iverilog", "-g2012", "-o", executable_path, candidate_path, testbench_path, ref_path]
+        try:
+            subprocess.check_output(compile_cmd, stderr=subprocess.STDOUT, timeout=10)
+        except subprocess.CalledProcessError as e:
+            error_msg = e.output.decode() if e.output else "Unknown compilation error"
+            line_count = len(code.strip().splitlines())
+            # Partial credit: give evolution a gradient even on compile failure
+            partial_score = 0.0
+            if line_count > 0 and "module" in code.lower():
+                partial_score = 0.05  # Has valid-looking Verilog structure
+            if "TopModule" in code:
+                partial_score = 0.1   # Correct module name
+            return {
+                "accuracy": 0.0,
+                "line_count": line_count,
+                "combined_score": partial_score,
+                "error": f"Compilation failed:\n{error_msg}"
+            }
 
-        # Run iverilog
-        iverilog_cmd = ["iverilog", "-g2012", "-o", "sim", "candidate.sv", "testbench.sv", "ref.sv"]
-        iverilog_result = subprocess.run(iverilog_cmd, capture_output=True, text=True)
+        # Run
+        run_cmd = ["vvp", executable_path]
+        try:
+            output = subprocess.check_output(run_cmd, stderr=subprocess.STDOUT, timeout=10).decode()
+        except subprocess.CalledProcessError as e:
+            error_msg = e.output.decode() if e.output else "Unknown runtime error"
+            return {
+                "accuracy": 0.0,
+                "line_count": len(code.strip().splitlines()),
+                "combined_score": 0.15,  # Compiled but runtime error
+                "error": f"Runtime error:\n{error_msg}"
+            }
 
-        if iverilog_result.returncode != 0:
-            return {"accuracy": 0.0, "line_count": len(code.splitlines()), "combined_score": 0.0, "error": iverilog_result.stderr}
-
-        # Run the simulation
-        sim_cmd = ["vvp", "sim"]
-        sim_result = subprocess.run(sim_cmd, capture_output=True, text=True)
-
-        # Parse the simulation output
-        output = sim_result.stdout
-        accuracy = 1.0
-        errors = 0
-        mismatches = 0
-        errors_f = 0
-
-        if "FAIL" in output:
-            accuracy = 0.0
-
-        # Attempt to parse mismatch counts
-        match = re.search(r"Mismatches: (\d+) in (\d+)", output)
-        if match:
-            errors = int(match.group(1))
-            mismatches = int(match.group(2))
-        
-        match_f = re.search(r"errors_f = (\d+)", output)
-        if match_f:
-            errors_f = int(match_f.group(1))
-
-
-        if "TIMEOUT" in output:
-            accuracy = 0.0
-
-        if errors == 0 and mismatches == 0 and errors_f == 0:
+        # Parse Output
+        accuracy = 0.0
+        if "PASS" in output:
             accuracy = 1.0
+        elif "Mismatches:" in output:
+            # Parse specific counts if available
+            match = re.search(r"Mismatches: (\d+) in (\d+)", output)
+            if match:
+                errors = int(match.group(1))
+                total = int(match.group(2))
+                accuracy = 1.0 - (errors / total)
+        elif "TIMEOUT" in output:
+            accuracy = 0.0
 
-        if accuracy == 0.0 and errors > 0:
-            accuracy = 1.0 - (errors / mismatches) if mismatches > 0 else 0.0
+        # Calculate Score
+        line_count = len(code.strip().splitlines())
+        combined_score = accuracy
+        # bonus for conciseness only if correct
+        if accuracy == 1.0:
+            combined_score += max(0, (100 - line_count) / 1000.0)
 
-        # Calculate combined score (simple average of accuracy and line count normalization)
-        line_count = len(code.splitlines())
-        combined_score = (accuracy + (line_count / 100.0)) / 2.0  # Normalize line count
-
-        return {"accuracy": accuracy, "line_count": line_count, "combined_score": combined_score, "error": ""}
-
+        return {
+            "accuracy": accuracy,
+            "line_count": line_count,
+            "combined_score": combined_score,
+            "error": None
+        }
     except Exception as e:
         return {"accuracy": 0.0, "line_count": 0, "combined_score": 0.0, "error": str(e)}
     finally:
-        # Clean up temporary files
-        import os
-        try:
-            os.remove("candidate.sv")
-            os.remove("sim")
-        except FileNotFoundError:
-            pass
+        if os.path.exists(candidate_path):
+            os.remove(candidate_path)
+        if os.path.exists(executable_path):
+            os.remove(executable_path)
