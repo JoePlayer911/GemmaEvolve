@@ -1,0 +1,2292 @@
+[
+  {
+    "problem": "Prob001_zero",
+    "baseline": {
+      "score": 1.093,
+      "accuracy": 1.0,
+      "time": 12.167983293533325,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob001_zero/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob002_m2014_q4i",
+    "baseline": {
+      "score": 1.093,
+      "accuracy": 1.0,
+      "time": 11.728802919387817,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob002_m2014_q4i/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob003_step_one",
+    "baseline": {
+      "score": 1.093,
+      "accuracy": 1.0,
+      "time": 12.864327430725098,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob003_step_one/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob004_vector2",
+    "baseline": {
+      "score": 0.009090909090909038,
+      "accuracy": 0.009090909090909038,
+      "time": 39.782686948776245,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob004_vector2/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.079,
+      "accuracy": 1.0,
+      "time": 48.141517877578735,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob004_vector2_20260227_145845.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob005_notgate",
+    "baseline": {
+      "score": 1.092,
+      "accuracy": 1.0,
+      "time": 13.841373920440674,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob005_notgate/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob006_vectorr",
+    "baseline": {
+      "score": 1.085,
+      "accuracy": 1.0,
+      "time": 47.88167715072632,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob006_vectorr/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob007_wire",
+    "baseline": {
+      "score": 1.092,
+      "accuracy": 1.0,
+      "time": 13.67616319656372,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob007_wire/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob008_m2014_q4h",
+    "baseline": {
+      "score": 1.092,
+      "accuracy": 1.0,
+      "time": 13.945462226867676,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob008_m2014_q4h/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob009_popcount3",
+    "baseline": {
+      "score": 0.2272727272727273,
+      "accuracy": 0.2272727272727273,
+      "time": 33.736053705215454,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob009_popcount3/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.086,
+      "accuracy": 1.0,
+      "time": 62.301934003829956,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob009_popcount3_20260227_150136.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob010_mt2015_q4a",
+    "baseline": {
+      "score": 1.091,
+      "accuracy": 1.0,
+      "time": 17.232078552246094,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob010_mt2015_q4a/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob011_norgate",
+    "baseline": {
+      "score": 1.091,
+      "accuracy": 1.0,
+      "time": 16.163708686828613,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob011_norgate/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob012_xnorgate",
+    "baseline": {
+      "score": 1.091,
+      "accuracy": 1.0,
+      "time": 16.062448024749756,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob012_xnorgate/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob013_m2014_q4e",
+    "baseline": {
+      "score": 0.39,
+      "accuracy": 0.39,
+      "time": 17.68541407585144,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob013_m2014_q4e/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.091,
+      "accuracy": 1.0,
+      "time": 23.431910037994385,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob013_m2014_q4e_20260227_150346.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob014_andgate",
+    "baseline": {
+      "score": 1.091,
+      "accuracy": 1.0,
+      "time": 15.781165838241577,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob014_andgate/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob015_vector1",
+    "baseline": {
+      "score": 1.09,
+      "accuracy": 1.0,
+      "time": 29.711126804351807,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob015_vector1/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob016_m2014_q4j",
+    "baseline": {
+      "score": 0.61,
+      "accuracy": 0.61,
+      "time": 59.66629600524902,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob016_m2014_q4j/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.76,
+      "accuracy": 0.76,
+      "time": 2474.478892326355,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob016_m2014_q4j_20260227_150554.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob017_mux2to1v",
+    "baseline": {
+      "score": 1.09,
+      "accuracy": 1.0,
+      "time": 23.96529245376587,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob017_mux2to1v/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob018_mux256to1",
+    "baseline": {
+      "score": 1.091,
+      "accuracy": 1.0,
+      "time": 20.96802020072937,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob018_mux256to1/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob019_m2014_q4f",
+    "baseline": {
+      "score": 1.091,
+      "accuracy": 1.0,
+      "time": 17.89222526550293,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob019_m2014_q4f/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob020_mt2015_eq2",
+    "baseline": {
+      "score": 1.091,
+      "accuracy": 1.0,
+      "time": 19.48697853088379,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob020_mt2015_eq2/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob021_mux256to1v",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 30.66360092163086,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob021_mux256to1v/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.087,
+      "accuracy": 1.0,
+      "time": 66.6637134552002,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob021_mux256to1v_20260227_154902.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob022_mux2to1",
+    "baseline": {
+      "score": 1.09,
+      "accuracy": 1.0,
+      "time": 18.235339403152466,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob022_mux2to1/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob023_vector100r",
+    "baseline": {
+      "score": 1.087,
+      "accuracy": 1.0,
+      "time": 33.67102861404419,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob023_vector100r/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob024_hadd",
+    "baseline": {
+      "score": 1.089,
+      "accuracy": 1.0,
+      "time": 20.432764530181885,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob024_hadd/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob025_reduction",
+    "baseline": {
+      "score": 1.092,
+      "accuracy": 1.0,
+      "time": 27.627185344696045,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob025_reduction/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob026_alwaysblock1",
+    "baseline": {
+      "score": 1.086,
+      "accuracy": 1.0,
+      "time": 26.991012573242188,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob026_alwaysblock1/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob027_fadd",
+    "baseline": {
+      "score": 1.088,
+      "accuracy": 1.0,
+      "time": 27.195884466171265,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob027_fadd/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob028_m2014_q4a",
+    "baseline": {
+      "score": 1.091,
+      "accuracy": 1.0,
+      "time": 16.73405909538269,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob028_m2014_q4a/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob029_m2014_q4g",
+    "baseline": {
+      "score": 0.43999999999999995,
+      "accuracy": 0.43999999999999995,
+      "time": 30.912298440933228,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob029_m2014_q4g/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.088,
+      "accuracy": 1.0,
+      "time": 21.62230682373047,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob029_m2014_q4g_20260227_155331.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob030_popcount255",
+    "baseline": {
+      "score": 1.09,
+      "accuracy": 1.0,
+      "time": 3.703540802001953,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob030_popcount255/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob031_dff",
+    "baseline": {
+      "score": 1.089,
+      "accuracy": 1.0,
+      "time": 2.994077444076538,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob031_dff/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob032_vector0",
+    "baseline": {
+      "score": 1.086,
+      "accuracy": 1.0,
+      "time": 5.144404649734497,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob032_vector0/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob033_ece241_2014_q1c",
+    "baseline": {
+      "score": 1.088,
+      "accuracy": 1.0,
+      "time": 4.90587854385376,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob033_ece241_2014_q1c/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob034_dff8",
+    "baseline": {
+      "score": 1.089,
+      "accuracy": 1.0,
+      "time": 3.5488789081573486,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob034_dff8/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob035_count1to10",
+    "baseline": {
+      "score": 1.081,
+      "accuracy": 1.0,
+      "time": 6.265937328338623,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob035_count1to10/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob036_ringer",
+    "baseline": {
+      "score": 1.089,
+      "accuracy": 1.0,
+      "time": 3.401940107345581,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob036_ringer/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob037_review2015_count1k",
+    "baseline": {
+      "score": 1.077,
+      "accuracy": 1.0,
+      "time": 6.750542402267456,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob037_review2015_count1k/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob038_count15",
+    "baseline": {
+      "score": 0.5605700712589073,
+      "accuracy": 0.5605700712589073,
+      "time": 5.235838413238525,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob038_count15/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.5605700712589073,
+      "accuracy": 0.5605700712589073,
+      "time": 1148.3326625823975,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob038_count15_20260228_142512.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob039_always_if",
+    "baseline": {
+      "score": 1.08,
+      "accuracy": 1.0,
+      "time": 6.949687242507935,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob039_always_if/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob040_count10",
+    "baseline": {
+      "score": 0.5785876993166287,
+      "accuracy": 0.5785876993166287,
+      "time": 6.987095355987549,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob040_count10/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.5785876993166287,
+      "accuracy": 0.5785876993166287,
+      "time": 1297.0007016658783,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob040_count10_20260228_144437.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob041_dff8r",
+    "baseline": {
+      "score": 0.9050925925925926,
+      "accuracy": 0.9050925925925926,
+      "time": 5.5783398151397705,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob041_dff8r/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.084,
+      "accuracy": 1.0,
+      "time": 203.96687150001526,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob041_dff8r_20260228_150622.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob042_vector4",
+    "baseline": {
+      "score": 1.091,
+      "accuracy": 1.0,
+      "time": 3.714977741241455,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob042_vector4/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob043_vector5",
+    "baseline": {
+      "score": 0.06000000000000005,
+      "accuracy": 0.06000000000000005,
+      "time": 21.020945072174072,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob043_vector5/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.06000000000000005,
+      "accuracy": 0.06000000000000005,
+      "time": 2119.2490463256836,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob043_vector5_20260228_151014.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob044_vectorgates",
+    "baseline": {
+      "score": 0.8045977011494253,
+      "accuracy": 0.8045977011494253,
+      "time": 6.420012712478638,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob044_vectorgates/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.8045977011494253,
+      "accuracy": 0.8045977011494253,
+      "time": 997.8815212249756,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob044_vectorgates_20260228_154543.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob045_edgedetect2",
+    "baseline": {
+      "score": 1.081,
+      "accuracy": 1.0,
+      "time": 7.122650146484375,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob045_edgedetect2/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob046_dff8p",
+    "baseline": {
+      "score": 0.07110091743119262,
+      "accuracy": 0.07110091743119262,
+      "time": 5.193175315856934,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob046_dff8p/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.07110091743119262,
+      "accuracy": 0.07110091743119262,
+      "time": 1088.7533566951752,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob046_dff8p_20260228_160236.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob047_dff8ar",
+    "baseline": {
+      "score": 1.084,
+      "accuracy": 1.0,
+      "time": 5.565571069717407,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob047_dff8ar/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob048_m2014_q4c",
+    "baseline": {
+      "score": 1.084,
+      "accuracy": 1.0,
+      "time": 4.3095550537109375,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob048_m2014_q4c/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob049_m2014_q4b",
+    "baseline": {
+      "score": 1.084,
+      "accuracy": 1.0,
+      "time": 4.508691072463989,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob049_m2014_q4b/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob050_kmap1",
+    "baseline": {
+      "score": 0.8904109589041096,
+      "accuracy": 0.8904109589041096,
+      "time": 2.4736361503601074,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob050_kmap1/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.8904109589041096,
+      "accuracy": 0.8904109589041096,
+      "time": 441.3733341693878,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob050_kmap1_20260228_162104.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob051_gates4",
+    "baseline": {
+      "score": 1.088,
+      "accuracy": 1.0,
+      "time": 6.395433664321899,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob051_gates4/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob052_gates100",
+    "baseline": {
+      "score": 1.088,
+      "accuracy": 1.0,
+      "time": 3.9991989135742188,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob052_gates100/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob053_m2014_q4d",
+    "baseline": {
+      "score": 0.99,
+      "accuracy": 0.99,
+      "time": 4.0676915645599365,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob053_m2014_q4d/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.99,
+      "accuracy": 0.99,
+      "time": 577.4819033145905,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob053_m2014_q4d_20260228_162843.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob054_edgedetect",
+    "baseline": {
+      "score": 0.22466960352422904,
+      "accuracy": 0.22466960352422904,
+      "time": 10.055724382400513,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob054_edgedetect/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.079,
+      "accuracy": 1.0,
+      "time": 59.57072424888611,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob054_edgedetect_20260228_163834.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob055_conditional",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 8.767822742462158,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob055_conditional/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.08,
+      "accuracy": 1.0,
+      "time": 32.19776701927185,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob055_conditional_20260228_163945.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob056_ece241_2013_q7",
+    "baseline": {
+      "score": 1.076,
+      "accuracy": 1.0,
+      "time": 8.750212907791138,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob056_ece241_2013_q7/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob057_kmap2",
+    "baseline": {
+      "score": 0.6293103448275862,
+      "accuracy": 0.6293103448275862,
+      "time": 4.890429496765137,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob057_kmap2/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.6293103448275862,
+      "accuracy": 0.6293103448275862,
+      "time": 313.63984274864197,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob057_kmap2_20260228_172620.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob058_alwaysblock2",
+    "baseline": {
+      "score": 1.077,
+      "accuracy": 1.0,
+      "time": 8.19335412979126,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob058_alwaysblock2/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob059_wire4",
+    "baseline": {
+      "score": 1.084,
+      "accuracy": 1.0,
+      "time": 4.434663534164429,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob059_wire4/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob060_m2014_q4k",
+    "baseline": {
+      "score": 0.5618729096989967,
+      "accuracy": 0.5618729096989967,
+      "time": 6.735652446746826,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob060_m2014_q4k/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.9531772575250836,
+      "accuracy": 0.9531772575250836,
+      "time": 1080.3809525966644,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob060_m2014_q4k_20260228_173156.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob061_2014_q4a",
+    "baseline": {
+      "score": 0.87,
+      "accuracy": 0.87,
+      "time": 5.792377948760986,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob061_2014_q4a/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.77,
+      "accuracy": 0.77,
+      "time": 435.9918837547302,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob061_2014_q4a_20260228_175006.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob062_bugs_mux2",
+    "baseline": {
+      "score": 0.02631578947368418,
+      "accuracy": 0.02631578947368418,
+      "time": 5.128765106201172,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob062_bugs_mux2/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.02631578947368418,
+      "accuracy": 0.02631578947368418,
+      "time": 278.8777115345001,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob062_bugs_mux2_20260228_175730.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob063_review2015_shiftcount",
+    "baseline": {
+      "score": 0.0004828585224528892,
+      "accuracy": 0.0004828585224528892,
+      "time": 9.927704572677612,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob063_review2015_shiftcount/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.0893288266537905,
+      "accuracy": 0.0893288266537905,
+      "time": 714.5640239715576,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob063_review2015_shiftcount_20260228_180222.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob064_vector3",
+    "baseline": {
+      "score": 0.0,
+      "accuracy": 0.0,
+      "time": 16.651864051818848,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob064_vector3/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.077,
+      "accuracy": 1.0,
+      "time": 37.27682590484619,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob064_vector3_20260228_181436.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob065_7420",
+    "baseline": {
+      "score": 1.083,
+      "accuracy": 1.0,
+      "time": 7.431422710418701,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob065_7420/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob066_edgecapture",
+    "baseline": {
+      "score": 0.5601503759398496,
+      "accuracy": 0.5601503759398496,
+      "time": 7.791947603225708,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob066_edgecapture/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.6578947368421053,
+      "accuracy": 0.6578947368421053,
+      "time": 693.5913360118866,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob066_edgecapture_20260228_213512.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob067_countslow",
+    "baseline": {
+      "score": 0.7034068136272544,
+      "accuracy": 0.7034068136272544,
+      "time": 7.670671701431274,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob067_countslow/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.074,
+      "accuracy": 1.0,
+      "time": 30.60985541343689,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob067_countslow_20260228_214656.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob068_countbcd",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 29.533949851989746,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob068_countbcd/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 1750.8689153194427,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob068_countbcd_20260228_214759.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob069_truthtable1",
+    "baseline": {
+      "score": 1.09,
+      "accuracy": 1.0,
+      "time": 5.431415557861328,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob069_truthtable1/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob070_ece241_2013_q2",
+    "baseline": {
+      "score": 0.6728971962616823,
+      "accuracy": 0.6728971962616823,
+      "time": 7.192072153091431,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob070_ece241_2013_q2/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.794392523364486,
+      "accuracy": 0.794392523364486,
+      "time": 357.57755947113037,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob070_ece241_2013_q2_20260228_221726.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob071_always_casez",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 5.481619119644165,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob071_always_casez/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.085,
+      "accuracy": 1.0,
+      "time": 49.765265703201294,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob071_always_casez_20260228_222332.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob072_thermostat",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 7.278118848800659,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob072_thermostat/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.085,
+      "accuracy": 1.0,
+      "time": 679.944137096405,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob072_thermostat_20260228_222432.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob073_dff16e",
+    "baseline": {
+      "score": 0.5553047404063205,
+      "accuracy": 0.5553047404063205,
+      "time": 8.266037225723267,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob073_dff16e/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.9977426636568849,
+      "accuracy": 0.9977426636568849,
+      "time": 661.6470654010773,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob073_dff16e_20260228_223603.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob074_ece241_2014_q4",
+    "baseline": {
+      "score": 0.6186440677966102,
+      "accuracy": 0.6186440677966102,
+      "time": 5.939860105514526,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob074_ece241_2014_q4/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.7542372881355932,
+      "accuracy": 0.7542372881355932,
+      "time": 702.5407724380493,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob074_ece241_2014_q4_20260228_224713.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob075_counter_2bc",
+    "baseline": {
+      "score": 0.2321598477640342,
+      "accuracy": 0.2321598477640342,
+      "time": 12.989958763122559,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob075_counter_2bc/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.2454804947668887,
+      "accuracy": 0.2454804947668887,
+      "time": 861.909830570221,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob075_counter_2bc_20260228_225911.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob076_always_case",
+    "baseline": {
+      "score": 1.07,
+      "accuracy": 1.0,
+      "time": 13.347744226455688,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob076_always_case/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob077_wire_decl",
+    "baseline": {
+      "score": 1.087,
+      "accuracy": 1.0,
+      "time": 4.17614483833313,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob077_wire_decl/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob078_dualedge",
+    "baseline": {
+      "score": 1.089,
+      "accuracy": 1.0,
+      "time": 3.2338860034942627,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob078_dualedge/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob079_fsm3onehot",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 20.11708903312683,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob079_fsm3onehot/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.25,
+      "accuracy": 0.25,
+      "time": 1373.786410331726,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob079_fsm3onehot_20260228_231417.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob080_timer",
+    "baseline": {
+      "score": 0.9814788831205276,
+      "accuracy": 0.9814788831205276,
+      "time": 8.640942096710205,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob080_timer/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.9814788831205276,
+      "accuracy": 0.9814788831205276,
+      "time": 622.4580278396606,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob080_timer_20260228_233722.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob081_7458",
+    "baseline": {
+      "score": 1.081,
+      "accuracy": 1.0,
+      "time": 9.050179958343506,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob081_7458/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob082_lfsr32",
+    "baseline": {
+      "score": 0.00023499999999998522,
+      "accuracy": 0.00023499999999998522,
+      "time": 43.18012738227844,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob082_lfsr32/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.00023499999999998522,
+      "accuracy": 0.00023499999999998522,
+      "time": 692.9764199256897,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob082_lfsr32_20260228_234842.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob083_mt2015_q4b",
+    "baseline": {
+      "score": 1.091,
+      "accuracy": 1.0,
+      "time": 3.3809263706207275,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob083_mt2015_q4b/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob084_ece241_2013_q12",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 17.179046630859375,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob084_ece241_2013_q12/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.067,
+      "accuracy": 1.0,
+      "time": 44.26327443122864,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob084_ece241_2013_q12_20260301_000039.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob085_shift4",
+    "baseline": {
+      "score": 0.8290398126463701,
+      "accuracy": 0.8290398126463701,
+      "time": 7.710330486297607,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob085_shift4/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.8290398126463701,
+      "accuracy": 0.8290398126463701,
+      "time": 485.51433420181274,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob085_shift4_20260301_000133.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob086_lfsr5",
+    "baseline": {
+      "score": 0.03308575286968263,
+      "accuracy": 0.03308575286968263,
+      "time": 10.071924924850464,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob086_lfsr5/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.03308575286968263,
+      "accuracy": 0.03308575286968263,
+      "time": 720.8193905353546,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob086_lfsr5_20260301_000952.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob087_gates",
+    "baseline": {
+      "score": 1.079,
+      "accuracy": 1.0,
+      "time": 9.046483755111694,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob087_gates/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob088_ece241_2014_q5b",
+    "baseline": {
+      "score": 0.0,
+      "accuracy": 0.0,
+      "time": 18.624075174331665,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob088_ece241_2014_q5b/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.481651376146789,
+      "accuracy": 0.481651376146789,
+      "time": 1004.4142410755157,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob088_ece241_2014_q5b_20260301_002223.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob089_ece241_2014_q5a",
+    "baseline": {
+      "score": 0.5435779816513762,
+      "accuracy": 0.5435779816513762,
+      "time": 21.22449278831482,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob089_ece241_2014_q5a/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.9357798165137614,
+      "accuracy": 0.9357798165137614,
+      "time": 965.2069833278656,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob089_ece241_2014_q5a_20260301_003932.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob090_circuit1",
+    "baseline": {
+      "score": 1.091,
+      "accuracy": 1.0,
+      "time": 2.2909510135650635,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob090_circuit1/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob091_2012_q2b",
+    "baseline": {
+      "score": 0.16500000000000004,
+      "accuracy": 0.16500000000000004,
+      "time": 9.32801365852356,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob091_2012_q2b/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.5433333333333333,
+      "accuracy": 0.5433333333333333,
+      "time": 1933.8705434799194,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob091_2012_q2b_20260301_005552.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob092_gatesv100",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 17.979135036468506,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob092_gatesv100/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 1182.2107737064362,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob092_gatesv100_20260301_012826.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob093_ece241_2014_q3",
+    "baseline": {
+      "score": 0.2666666666666667,
+      "accuracy": 0.2666666666666667,
+      "time": 5.677945137023926,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob093_ece241_2014_q3/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.44999999999999996,
+      "accuracy": 0.44999999999999996,
+      "time": 1690.9195473194122,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob093_ece241_2014_q3_20260301_014817.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob094_gatesv",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 16.158961296081543,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob094_gatesv/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 1185.2551794052124,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob094_gatesv_20260301_021647.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob095_review2015_fsmshift",
+    "baseline": {
+      "score": 0.49,
+      "accuracy": 0.49,
+      "time": 9.174835920333862,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob095_review2015_fsmshift/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.5549999999999999,
+      "accuracy": 0.5549999999999999,
+      "time": 1357.127056837082,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob095_review2015_fsmshift_20260301_023645.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob096_review2015_fsmseq",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 28.104005098342896,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob096_review2015_fsmseq/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.9004665629860031,
+      "accuracy": 0.9004665629860031,
+      "time": 1182.2844183444977,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob096_review2015_fsmseq_20260301_025953.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob097_mux9to1v",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 17.561249256134033,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob097_mux9to1v/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 1.07,
+      "accuracy": 1.0,
+      "time": 107.59971857070923,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob097_mux9to1v_20260301_031955.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob098_circuit7",
+    "baseline": {
+      "score": 1.085,
+      "accuracy": 1.0,
+      "time": 4.9112114906311035,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob098_circuit7/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob099_m2014_q6c",
+    "baseline": {
+      "score": 0.30000000000000004,
+      "accuracy": 0.30000000000000004,
+      "time": 3.652022361755371,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob099_m2014_q6c/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.575,
+      "accuracy": 0.575,
+      "time": 410.3138358592987,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob099_m2014_q6c_20260301_032154.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob100_fsm3comb",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 14.556723833084106,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob100_fsm3comb/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 1083.032722234726,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob100_fsm3comb_20260301_032902.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob101_circuit4",
+    "baseline": {
+      "score": 0.6611570247933884,
+      "accuracy": 0.6611570247933884,
+      "time": 3.6557514667510986,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob101_circuit4/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.8181818181818181,
+      "accuracy": 0.8181818181818181,
+      "time": 402.8143947124481,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob101_circuit4_20260301_034712.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob102_circuit3",
+    "baseline": {
+      "score": 0.6115702479338843,
+      "accuracy": 0.6115702479338843,
+      "time": 3.266866683959961,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob102_circuit3/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.6694214876033058,
+      "accuracy": 0.6694214876033058,
+      "time": 272.39981412887573,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob102_circuit3_20260301_035401.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob103_circuit2",
+    "baseline": {
+      "score": 0.47933884297520657,
+      "accuracy": 0.47933884297520657,
+      "time": 4.388508319854736,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob103_circuit2/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.6115702479338843,
+      "accuracy": 0.6115702479338843,
+      "time": 475.17966175079346,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob103_circuit2_20260301_035840.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob104_mt2015_muxdff",
+    "baseline": {
+      "score": 0.7537688442211055,
+      "accuracy": 0.7537688442211055,
+      "time": 9.201401472091675,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob104_mt2015_muxdff/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.6934673366834171,
+      "accuracy": 0.6934673366834171,
+      "time": 523.4305329322815,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob104_mt2015_muxdff_20260301_040648.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob105_rotate100",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 12.412686824798584,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob105_rotate100/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.17802746566791505,
+      "accuracy": 0.17802746566791505,
+      "time": 931.4635472297668,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob105_rotate100_20260301_041547.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob106_always_nolatches",
+    "baseline": {
+      "score": 0.9996335776149233,
+      "accuracy": 0.9996335776149233,
+      "time": 16.15597367286682,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob106_always_nolatches/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.9997001998667555,
+      "accuracy": 0.9997001998667555,
+      "time": 1072.472734451294,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob106_always_nolatches_20260301_043137.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob107_fsm1s",
+    "baseline": {
+      "score": 1.064,
+      "accuracy": 1.0,
+      "time": 12.062831401824951,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob107_fsm1s/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob108_rule90",
+    "baseline": {
+      "score": 0.009127931470299111,
+      "accuracy": 0.009127931470299111,
+      "time": 14.27768588066101,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob108_rule90/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 1348.6422264575958,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob108_rule90_20260301_045002.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob109_fsm1",
+    "baseline": {
+      "score": 1.064,
+      "accuracy": 1.0,
+      "time": 13.00934886932373,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob109_fsm1/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob110_fsm2",
+    "baseline": {
+      "score": 1.071,
+      "accuracy": 1.0,
+      "time": 9.31196928024292,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob110_fsm2/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob111_fsm2s",
+    "baseline": {
+      "score": 1.056,
+      "accuracy": 1.0,
+      "time": 13.140370607376099,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob111_fsm2s/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob112_always_case2",
+    "baseline": {
+      "score": 0.35106382978723405,
+      "accuracy": 0.35106382978723405,
+      "time": 9.066596746444702,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob112_always_case2/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.35106382978723405,
+      "accuracy": 0.35106382978723405,
+      "time": 482.6756856441498,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob112_always_case2_20260301_051319.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob113_2012_q1g",
+    "baseline": {
+      "score": 0.38,
+      "accuracy": 0.38,
+      "time": 4.917076110839844,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob113_2012_q1g/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.76,
+      "accuracy": 0.76,
+      "time": 554.8400828838348,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob113_2012_q1g_20260301_052129.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob114_bugs_case",
+    "baseline": {
+      "score": 1.056,
+      "accuracy": 1.0,
+      "time": 22.573129892349243,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob114_bugs_case/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob115_shift18",
+    "baseline": {
+      "score": 0.1942588468200941,
+      "accuracy": 0.1942588468200941,
+      "time": 16.974385499954224,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob115_shift18/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.21653056174214302,
+      "accuracy": 0.21653056174214302,
+      "time": 1809.9675617218018,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob115_shift18_20260301_053127.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob116_m2014_q3",
+    "baseline": {
+      "score": 0.8200000000000001,
+      "accuracy": 0.8200000000000001,
+      "time": 5.4468348026275635,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob116_m2014_q3/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.87,
+      "accuracy": 0.87,
+      "time": 709.1133587360382,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob116_m2014_q3_20260301_060145.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob117_circuit9",
+    "baseline": {
+      "score": 0.13469387755102036,
+      "accuracy": 0.13469387755102036,
+      "time": 5.204983949661255,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob117_circuit9/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.13469387755102036,
+      "accuracy": 0.13469387755102036,
+      "time": 406.84905099868774,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob117_circuit9_20260301_061343.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob118_history_shift",
+    "baseline": {
+      "score": 0.0720194647201946,
+      "accuracy": 0.0720194647201946,
+      "time": 12.22603726387024,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob118_history_shift/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.0695863746958637,
+      "accuracy": 0.0695863746958637,
+      "time": 793.8052253723145,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob118_history_shift_20260301_062045.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob119_fsm3",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 19.816439390182495,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob119_fsm3/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.6,
+      "accuracy": 0.6,
+      "time": 982.3606107234955,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob119_fsm3_20260301_063421.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob120_fsm3s",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 24.56662678718567,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob120_fsm3s/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.6956521739130435,
+      "accuracy": 0.6956521739130435,
+      "time": 1323.7499754428864,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob120_fsm3s_20260301_065111.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob121_2014_q3bfsm",
+    "baseline": {
+      "score": 0.5984095427435387,
+      "accuracy": 0.5984095427435387,
+      "time": 17.619316816329956,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob121_2014_q3bfsm/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.588469184890656,
+      "accuracy": 0.588469184890656,
+      "time": 1308.0134165287018,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob121_2014_q3bfsm_20260301_071335.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob122_kmap4",
+    "baseline": {
+      "score": 0.2844827586206896,
+      "accuracy": 0.2844827586206896,
+      "time": 4.680341482162476,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob122_kmap4/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.5603448275862069,
+      "accuracy": 0.5603448275862069,
+      "time": 304.50501918792725,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob122_kmap4_20260301_073531.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob123_bugs_addsubz",
+    "baseline": {
+      "score": 1.074,
+      "accuracy": 1.0,
+      "time": 9.768762350082397,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob123_bugs_addsubz/baseline_generated.v"
+    },
+    "openevolve": "skipped",
+    "gemma_solved": true
+  },
+  {
+    "problem": "Prob124_rule110",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 24.90699052810669,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob124_rule110/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 3340.591005086899,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob124_rule110_20260301_074113.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob125_kmap3",
+    "baseline": {
+      "score": 0.75,
+      "accuracy": 0.75,
+      "time": 6.4477128982543945,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob125_kmap3/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.8491379310344828,
+      "accuracy": 0.8491379310344828,
+      "time": 360.1247045993805,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob125_kmap3_20260301_083703.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob126_circuit6",
+    "baseline": {
+      "score": 0.026548672566371723,
+      "accuracy": 0.026548672566371723,
+      "time": 17.771981477737427,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob126_circuit6/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.026548672566371723,
+      "accuracy": 0.026548672566371723,
+      "time": 800.0674157142639,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob126_circuit6_20260301_084324.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob127_lemmings1",
+    "baseline": {
+      "score": 0.6637554585152838,
+      "accuracy": 0.6637554585152838,
+      "time": 9.362534523010254,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob127_lemmings1/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.6637554585152838,
+      "accuracy": 0.6637554585152838,
+      "time": 763.5819430351257,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob127_lemmings1_20260301_085656.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob128_fsm_ps2",
+    "baseline": {
+      "score": 0.39249999999999996,
+      "accuracy": 0.39249999999999996,
+      "time": 14.853821754455566,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob128_fsm_ps2/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.40249999999999997,
+      "accuracy": 0.40249999999999997,
+      "time": 807.9425239562988,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob128_fsm_ps2_20260301_090958.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob143_fsm_onehot",
+    "baseline": {
+      "score": 0.3883928571428571,
+      "accuracy": 0.3883928571428571,
+      "time": 45.94058346748352,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob143_fsm_onehot/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.4241071428571429,
+      "accuracy": 0.4241071428571429,
+      "time": 3965.5098769664764,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob143_fsm_onehot_20260301_143347.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob144_conwaylife",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 32.158185958862305,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob144_conwaylife/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 1851.4589705467224,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob144_conwaylife_20260301_154028.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob145_circuit8",
+    "baseline": {
+      "score": 0.4,
+      "accuracy": 0.4,
+      "time": 6.516411304473877,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob145_circuit8/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.4,
+      "accuracy": 0.4,
+      "time": 481.6243009567261,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob145_circuit8_20260301_161129.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob146_fsm_serialdata",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 35.39535140991211,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob146_fsm_serialdata/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.958011049723757,
+      "accuracy": 0.958011049723757,
+      "time": 3130.091061115265,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob146_fsm_serialdata_20260301_162010.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob147_circuit10",
+    "baseline": {
+      "score": 0.43103448275862066,
+      "accuracy": 0.43103448275862066,
+      "time": 6.824514150619507,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob147_circuit10/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.9051724137931034,
+      "accuracy": 0.9051724137931034,
+      "time": 616.6629130840302,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob147_circuit10_20260301_171230.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob149_ece241_2013_q4",
+    "baseline": {
+      "score": 0.3122549019607843,
+      "accuracy": 0.3122549019607843,
+      "time": 47.47550320625305,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob149_ece241_2013_q4/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.4259803921568628,
+      "accuracy": 0.4259803921568628,
+      "time": 2790.3308429718018,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob149_ece241_2013_q4_20260301_191623.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob151_review2015_fsm",
+    "baseline": {
+      "score": 0.0,
+      "accuracy": 0.0,
+      "time": 0.0,
+      "mode": "pure_gemma_error"
+    },
+    "openevolve": {
+      "score": 0.0,
+      "accuracy": 0.0,
+      "time": 0.0,
+      "mode": "openevolve_error",
+      "log": "logs/completion_Prob151_review2015_fsm_20260301_201159.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob152_lemmings3",
+    "baseline": {
+      "score": 0.0,
+      "accuracy": 0.0,
+      "time": 0.0,
+      "mode": "pure_gemma_error"
+    },
+    "openevolve": {
+      "score": 0.0,
+      "accuracy": 0.0,
+      "time": 0.0,
+      "mode": "openevolve_error",
+      "log": "logs/completion_Prob152_lemmings3_20260301_201204.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob151_review2015_fsm",
+    "baseline": {
+      "score": 0.8327086210297889,
+      "accuracy": 0.8327086210297889,
+      "time": 48.26080918312073,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob151_review2015_fsm/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.8504636022884198,
+      "accuracy": 0.8504636022884198,
+      "time": 6519.873796463013,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob151_review2015_fsm_20260301_201310.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob152_lemmings3",
+    "baseline": {
+      "score": 0.6749435665914221,
+      "accuracy": 0.6749435665914221,
+      "time": 31.131399393081665,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob152_lemmings3/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.6749435665914221,
+      "accuracy": 0.6749435665914221,
+      "time": 1723.986052274704,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob152_lemmings3_20260301_220225.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob153_gshare",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 29.915107011795044,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob153_gshare/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.5678670360110804,
+      "accuracy": 0.5678670360110804,
+      "time": 3227.4827785491943,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob153_gshare_20260301_223142.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob154_fsm_ps2data",
+    "baseline": {
+      "score": 0.6133415688696726,
+      "accuracy": 0.6133415688696726,
+      "time": 27.78487777709961,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob154_fsm_ps2data/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.6973440395305744,
+      "accuracy": 0.6973440395305744,
+      "time": 2120.327321767807,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob154_fsm_ps2data_20260301_232600.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob155_lemmings4",
+    "baseline": {
+      "score": 0.09371884346959125,
+      "accuracy": 0.09371884346959125,
+      "time": 23.73640203475952,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob155_lemmings4/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.6899302093718844,
+      "accuracy": 0.6899302093718844,
+      "time": 5209.990179538727,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob155_lemmings4_20260302_000147.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob156_review2015_fancytimer",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 39.06999063491821,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob156_review2015_fancytimer/baseline_generated.v"
+    },
+    "openevolve": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 2447.2692770957947,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob156_review2015_fancytimer_20260302_012920.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  }
+]

@@ -35,19 +35,19 @@ prompt:
 
     Interface:
     module TopModule (
-  input d,
-  input done_counting,
-  input ack,
-  input [9:0] state, // 10-bit one-hot current state
-  output B3_next,
-  output S_next,
-  output S1_next,
-  output Count_next,
-  output Wait_next,
-  output done,
-  output counting,
-  output shift_ena
-);
+      input d,
+      input done_counting,
+      input ack,
+      input [9:0] state, // 10-bit one-hot current state
+      output B3_next,
+      output S_next,
+      output S1_next,
+      output Count_next,
+      output Wait_next,
+      output done,
+      output counting,
+      output shift_ena
+    );
 
     Requirements:
     - Implement the module logic using `assign` statements where possible.
@@ -60,9 +60,9 @@ prompt:
 
 # Database configuration
 database:
-  population_size: 10 
+  population_size: 40 
   archive_size: 5
-  num_islands: 1
+  num_islands: 4
   programs_per_island: 10
   elite_selection_ratio: 0.2
   exploitation_ratio: 0.7

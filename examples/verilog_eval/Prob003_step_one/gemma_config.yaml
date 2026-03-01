@@ -26,9 +26,9 @@ prompt:
   num_diverse_programs: 0
   include_artifacts: false
 database:
-  population_size: 10
+  population_size: 40
   archive_size: 5
-  num_islands: 1
+  num_islands: 4
   programs_per_island: 10
   elite_selection_ratio: 0.2
   exploitation_ratio: 0.7

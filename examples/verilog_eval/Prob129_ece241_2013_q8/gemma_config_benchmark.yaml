@@ -1,0 +1,51 @@
+checkpoint_interval: 10
+database:
+  archive_size: 5
+  elite_selection_ratio: 0.2
+  embedding_model: embedding_models/Nomic-Embed-Code/nomic-embed-code-q5_k_m.gguf
+  exploitation_ratio: 0.7
+  num_islands: 4
+  population_size: 40
+  programs_per_island: 10
+  similarity_threshold: 0.95
+diff_based_evolution: false
+early_stopping_patience: 100
+evaluator:
+  parallel_evaluations: 2
+  timeout: 30
+file_suffix: .v
+language: verilog
+llm:
+  evaluator_models:
+  - max_tokens: 4096
+    model_path: /home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf
+    n_ctx: 8192
+    n_gpu_layers: -1
+    name: gemma-local
+    temperature: 0.7
+    top_p: 0.95
+  models:
+  - max_tokens: 4096
+    model_path: /home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf
+    n_ctx: 8192
+    n_gpu_layers: -1
+    name: gemma-local
+    temperature: 0.7
+    top_p: 0.95
+log_level: INFO
+max_code_length: 5000
+max_iterations: 50
+prompt:
+  include_artifacts: false
+  num_diverse_programs: 0
+  num_top_programs: 0
+  system_message: "You are an expert Hardware Design Engineer. Your task is to implement\
+    \ a Verilog module.\n\nDescription:\nThe problem is to design a 3-state Mealy\
+    \ finite state machine that detects the sequence \"101\" on an input signal 'x'.\
+    \ The FSM should assert an output signal 'z' to logic-1 when the sequence is detected\
+    \ and includes a negative edge-triggered asynchronous reset. The FSM should also\
+    \ recognize overlapping sequences.\n\nInterface:\nmodule TopModule (\n  input\
+    \ clk,\n  input aresetn,\n  input x,\n  output reg z\n);\n\nRequirements:\n- Implement\
+    \ the module logic using `assign` statements where possible.\n- Follow Verilog-2001\
+    \ standards.\n- Output ONLY the Verilog module code.\n"
+target_score: 1.0

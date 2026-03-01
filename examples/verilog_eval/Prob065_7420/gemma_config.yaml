@@ -35,17 +35,17 @@ prompt:
 
     Interface:
     module TopModule (
-  input p1a,
-  input p1b,
-  input p1c,
-  input p1d,
-  output p1y,
-  input p2a,
-  input p2b,
-  input p2c,
-  input p2d,
-  output p2y
-);
+      input p1a,
+      input p1b,
+      input p1c,
+      input p1d,
+      output p1y,
+      input p2a,
+      input p2b,
+      input p2c,
+      input p2d,
+      output p2y
+    );
 
     Requirements:
     - Implement the module logic using `assign` statements where possible.
@@ -58,9 +58,9 @@ prompt:
 
 # Database configuration
 database:
-  population_size: 10 
+  population_size: 40 
   archive_size: 5
-  num_islands: 1
+  num_islands: 4
   programs_per_island: 10
   elite_selection_ratio: 0.2
   exploitation_ratio: 0.7

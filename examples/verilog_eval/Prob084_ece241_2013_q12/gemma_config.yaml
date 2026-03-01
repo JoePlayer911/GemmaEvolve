@@ -35,14 +35,14 @@ prompt:
 
     Interface:
     module TopModule (
-  input clk,
-  input enable,
-  input S,
-  input A,
-  input B,
-  input C,
-  output reg Z
-);
+      input clk,
+      input enable,
+      input S,
+      input A,
+      input B,
+      input C,
+      output reg Z
+    );
 
     Requirements:
     - Implement the module logic using `assign` statements where possible.
@@ -55,9 +55,9 @@ prompt:
 
 # Database configuration
 database:
-  population_size: 10 
+  population_size: 40 
   archive_size: 5
-  num_islands: 1
+  num_islands: 4
   programs_per_island: 10
   elite_selection_ratio: 0.2
   exploitation_ratio: 0.7

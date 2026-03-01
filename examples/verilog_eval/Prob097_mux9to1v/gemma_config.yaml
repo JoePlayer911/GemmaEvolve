@@ -35,18 +35,18 @@ prompt:
 
     Interface:
     module TopModule (
-  input [15:0] a,
-  input [15:0] b,
-  input [15:0] c,
-  input [15:0] d,
-  input [15:0] e,
-  input [15:0] f,
-  input [15:0] g,
-  input [15:0] h,
-  input [15:0] i,
-  input [3:0] sel,
-  output logic [15:0] out
-);
+      input [15:0] a,
+      input [15:0] b,
+      input [15:0] c,
+      input [15:0] d,
+      input [15:0] e,
+      input [15:0] f,
+      input [15:0] g,
+      input [15:0] h,
+      input [15:0] i,
+      input [3:0] sel,
+      output logic [15:0] out
+    );
 
     Requirements:
     - Implement the module logic using `assign` statements where possible.
@@ -59,9 +59,9 @@ prompt:
 
 # Database configuration
 database:
-  population_size: 10 
+  population_size: 40 
   archive_size: 5
-  num_islands: 1
+  num_islands: 4
   programs_per_island: 10
   elite_selection_ratio: 0.2
   exploitation_ratio: 0.7
