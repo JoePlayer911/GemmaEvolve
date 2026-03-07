@@ -6,6 +6,7 @@ import json
 import yaml
 import subprocess
 import glob
+import re
 import argparse
 import importlib.util
 import threading
@@ -26,8 +27,9 @@ RESULTS_FILE = "completion_benchmark.json"
 LOGS_DIR = "logs"
 
 SCORE_THRESHOLD = 1.0  # Only run OpenEvolve if Gemma scores below this
-DEFAULT_ITERATION_LIMIT = 300  # Iteration limit for OpenEvolve completion benchmark
-DEFAULT_PATIENCE = 100  # Early stopping patience if no improvement
+MAX_ITERATIONS = 800   # Fixed iteration limit for OpenEvolve
+CHECKPOINT_INTERVAL = 100  # Record best score every N iterations
+CHECKPOINTS = list(range(CHECKPOINT_INTERVAL, MAX_ITERATIONS + 1, CHECKPOINT_INTERVAL))  # [100, 200, ..., 800]
 BASELINE_TIMEOUT = 120  # Timeout in seconds for baseline Gemma generation
 
 
@@ -119,15 +121,126 @@ def run_pure_gemma(llm, problem_dir: str, config_path: str) -> Dict[str, Any]:
     }
 
 
-def run_openevolve(problem_dir: str, config_path: str, max_iterations: int = 300,
-                   patience: int = 100, jumpstart_path: str = None, prob_name: str = "unknown") -> Dict[str, Any]:
-    """Runs OpenEvolve via subprocess with iteration limit and early stopping."""
+def parse_log_checkpoints(log_filename: str, checkpoints: List[int] = None) -> Dict[str, Dict[str, float]]:
+    """Parse an OpenEvolve log to extract best-so-far score at each checkpoint iteration.
+
+    Returns a dict like:
+        {"iter_100": {"score": 0.5, "accuracy": 0.5},
+         "iter_200": {"score": 0.8, "accuracy": 0.8}, ...}
+    """
+    if checkpoints is None:
+        checkpoints = CHECKPOINTS
+
+    # Regex patterns
+    iter_pattern = re.compile(r'Iteration (\d+):')
+    iter_time_pattern = re.compile(r'Iteration \d+: .* completed in ([\d.]+)s')
+    metrics_pattern = re.compile(r'Metrics:.*?accuracy=([\d.]+).*?combined_score=([\d.]+)')
+    best_pattern = re.compile(r'New best score: ([\d.]+)')
+    target_pattern = re.compile(r'Target score .* reached at iteration (\d+)')
+    early_stop_pattern = re.compile(r'\[STOP\].*at iteration (\d+)')
+
+    best_score = 0.0
+    best_accuracy = 0.0
+    current_iter = 0
+    max_reached_iter = 0
+    solved_iteration = None
+    solved_time = 0.0
+    checkpoint_results = {}
+
+    try:
+        with open(log_filename, 'r') as f:
+            for line in f:
+                # Track current iteration
+                m = iter_pattern.search(line)
+                if m:
+                    current_iter = int(m.group(1))
+                    max_reached_iter = max(max_reached_iter, current_iter)
+                
+                time_match = iter_time_pattern.search(line)
+                if time_match:
+                    solved_time += float(time_match.group(1))
+
+                # Also extract metrics from the same Metrics line
+                mm = metrics_pattern.search(line)
+                if mm:
+                    acc = float(mm.group(1))
+                    score = float(mm.group(2))
+                    if score > best_score:
+                        best_score = score
+                        best_accuracy = acc
+
+                # Check for "New best score" lines
+                m = best_pattern.search(line)
+                if m:
+                    new_best = float(m.group(1))
+                    if new_best > best_score:
+                        best_score = new_best
+
+                # Check for metrics on separate lines
+                if 'Metrics:' in line and 'Iteration' not in line:
+                    mm = metrics_pattern.search(line)
+                    if mm:
+                        acc = float(mm.group(1))
+                        score = float(mm.group(2))
+                        if score > best_score:
+                            best_score = score
+                            best_accuracy = acc
+
+                # Record checkpoint when we cross a boundary
+                for cp in checkpoints:
+                    if current_iter >= cp and f"iter_{cp}" not in checkpoint_results:
+                        checkpoint_results[f"iter_{cp}"] = {
+                            "score": best_score,
+                            "accuracy": best_accuracy
+                        }
+
+                # Track early stop / target reached
+                m = target_pattern.search(line)
+                if m:
+                    solved_iteration = int(m.group(1))
+                    max_reached_iter = max(max_reached_iter, solved_iteration)
+                m = early_stop_pattern.search(line)
+                if m:
+                    max_reached_iter = max(max_reached_iter, int(m.group(1)))
+    except Exception as e:
+        print(f"  WARNING: Error parsing log {log_filename}: {e}")
+
+    # Fill remaining checkpoints beyond what was reached (use the last known best)
+    for cp in checkpoints:
+        key = f"iter_{cp}"
+        if key not in checkpoint_results:
+            # If we ran past this iteration but didn't record it, use current best
+            if max_reached_iter >= cp:
+                checkpoint_results[key] = {
+                    "score": best_score,
+                    "accuracy": best_accuracy
+                }
+            else:
+                # OpenEvolve stopped before reaching this checkpoint
+                # Use the best score at the time of stopping
+                checkpoint_results[key] = {
+                    "score": best_score,
+                    "accuracy": best_accuracy
+                }
+
+    checkpoint_results["metadata"] = {
+        "solved_iteration": solved_iteration,
+        "solved_time_seconds": round(solved_time, 2) if solved_iteration else None
+    }
+
+    return checkpoint_results
+
+
+def run_openevolve(problem_dir: str, config_path: str, max_iterations: int = MAX_ITERATIONS,
+                   jumpstart_path: str = None, prob_name: str = "unknown") -> Dict[str, Any]:
+    """Runs OpenEvolve via subprocess with fixed iteration limit (no patience/early stopping).
+    Returns multi-checkpoint results."""
     start_time = time.time()
 
-    # Create a temporary config
+    # Create a temporary config - enable target score stopping
     config = load_config(config_path)
-    config['target_score'] = 1.0  # Stop if perfect
-    config['early_stopping_patience'] = patience
+    config['target_score'] = 1.0        # Stop when combined score hits 1.0 (accuracy 1.0 + optimization)
+    config['early_stopping_patience'] = 99999  # Disable early stopping (large number)
 
     temp_config_path = os.path.join(problem_dir, "gemma_config_benchmark.yaml")
     with open(temp_config_path, 'w') as f:
@@ -146,8 +259,8 @@ def run_openevolve(problem_dir: str, config_path: str, max_iterations: int = 300
         initial_program,
         evaluator_script,
         "--config", temp_config_path,
-        "--iterations", str(max_iterations),  # Stop precisely at this iteration limit
-        "--log-level", "DEBUG"  # Full debug logging to file
+        "--iterations", str(max_iterations),
+        "--log-level", "DEBUG"
     ]
 
     # Create timestamped log file
@@ -165,7 +278,6 @@ def run_openevolve(problem_dir: str, config_path: str, max_iterations: int = 300
             logfile.write(f"Initial Program: {initial_program}\n")
             logfile.write(f"Config: {temp_config_path}\n")
             logfile.write(f"Iteration Limit: {max_iterations}\n")
-            logfile.write(f"Patience: {patience}\n")
             logfile.write(f"Command: {' '.join(cmd)}\n")
             logfile.write(f"{'=' * 60}\n\n")
             logfile.flush()
@@ -173,14 +285,18 @@ def run_openevolve(problem_dir: str, config_path: str, max_iterations: int = 300
     except subprocess.CalledProcessError as e:
         print(f"  OpenEvolve failed with exit code {e.returncode}")
         print(f"  Check log file for details: {log_filename}")
-        return {"score": 0.0, "accuracy": 0.0, "time": 0.0, "mode": "openevolve_error", "log": log_filename}
+        return {"mode": "openevolve_error", "log": log_filename}
     finally:
         if os.path.exists(temp_config_path):
             os.remove(temp_config_path)
 
     execution_time = time.time() - start_time
 
-    # Read best result from output dir
+    # Parse the log to extract checkpoint scores
+    checkpoint_scores = parse_log_checkpoints(log_filename)
+    metadata = checkpoint_scores.pop("metadata", {})
+
+    # Also read final best result from output dir for authoritative final score
     output_dir = os.path.join(problem_dir, "openevolve_output")
     best_info_path = os.path.join(output_dir, "best", "best_program_info.json")
 
@@ -188,40 +304,122 @@ def run_openevolve(problem_dir: str, config_path: str, max_iterations: int = 300
         with open(best_info_path, 'r') as f:
             info = json.load(f)
             metrics = info.get("metrics", {})
-            return {
-                "score": metrics.get("combined_score", 0.0),
-                "accuracy": metrics.get("accuracy", 0.0),
-                "time": execution_time,
-                "mode": "openevolve",
-                "log": log_filename
-            }
+            final_score = metrics.get("combined_score", 0.0)
+            final_accuracy = metrics.get("accuracy", 0.0)
+            # Override the last checkpoint with the authoritative final result
+            last_key = f"iter_{max_iterations}"
+            if last_key in checkpoint_scores:
+                checkpoint_scores[last_key] = {
+                    "score": final_score,
+                    "accuracy": final_accuracy
+                }
 
-    return {"score": 0.0, "accuracy": 0.0, "time": execution_time, "mode": "openevolve_failed_read", "log": log_filename}
+    result = {
+        **checkpoint_scores,
+        "solved_iteration": metadata.get("solved_iteration"),
+        "total_time": execution_time,
+        "mode": "openevolve",
+        "log": log_filename
+    }
+
+    return result
+
+
+def deduplicate_results(results: List[Dict]) -> List[Dict]:
+    """Remove duplicate entries, keeping the last successful run for each problem."""
+    seen = {}
+    for entry in results:
+        prob = entry["problem"]
+        # If we already have this problem, keep the one with a non-error mode
+        if prob in seen:
+            existing = seen[prob]
+            existing_is_error = existing.get("baseline", {}).get("mode", "").endswith("_error")
+            new_is_error = entry.get("baseline", {}).get("mode", "").endswith("_error")
+            if existing_is_error and not new_is_error:
+                seen[prob] = entry  # Replace error entry with successful one
+            # Otherwise keep existing (first successful, or first error if both error)
+        else:
+            seen[prob] = entry
+    return list(seen.values())
+
+
+def sort_results_by_problem_number(results: List[Dict]) -> List[Dict]:
+    """Sort results by problem number (numeric extraction from Prob###_name)."""
+    def sort_key(entry):
+        m = re.search(r'Prob(\d+)', entry.get('problem', ''))
+        return int(m.group(1)) if m else 999
+    return sorted(results, key=sort_key)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Completion Benchmark: OpenEvolve vs Native Gemma")
+    parser = argparse.ArgumentParser(description="Completion Benchmark: OpenEvolve vs Native Gemma (Multi-Checkpoint)")
     parser.add_argument("--limit", type=int, default=0, help="Number of problems to run (0 = all)")
-    parser.add_argument("--max-iterations", type=int, default=DEFAULT_ITERATION_LIMIT,
-                        help=f"OpenEvolve max iterations / checkpoint limit (default: {DEFAULT_ITERATION_LIMIT})")
-    parser.add_argument("--patience", type=int, default=DEFAULT_PATIENCE,
-                        help=f"OpenEvolve early stopping patience (default: {DEFAULT_PATIENCE})")
     parser.add_argument("--jumpstart", action="store_true", default=False,
                         help="Use native Gemma baseline output as initial program for OpenEvolve (default: disabled)")
     parser.add_argument("--start", type=int, default=1,
-                        help="Problem number to start from (1-indexed, default: 1). Previous results are preserved.")
+                        help="Positional index to start from (1-indexed into sorted dir list, NOT problem number). Previous results are preserved.")
     parser.add_argument("--seed", type=int, default=42,
                         help="Random seed for LLM generation (default: 42)")
+    parser.add_argument("--fill-gaps", action="store_true", default=False,
+                        help="Auto-detect problems missing from results JSON and run only those.")
+    parser.add_argument("--deduplicate", action="store_true", default=False,
+                        help="Remove duplicate error entries from results JSON (keeps successful re-runs).")
     args = parser.parse_args()
 
     if not os.path.exists(DATASET_DIR):
         print(f"Error: Dataset {DATASET_DIR} not found.")
         return
 
+    # Handle --deduplicate mode (standalone operation)
+    if args.deduplicate:
+        if not os.path.exists(RESULTS_FILE):
+            print(f"Error: {RESULTS_FILE} not found.")
+            return
+        with open(RESULTS_FILE, 'r') as f:
+            existing = json.load(f)
+        print(f"  Before dedup: {len(existing)} entries")
+        deduped = deduplicate_results(existing)
+        sorted_results = sort_results_by_problem_number(deduped)
+        print(f"  After dedup:  {len(sorted_results)} entries")
+        with open(RESULTS_FILE, 'w') as f:
+            json.dump(sorted_results, f, indent=2)
+        print(f"  Saved to {RESULTS_FILE}")
+        if not args.fill_gaps:
+            return
+
     # We will lazy-load the baseline LLM to allow freeing memory for OpenEvolve
     llm = None
 
-    problems = sorted(glob.glob(os.path.join(DATASET_DIR, "Prob*")))
+    all_problems = sorted(glob.glob(os.path.join(DATASET_DIR, "Prob*")))
+
+    # Handle --fill-gaps mode: only run missing problems
+    if args.fill_gaps:
+        if not os.path.exists(RESULTS_FILE):
+            print(f"No existing {RESULTS_FILE}. Running all problems instead.")
+            problems = all_problems
+        else:
+            with open(RESULTS_FILE, 'r') as f:
+                existing_results = json.load(f)
+            # Deduplicate first
+            existing_results = deduplicate_results(existing_results)
+            # Find which problems already have non-error results
+            completed_problems = set()
+            for entry in existing_results:
+                baseline_mode = entry.get("baseline", {}).get("mode", "")
+                if not baseline_mode.endswith("_error"):
+                    completed_problems.add(entry["problem"])
+            # Filter to only missing problems
+            problems = [p for p in all_problems if os.path.basename(p) not in completed_problems]
+            if not problems:
+                print(f"  All problems already have results in {RESULTS_FILE}. Nothing to do.")
+                return
+            print(f"  Found {len(problems)} missing problems to fill:")
+            for p in problems:
+                print(f"    - {os.path.basename(p)}")
+            print()
+    else:
+        problems = all_problems
+
     total_problems = len(problems) if args.limit == 0 else min(len(problems), args.limit)
     results = []
 
@@ -230,9 +428,10 @@ def main():
     gemma_failed = 0
     openevolve_attempted = 0
     openevolve_solved = 0
+    skipped_errors = 0
 
-    # Resume support: load existing results and reconstruct counters
-    start_idx = args.start - 1  # Convert 1-indexed to 0-indexed
+    # Resume support (only for non-fill-gaps mode): load existing results and reconstruct counters
+    start_idx = args.start - 1 if not args.fill_gaps else 0  # fill-gaps handles its own filtering
     if start_idx > 0 and os.path.exists(RESULTS_FILE):
         with open(RESULTS_FILE, 'r') as f:
             existing_results = json.load(f)
@@ -245,24 +444,28 @@ def main():
             else:
                 gemma_failed += 1
                 oe = r.get("openevolve", {})
-                if isinstance(oe, dict):
+                if isinstance(oe, dict) and oe.get("mode") != "openevolve_error":
                     openevolve_attempted += 1
                     if r.get("openevolve_solved", False):
                         openevolve_solved += 1
         print(f"  Resuming from problem {args.start}. Loaded {len(results)} previous results.")
 
+    checkpoint_labels = [f"iter_{cp}" for cp in CHECKPOINTS]
+
     print(f"\n{'=' * 70}")
-    print(f"  COMPLETION BENCHMARK")
-    print(f"  Problems: {total_problems} | Iteration Limit: {args.max_iterations} | Patience: {args.patience}")
+    print(f"  COMPLETION BENCHMARK (Multi-Checkpoint)")
+    if args.fill_gaps:
+        print(f"  Mode: FILL GAPS ({total_problems} missing problems)")
+    print(f"  Problems: {total_problems} | Iterations: {MAX_ITERATIONS} | Checkpoints: {CHECKPOINTS}")
     print(f"  Strategy: Run OpenEvolve ONLY when Gemma scores < {SCORE_THRESHOLD}")
     if start_idx > 0:
         print(f"  Resuming from: Problem {args.start}")
     print(f"{'=' * 70}\n")
 
     for i, problem_dir in enumerate(problems):
-        if args.limit > 0 and i >= args.limit:
+        if args.limit > 0 and i >= total_problems:
             break
-        if i < start_idx:
+        if not args.fill_gaps and i < start_idx:
             continue
 
         prob_name = os.path.basename(problem_dir)
@@ -277,7 +480,7 @@ def main():
                 print("  Loading Gemma model for Baseline...")
                 llm = Llama(
                     model_path=DEFAULT_MODEL_PATH,
-                    n_ctx=8192,
+                    n_ctx=32768,
                     n_gpu_layers=-1,  # GPU for fast inference
                     seed=args.seed,
                     verbose=False
@@ -285,7 +488,9 @@ def main():
             baseline_res = run_pure_gemma(llm, problem_dir, config_path)
         except Exception as e:
             print(f"  ERROR running Gemma: {e}")
-            baseline_res = {"score": 0.0, "accuracy": 0.0, "time": 0.0, "mode": "pure_gemma_error"}
+            print(f"  ⚠ SKIPPING {prob_name} (baseline error)")
+            skipped_errors += 1
+            continue
         print(f"  Gemma Score: {baseline_res['score']:.4f} (accuracy={baseline_res.get('accuracy', 0):.4f})")
 
         entry = {
@@ -301,8 +506,7 @@ def main():
             print(f"  ✓ Gemma solved it (score >= {SCORE_THRESHOLD}). Skipping OpenEvolve.")
         else:
             gemma_failed += 1
-            openevolve_attempted += 1
-            print(f"  ✗ Gemma failed (score < {SCORE_THRESHOLD}). Running OpenEvolve (iterations={args.max_iterations}, patience={args.patience})...")
+            print(f"  ✗ Gemma failed (score < {SCORE_THRESHOLD}). Running OpenEvolve ({MAX_ITERATIONS} iterations)...")
 
             # Free up baseline LLM VRAM before spawning OpenEvolve
             if llm is not None:
@@ -314,61 +518,111 @@ def main():
             jumpstart_code = baseline_res.get('code_path') if args.jumpstart else None
             try:
                 evolve_res = run_openevolve(
-                    problem_dir, config_path, args.max_iterations, args.patience,
+                    problem_dir, config_path, MAX_ITERATIONS,
                     jumpstart_path=jumpstart_code, prob_name=prob_name
                 )
-                print(f"  OpenEvolve Score: {evolve_res['score']:.4f} (accuracy={evolve_res.get('accuracy', 0):.4f}, time={evolve_res['time']:.1f}s)")
+
+                # Check if OpenEvolve errored
+                if evolve_res.get("mode") == "openevolve_error":
+                    print(f"  ⚠ SKIPPING {prob_name} (OpenEvolve error)")
+                    skipped_errors += 1
+                    continue
+
+                openevolve_attempted += 1
+
+                # Print checkpoint scores
+                print(f"  OpenEvolve Checkpoint Scores:")
+                for cp in CHECKPOINTS:
+                    key = f"iter_{cp}"
+                    cp_data = evolve_res.get(key, {})
+                    score = cp_data.get("score", 0.0)
+                    acc = cp_data.get("accuracy", 0.0)
+                    print(f"    Iter {cp:4d}: score={score:.4f}, accuracy={acc:.4f}")
+                print(f"  Total time: {evolve_res.get('total_time', 0):.1f}s")
 
                 entry["openevolve"] = evolve_res
                 entry["gemma_solved"] = False
-                entry["openevolve_solved"] = evolve_res['score'] >= SCORE_THRESHOLD
 
-                if evolve_res['score'] >= SCORE_THRESHOLD:
+                # Check if any checkpoint solved it
+                final_cp = evolve_res.get(f"iter_{MAX_ITERATIONS}", {})
+                final_score = final_cp.get("score", 0.0)
+                entry["openevolve_solved"] = final_score >= SCORE_THRESHOLD
+
+                if final_score >= SCORE_THRESHOLD:
                     openevolve_solved += 1
                     print(f"  ✓ OpenEvolve COMPLETED the problem!")
                 else:
                     print(f"  ✗ OpenEvolve could not fully solve it either.")
             except Exception as e:
                 print(f"  ERROR running OpenEvolve: {e}")
-                entry["openevolve"] = {"score": 0.0, "accuracy": 0.0, "time": 0.0, "mode": "openevolve_error"}
-                entry["gemma_solved"] = False
-                entry["openevolve_solved"] = False
+                print(f"  ⚠ SKIPPING {prob_name} (OpenEvolve exception)")
+                skipped_errors += 1
+                continue
 
         results.append(entry)
 
         # Save incrementally (in case of crash)
-        with open(RESULTS_FILE, 'w') as f:
-            json.dump(results, f, indent=2)
+        if args.fill_gaps:
+            # In fill-gaps mode, merge new results into existing file
+            if os.path.exists(RESULTS_FILE):
+                with open(RESULTS_FILE, 'r') as f:
+                    all_results = json.load(f)
+            else:
+                all_results = []
+            all_results.append(entry)
+            all_results = deduplicate_results(all_results)
+            all_results = sort_results_by_problem_number(all_results)
+            with open(RESULTS_FILE, 'w') as f:
+                json.dump(all_results, f, indent=2)
+        else:
+            with open(RESULTS_FILE, 'w') as f:
+                json.dump(results, f, indent=2)
 
     # Final Summary
     print(f"\n{'=' * 70}")
-    print(f"  COMPLETION BENCHMARK RESULTS")
+    print(f"  COMPLETION BENCHMARK RESULTS (Multi-Checkpoint)")
     print(f"{'=' * 70}")
     print(f"  Total problems tested:          {len(results)}")
+    print(f"  Skipped (errors):               {skipped_errors}")
     print(f"  Gemma solved (score >= 1.0):     {gemma_solved}")
     print(f"  Gemma failed (score <  1.0):     {gemma_failed}")
     print(f"  OpenEvolve attempted:            {openevolve_attempted}")
-    print(f"  OpenEvolve solved:               {openevolve_solved}")
+    print(f"  OpenEvolve solved (@ iter {MAX_ITERATIONS}):  {openevolve_solved}")
     if openevolve_attempted > 0:
         print(f"  OpenEvolve completion rate:      {openevolve_solved}/{openevolve_attempted} ({100*openevolve_solved/openevolve_attempted:.1f}%)")
     print(f"{'=' * 70}")
 
-    # Detailed table for failed problems
+    # Detailed table for failed problems with checkpoint progression
     failed_entries = [r for r in results if not r.get("gemma_solved", False)]
     if failed_entries:
+        header = f"{'Problem':<25} | {'Gemma':>8}"
+        for cp in CHECKPOINTS:
+            header += f" | {'@'+str(cp):>8}"
+        header += f" | {'Solved Iter':>11}"
         print(f"\n--- Detailed Results: Problems Gemma Could NOT Solve ---")
-        print(f"{'Problem':<25} | {'Gemma':>8} | {'OpenEvolve':>10} | {'Completed?':>10}")
-        print("-" * 65)
+        print(header)
+        print("-" * len(header))
         for entry in failed_entries:
             gemma_score = entry['baseline']['score']
             oe = entry.get('openevolve', {})
-            if isinstance(oe, dict):
-                oe_score = oe.get('score', 0.0)
-                completed = "YES" if entry.get('openevolve_solved', False) else "NO"
+            row = f"{entry['problem']:<25} | {gemma_score:>8.4f}"
+            if isinstance(oe, dict) and oe.get("mode") != "openevolve_error":
+                for cp in CHECKPOINTS:
+                    key = f"iter_{cp}"
+                    cp_data = oe.get(key, {})
+                    score = cp_data.get("score", 0.0)
+                    row += f" | {score:>8.4f}"
+                
+                solved_iter = oe.get("solved_iteration")
+                if solved_iter:
+                    row += f" | {solved_iter:>11d}"
+                else:
+                    row += f" | {'-':>11}"
             else:
-                oe_score = 0.0
-                completed = "N/A"
-            print(f"{entry['problem']:<25} | {gemma_score:>8.4f} | {oe_score:>10.4f} | {completed:>10}")
+                for cp in CHECKPOINTS:
+                    row += f" | {'N/A':>8}"
+                row += f" | {'N/A':>11}"
+            print(row)
 
     print(f"\nResults saved to {RESULTS_FILE}")
 

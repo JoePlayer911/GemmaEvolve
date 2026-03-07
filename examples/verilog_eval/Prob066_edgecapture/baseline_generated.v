@@ -9,10 +9,15 @@ module TopModule (
 
   always @(posedge clk) begin
     if (reset) begin
-      out <= 32'b0;
-      prev_in <= 32'b0;
+      out <= 0;
+      prev_in <= 0;
     end else begin
-      out <= (in & ~prev_in) | out;
+      out <= 0;
+      for (integer i = 0; i < 32; i++) begin
+        if (prev_in[i] == 1 && in[i] == 0) begin
+          out[i] <= 1;
+        end
+      end
       prev_in <= in;
     end
   end

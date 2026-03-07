@@ -4,12 +4,20 @@ module TopModule (
   output reg [3:0] q
 );
 
-  always @(posedge clk or posedge reset) begin
+  reg [3:0] count;
+
+  always @(posedge clk) begin
     if (reset) begin
-      q <= 4'b0000;
+      count <= 4'b0000;
     end else begin
-      q <= q + 1'b1;
+      if (count == 4'b1111) begin
+        count <= 4'b0000;
+      end else begin
+        count <= count + 1'b1;
+      end
     end
   end
+
+  assign q = count;
 
 endmodule

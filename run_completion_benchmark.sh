@@ -1,7 +1,7 @@
 #!/bin/bash
-# 1-click Completion Benchmark
-# Compares whether OpenEvolve can solve problems that native Gemma cannot.
-# Only runs OpenEvolve when Gemma's score < 1.0 (patience=300).
+# 1-click Completion Benchmark (Multi-Checkpoint)
+# Compares Native Gemma vs OpenEvolve at 100-iteration checkpoints (100-800).
+# Only runs OpenEvolve when Gemma's score < 1.0. Skips problems with errors.
 
 set -e
 
@@ -9,8 +9,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 echo "========================================"
-echo "  Completion Benchmark"
-echo "  OpenEvolve vs Native Gemma"
+echo "  Completion Benchmark (Multi-Checkpoint)"
+echo "  Native Gemma vs OpenEvolve @100-800"
 echo "========================================"
 echo ""
 
@@ -19,8 +19,8 @@ source ./venv/bin/activate
 
 # Check if arguments are provided, otherwise use defaults
 if [ $# -eq 0 ]; then
-    echo "Using default settings (All problems, Iteration Limit: 300, Patience: 100)."
-    echo "Customize: ./run_completion_benchmark.sh --limit 5 --max-iterations 300 --patience 100 --jumpstart"
+    echo "Using default settings (All problems, 800 iterations, checkpoints every 100)."
+    echo "Customize: ./run_completion_benchmark.sh --limit 5 --jumpstart --fill-gaps"
     echo ""
     python3 run_completion_benchmark.py
 else

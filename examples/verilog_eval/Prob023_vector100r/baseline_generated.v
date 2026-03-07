@@ -5,8 +5,8 @@ module TopModule (
 
   genvar i;
   generate
-    for (i = 0; i < 100; i++) begin : bit_reverse
-      assign out[i] = in[99-i];
+    for (i = 0; i < 100; i++) begin : bit_reversal
+      assign out[i] = in[99 - i];
     end
   endgenerate
 

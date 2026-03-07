@@ -4,6 +4,6 @@ module TopModule (
   output [3:0] out
 );
 
-  assign out = in[((sel[7:0] * 4) + 3) : ((sel[7:0] * 4))];
+  assign out = in[sel * 4 + 3 : sel * 4];
 
 endmodule

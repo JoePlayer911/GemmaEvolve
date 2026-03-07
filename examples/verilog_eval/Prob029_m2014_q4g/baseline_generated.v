@@ -7,7 +7,7 @@ module TopModule (
 
   logic xnor_out;
 
-  assign xnor_out = ~(in1 & in2) | ~(~in1 & ~in2);
+  assign xnor_out = in1 == in2;
   assign out = xnor_out ^ in3;
 
 endmodule

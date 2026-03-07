@@ -5,9 +5,11 @@ module TopModule (
   output reg out_alwaysblock
 );
 
+  // AND gate using assign statement
   assign out_assign = a & b;
 
-  always @(*) begin
+  // AND gate using combinational always block
+  always @(a or b) begin
     out_alwaysblock = a & b;
   end
 
