@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
 Benchmark Results Chart Generator
-Converts completion_benchmark.json into a clear, publication-quality chart
-comparing Pure Gemma Baseline vs OpenEvolve performance.
-Displays simple aggregated charts and numerical data as there are many problems.
+Converts completion_benchmark.json into publication-quality charts:
+  Panel 1 – Line chart: Native Gemma accuracy vs OpenEvolve iter_800 accuracy per problem
+  Panel 2 – Line chart: OpenEvolve accuracy progression (iter_100 … iter_800) averaged across problems
+  Panel 3 – Summary metrics table
 """
 
 import json
@@ -32,6 +33,8 @@ COLOR_WIN      = "#2ECC71"   # Green for win
 COLOR_TIE      = "#F39C12"   # Yellow for tie
 COLOR_LOSE     = "#E74C3C"   # Red for lose
 
+ITER_KEYS = [f"iter_{i}" for i in range(100, 900, 100)]  # iter_100 … iter_800
+
 
 def load_data(path):
     with open(path, 'r') as f:
@@ -50,136 +53,131 @@ def main():
     data = load_data(input_path)
     n = len(data)
 
-    problems   = [d["problem"] for d in data]
-    b_scores   = []
-    e_scores   = []
-    b_acc      = []
-    e_acc      = []
-    
-    b_solved   = 0
-    e_solved   = 0
+    # --- Extract per-problem data ---
+    problems     = [d["problem"] for d in data]
+    b_acc        = [d["baseline"]["accuracy"] for d in data]
 
+    # For iter_800 accuracy: use iter_800 if openevolve ran, else baseline accuracy
+    e800_acc = []
     for d in data:
-        b = d["baseline"]
-        b_scores.append(b["score"])
-        b_acc.append(b["accuracy"])
-        if b["accuracy"] >= 1.0:
-            b_solved += 1
-            
-        e = d.get("openevolve")
-        if e == "skipped":
-            e_scores.append(b["score"])
-            e_acc.append(b["accuracy"])
-            if b["accuracy"] >= 1.0:
-                e_solved += 1
+        oe = d.get("openevolve")
+        if oe == "skipped":
+            e800_acc.append(d["baseline"]["accuracy"])
         else:
-            e_scores.append(e["score"])
-            e_acc.append(e["accuracy"])
-            if e["accuracy"] >= 1.0:
-                e_solved += 1
+            e800_acc.append(oe["iter_800"]["accuracy"])
+
+    # --- Iteration progression (only for problems where openevolve actually ran) ---
+    iter_labels = [str(i) for i in range(100, 900, 100)]
+    # Collect per-iteration average accuracy across all problems that ran openevolve
+    oe_problems = [d for d in data if d.get("openevolve") not in (None, "skipped")]
+    iter_avg_acc = []
+    for key in ITER_KEYS:
+        accs = [d["openevolve"][key]["accuracy"] for d in oe_problems]
+        iter_avg_acc.append(np.mean(accs) if accs else 0.0)
+
+    # Baseline average for the same subset
+    oe_baseline_avg = np.mean([d["baseline"]["accuracy"] for d in oe_problems]) if oe_problems else 0.0
 
     # --- Derived stats ---
-    score_wins = sum(1 for b, e in zip(b_scores, e_scores) if e > b)
-    score_ties = sum(1 for b, e in zip(b_scores, e_scores) if abs(e - b) < 1e-6)
-    score_losses = n - score_wins - score_ties
-    avg_b_score = np.mean(b_scores)
-    avg_e_score = np.mean(e_scores)
-    avg_b_acc   = np.mean(b_acc) * 100
-    avg_e_acc   = np.mean(e_acc) * 100
-    b_pass_rate = (b_solved / n) * 100 if n > 0 else 0
-    e_pass_rate = (e_solved / n) * 100 if n > 0 else 0
+    b_solved  = sum(1 for a in b_acc if a >= 1.0)
+    e_solved  = sum(1 for a in e800_acc if a >= 1.0)
+    avg_b_acc = np.mean(b_acc) * 100
+    avg_e_acc = np.mean(e800_acc) * 100
+    b_pass    = (b_solved / n) * 100 if n > 0 else 0
+    e_pass    = (e_solved / n) * 100 if n > 0 else 0
+    wins      = sum(1 for b, e in zip(b_acc, e800_acc) if e > b + 1e-6)
+    ties      = sum(1 for b, e in zip(b_acc, e800_acc) if abs(e - b) < 1e-6)
+    losses    = n - wins - ties
 
     # --- Setup figure ---
     plt.style.use('dark_background')
-    fig = plt.figure(figsize=(14, 8), facecolor=COLOR_BG)
+    fig = plt.figure(figsize=(20, 9), facecolor=COLOR_BG)
     fig.suptitle("GemmaEvolve Completion Benchmark Results",
-                 fontsize=22, fontweight='bold', color='white', y=0.96)
-    fig.text(0.5, 0.91,
-             f"Pure Gemma Baseline vs OpenEvolve  •  {n} Problems",
+                 fontsize=22, fontweight='bold', color='white', y=0.97)
+    fig.text(0.5, 0.92,
+             f"Pure Gemma Baseline vs OpenEvolve  •  {n} Problems  •  {len(oe_problems)} ran OpenEvolve",
              ha='center', fontsize=12, color=COLOR_TEXT, alpha=0.7)
 
-    gs = gridspec.GridSpec(1, 3, hspace=0.3, wspace=0.3,
-                           left=0.05, right=0.95, top=0.82, bottom=0.1)
+    gs = gridspec.GridSpec(1, 3, width_ratios=[2, 1.3, 1.2],
+                           hspace=0.3, wspace=0.35,
+                           left=0.05, right=0.98, top=0.85, bottom=0.12)
 
-    # ===== Panel 1: Overall Pass Rate & Average Accuracy (Bar Chart) =====
+    # ===== Panel 1: Line chart – Gemma vs iter_800 per problem =====
     ax1 = fig.add_subplot(gs[0, 0])
     ax1.set_facecolor(COLOR_PANEL)
-    
-    metrics = ["Pass Rate (%)", "Average Accuracy (%)"]
-    b_vals = [b_pass_rate, avg_b_acc]
-    e_vals = [e_pass_rate, avg_e_acc]
-    
-    x = np.arange(len(metrics))
-    bar_w = 0.35
-    
-    bars_b = ax1.bar(x - bar_w/2, b_vals, bar_w, label='Baseline',
-                     color=COLOR_BASELINE, edgecolor='white', linewidth=0.5, alpha=0.9, zorder=3)
-    bars_e = ax1.bar(x + bar_w/2, e_vals, bar_w, label='OpenEvolve',
-                     color=COLOR_EVOLVE, edgecolor='white', linewidth=0.5, alpha=0.9, zorder=3)
 
-    for bar in bars_b:
-        h = bar.get_height()
-        ax1.text(bar.get_x() + bar.get_width()/2, h + 1, f'{h:.1f}%',
-                 ha='center', va='bottom', fontsize=9, color=COLOR_TEXT, fontweight='bold')
-    for bar in bars_e:
-        h = bar.get_height()
-        ax1.text(bar.get_x() + bar.get_width()/2, h + 1, f'{h:.1f}%',
-                 ha='center', va='bottom', fontsize=9, color=COLOR_TEXT, fontweight='bold')
+    x = np.arange(n)
+    ax1.plot(x, b_acc, color=COLOR_BASELINE, linewidth=1.2, alpha=0.85, label='Native Gemma')
+    ax1.plot(x, e800_acc, color=COLOR_EVOLVE, linewidth=1.2, alpha=0.85, label='OpenEvolve (iter 800)')
 
-    ax1.set_title("Performance Overview", fontsize=14, fontweight='bold', color='white', pad=10)
-    ax1.set_xticks(x)
-    ax1.set_xticklabels(metrics, fontsize=10, color=COLOR_TEXT, fontweight='bold')
-    ax1.set_ylim(0, max(max(b_vals), max(e_vals)) * 1.2)
-    if ax1.get_ylim()[1] > 115:
-        ax1.set_ylim(0, 115)
-    ax1.legend(fontsize=9, loc='upper left', framealpha=0.3)
+    # Fill area where OpenEvolve beats baseline
+    b_arr = np.array(b_acc)
+    e_arr = np.array(e800_acc)
+    ax1.fill_between(x, b_arr, e_arr, where=(e_arr > b_arr),
+                     color=COLOR_WIN, alpha=0.15, label='OE improvement')
+
+    ax1.set_xlabel("Problem Index", fontsize=11, color=COLOR_TEXT)
+    ax1.set_ylabel("Accuracy", fontsize=11, color=COLOR_TEXT)
+    ax1.set_title("Per-Problem Accuracy: Gemma vs OpenEvolve (iter 800)",
+                  fontsize=13, fontweight='bold', color='white', pad=10)
+    ax1.set_ylim(-0.05, 1.15)
+    ax1.axhline(y=1.0, color=COLOR_WIN, linestyle=':', linewidth=0.8, alpha=0.5)
+    ax1.legend(fontsize=9, loc='lower left', framealpha=0.4)
     ax1.grid(axis='y', color=COLOR_GRID, linestyle='--', alpha=0.5, zorder=0)
     ax1.tick_params(colors=COLOR_TEXT)
 
-    # ===== Panel 2: Win/Tie/Loss Donut =====
+    # ===== Panel 2: Line chart – Accuracy progression iter 100-800 =====
     ax2 = fig.add_subplot(gs[0, 1])
     ax2.set_facecolor(COLOR_PANEL)
-    sizes = [score_wins, score_ties, score_losses]
-    colors_pie = [COLOR_WIN, COLOR_TIE, COLOR_LOSE]
-    pie_labels = [f"OE Win ({score_wins})", f"Tie ({score_ties})", f"OE Loss ({score_losses})"]
 
-    filtered = [(s, c, l) for s, c, l in zip(sizes, colors_pie, pie_labels) if s > 0]
-    if filtered:
-        f_sizes, f_colors, f_labels = zip(*filtered)
-    else:
-        f_sizes, f_colors, f_labels = [1], ['gray'], ['No data']
+    ix = np.arange(len(iter_labels))
+    ax2.plot(ix, [a * 100 for a in iter_avg_acc],
+             color=COLOR_EVOLVE, linewidth=2.5, marker='o', markersize=6,
+             markerfacecolor='white', markeredgecolor=COLOR_EVOLVE, markeredgewidth=2,
+             zorder=5, label='Avg Accuracy (%)')
+    ax2.axhline(y=oe_baseline_avg * 100, color=COLOR_BASELINE, linestyle='--',
+                linewidth=1.5, alpha=0.8, label=f'Baseline avg ({oe_baseline_avg*100:.1f}%)')
 
-    wedges, texts, autotexts = ax2.pie(
-        f_sizes, labels=f_labels, colors=f_colors, autopct='%1.0f%%',
-        startangle=90, pctdistance=0.75, wedgeprops=dict(width=0.4, edgecolor=COLOR_BG, linewidth=2),
-        textprops=dict(color=COLOR_TEXT, fontsize=10))
-    for at in autotexts:
-        at.set_fontweight('bold')
-        at.set_fontsize(11)
-    ax2.set_title("OpenEvolve vs Baseline\n(Head-to-head Problem Score)", fontsize=13, fontweight='bold', color='white', pad=10)
+    # Annotate first and last points
+    ax2.annotate(f'{iter_avg_acc[0]*100:.1f}%', (ix[0], iter_avg_acc[0]*100),
+                 textcoords="offset points", xytext=(0, 12), ha='center',
+                 fontsize=9, color=COLOR_TEXT, fontweight='bold')
+    ax2.annotate(f'{iter_avg_acc[-1]*100:.1f}%', (ix[-1], iter_avg_acc[-1]*100),
+                 textcoords="offset points", xytext=(0, 12), ha='center',
+                 fontsize=9, color=COLOR_TEXT, fontweight='bold')
 
-    # ===== Panel 3: Summary Stats Table =====
+    ax2.set_xticks(ix)
+    ax2.set_xticklabels(iter_labels, fontsize=9, color=COLOR_TEXT, rotation=45)
+    ax2.set_xlabel("Iteration Checkpoint", fontsize=11, color=COLOR_TEXT)
+    ax2.set_ylabel("Avg Accuracy (%)", fontsize=11, color=COLOR_TEXT)
+    ax2.set_title(f"OpenEvolve Accuracy Progression\n({len(oe_problems)} problems that ran OE)",
+                  fontsize=13, fontweight='bold', color='white', pad=10)
+    ax2.legend(fontsize=9, loc='lower right', framealpha=0.4)
+    ax2.grid(axis='y', color=COLOR_GRID, linestyle='--', alpha=0.5, zorder=0)
+    ax2.tick_params(colors=COLOR_TEXT)
+
+    # ===== Panel 3: Summary Metrics Table =====
     ax3 = fig.add_subplot(gs[0, 2])
-    ax3.set_facecolor(COLOR_BG) # blending with background
+    ax3.set_facecolor(COLOR_BG)
     ax3.axis('off')
 
     table_data = [
-        ["Metric",          "Baseline",             "OpenEvolve"],
-        ["Problems Solved", f"{b_solved} / {n}",    f"{e_solved} / {n}"],
-        ["Pass Rate",       f"{b_pass_rate:.1f}%",  f"{e_pass_rate:.1f}%"],
-        ["Avg Accuracy",    f"{avg_b_acc:.1f}%",    f"{avg_e_acc:.1f}%"],
-        ["Avg Score",       f"{avg_b_score:.4f}",   f"{avg_e_score:.4f}"],
-        ["Head-to-head",    "—",                    f"{score_wins}W - {score_ties}T - {score_losses}L"],
+        ["Metric",      "Baseline",           "OpenEvolve"],
+        ["Solved",      f"{b_solved}/{n}",     f"{e_solved}/{n}"],
+        ["Pass Rate",   f"{b_pass:.1f}%",      f"{e_pass:.1f}%"],
+        ["Avg Acc",     f"{avg_b_acc:.1f}%",   f"{avg_e_acc:.1f}%"],
+        ["W / T / L",   "—",                   f"{wins}/{ties}/{losses}"],
+        ["OE Runs",     "—",                   f"{len(oe_problems)}"],
     ]
 
     table = ax3.table(
         cellText=table_data,
         cellLoc='center',
         loc='center',
-        bbox=[0.0, 0.1, 1.0, 0.8]
+        bbox=[0.0, 0.15, 1.0, 0.75]
     )
     table.auto_set_font_size(False)
-    table.set_fontsize(11)
+    table.set_fontsize(10)
 
     for (row, col), cell in table.get_celld().items():
         cell.set_edgecolor(COLOR_GRID)
@@ -192,17 +190,20 @@ def main():
             cell.set_text_props(color=COLOR_TEXT)
             if col == 0:
                 cell.set_text_props(color=COLOR_TEXT, fontweight='bold')
-        cell.set_height(0.15)
+        cell.set_height(0.14)
+
+    ax3.set_title("Summary Metrics", fontsize=14, fontweight='bold', color='white', pad=10)
 
     # Save
     plt.savefig(output_path, dpi=DPI, facecolor=COLOR_BG, bbox_inches='tight')
     print(f"✅ Chart saved to: {output_path}")
     print(f"   Resolution: {DPI} DPI")
-    print(f"   Problems: {n}")
+    print(f"   Total problems: {n}")
+    print(f"   Problems that ran OpenEvolve: {len(oe_problems)}")
     print(f"   Problems Solved — Baseline: {b_solved}  |  OpenEvolve: {e_solved}")
-    print(f"   Pass Rate — Baseline: {b_pass_rate:.1f}%  |  OpenEvolve: {e_pass_rate:.1f}%")
-    print(f"   Avg Score — Baseline: {avg_b_score:.4f}  |  OpenEvolve: {avg_e_score:.4f}")
-    print(f"   Score W/T/L: {score_wins}/{score_ties}/{score_losses}")
+    print(f"   Pass Rate — Baseline: {b_pass:.1f}%  |  OpenEvolve: {e_pass:.1f}%")
+    print(f"   Avg Accuracy — Baseline: {avg_b_acc:.1f}%  |  OpenEvolve: {avg_e_acc:.1f}%")
+    print(f"   Head-to-head W/T/L: {wins}/{ties}/{losses}")
 
 
 if __name__ == "__main__":

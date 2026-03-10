@@ -52,37 +52,33 @@ def run_pure_gemma(llm, problem_dir: str, config_path: str) -> Dict[str, Any]:
         {"role": "user", "content": "Please implement the module described above. Output ONLY the Verilog code."}
     ]
 
-    # Use a thread with timeout to prevent hanging on complex problems
-    result_container = [None]
-    error_container = [None]
+    generated_code = ""
+    try:
+        response_generator = llm.create_chat_completion(
+            messages=messages,
+            temperature=0.7,
+            max_tokens=4096,
+            stream=True
+        )
+        
+        for chunk in response_generator:
+            if time.time() - start_time > BASELINE_TIMEOUT:
+                print(f"  WARNING: Gemma generation timed out after {BASELINE_TIMEOUT}s")
+                # Need to manually close the generator to ensure llamacpp stops cleanly
+                response_generator.close()
+                return {
+                    "score": 0.0, "accuracy": 0.0,
+                    "time": time.time() - start_time,
+                    "mode": "pure_gemma_timeout"
+                }
 
-    def generate():
-        try:
-            result_container[0] = llm.create_chat_completion(
-                messages=messages,
-                temperature=0.7,
-                max_tokens=4096
-            )
-        except Exception as e:
-            error_container[0] = e
-
-    thread = threading.Thread(target=generate)
-    thread.start()
-    thread.join(timeout=BASELINE_TIMEOUT)
-
-    if thread.is_alive():
-        print(f"  WARNING: Gemma generation timed out after {BASELINE_TIMEOUT}s")
-        return {
-            "score": 0.0, "accuracy": 0.0,
-            "time": time.time() - start_time,
-            "mode": "pure_gemma_timeout"
-        }
-    if error_container[0]:
-        raise error_container[0]
-
-    response = result_container[0]
-
-    generated_code = response["choices"][0]["message"]["content"]
+            if "choices" in chunk and len(chunk["choices"]) > 0:
+                delta = chunk["choices"][0].get("delta", {})
+                if "content" in delta and delta["content"] is not None:
+                    generated_code += delta["content"]
+                    
+    except Exception as e:
+        raise e
 
     # Extract code if wrapped in markdown
     if "```verilog" in generated_code:
@@ -510,6 +506,11 @@ def main():
 
             # Free up baseline LLM VRAM before spawning OpenEvolve
             if llm is not None:
+                if hasattr(llm, 'close'):
+                    try:
+                        llm.close()
+                    except Exception as e:
+                        print(f"  Warning: llm.close() failed: {e}")
                 del llm
                 import gc
                 gc.collect()

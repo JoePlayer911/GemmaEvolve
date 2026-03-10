@@ -314,9 +314,13 @@ class OpenEvolve:
             del self.evaluator
             self.evaluator = None
         if hasattr(self, "llm_ensemble") and self.llm_ensemble is not None:
+            if hasattr(self.llm_ensemble, "close"):
+                self.llm_ensemble.close()
             del self.llm_ensemble
             self.llm_ensemble = None
         if hasattr(self, "llm_evaluator_ensemble") and self.llm_evaluator_ensemble is not None:
+            if hasattr(self.llm_evaluator_ensemble, "close"):
+                self.llm_evaluator_ensemble.close()
             del self.llm_evaluator_ensemble
             self.llm_evaluator_ensemble = None
             

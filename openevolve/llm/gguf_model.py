@@ -59,6 +59,15 @@ class GGUFLLM(LLMInterface):
         )
         logger.info("GGUF model loaded successfully.")
 
+    def close(self):
+        """Explicitly free Llama model resources."""
+        if hasattr(self, "llm") and self.llm:
+            if hasattr(self.llm, "close"):
+                try:
+                    self.llm.close()
+                except Exception as e:
+                    logger.warning(f"Failed to close Llama model: {e}")
+
     async def generate(self, prompt: str, **kwargs) -> str:
         """Generate text from a prompt"""
         return await self.generate_with_context(

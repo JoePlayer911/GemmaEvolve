@@ -60,6 +60,15 @@ class LLMEnsemble:
             )
             logger._ensemble_logged = True
 
+    def close(self):
+        """Close all models in the ensemble"""
+        for model in self.models:
+            if hasattr(model, "close"):
+                try:
+                    model.close()
+                except Exception as e:
+                    logger.warning(f"Failed to close model {getattr(model, 'name', 'unknown')}: {e}")
+
     async def generate(self, prompt: str, **kwargs) -> str:
         """Generate text using a randomly selected model based on weights"""
         model = self._sample_model()
