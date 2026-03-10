@@ -114,7 +114,8 @@ def main():
     ax1.plot(x, gemma_cum, color=COLOR_BASELINE, linewidth=2.0, alpha=0.9, label='Native Gemma')
 
     # OpenEvolve iterations (iter_100 through iter_800)
-    iter_cmap = plt.cm.YlOrRd(np.linspace(0.25, 0.95, len(ITER_KEYS)))
+    iter_cmap = plt.cm.rainbow(np.linspace(0, 1, len(ITER_KEYS)))
+    max_solved = int(gemma_cum[-1])  # track max for y-axis
     for idx, key in enumerate(ITER_KEYS):
         iter_acc = []
         for d in data:
@@ -125,6 +126,7 @@ def main():
             else:
                 iter_acc.append(oe[key]["accuracy"])
         cum_solved = np.cumsum([1 if a >= 1.0 else 0 for a in iter_acc])
+        max_solved = max(max_solved, int(cum_solved[-1]))
         label = key.replace("_", " ").title()
         ax1.plot(x, cum_solved, color=iter_cmap[idx], linewidth=1.4, alpha=0.85, label=label)
 
@@ -132,7 +134,7 @@ def main():
     ax1.set_ylabel("Number of Problems Solved", fontsize=11, color=COLOR_TEXT)
     ax1.set_title("Cumulative Problems Solved",
                   fontsize=13, fontweight='bold', color='white', pad=10)
-    ax1.set_ylim(0, n + 2)
+    ax1.set_ylim(0, max_solved + 5)
     ax1.legend(fontsize=8, loc='upper left', framealpha=0.4, ncol=2)
     ax1.grid(axis='y', color=COLOR_GRID, linestyle='--', alpha=0.5, zorder=0)
     ax1.tick_params(colors=COLOR_TEXT)
