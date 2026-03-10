@@ -102,27 +102,38 @@ def main():
                            hspace=0.3, wspace=0.35,
                            left=0.05, right=0.98, top=0.85, bottom=0.12)
 
-    # ===== Panel 1: Line chart – Gemma vs iter_800 per problem =====
+    # ===== Panel 1: Cumulative problems solved =====
     ax1 = fig.add_subplot(gs[0, 0])
     ax1.set_facecolor(COLOR_PANEL)
 
-    x = np.arange(n)
-    ax1.plot(x, b_acc, color=COLOR_BASELINE, linewidth=1.2, alpha=0.85, label='Native Gemma')
-    ax1.plot(x, e800_acc, color=COLOR_EVOLVE, linewidth=1.2, alpha=0.85, label='OpenEvolve (iter 800)')
+    x = np.arange(1, n + 1)  # 1-indexed: total problems attempted
 
-    # Fill area where OpenEvolve beats baseline
-    b_arr = np.array(b_acc)
-    e_arr = np.array(e800_acc)
-    ax1.fill_between(x, b_arr, e_arr, where=(e_arr > b_arr),
-                     color=COLOR_WIN, alpha=0.15, label='OE improvement')
+    # Build cumulative solved for each model line
+    # Native Gemma
+    gemma_cum = np.cumsum([1 if a >= 1.0 else 0 for a in b_acc])
+    ax1.plot(x, gemma_cum, color=COLOR_BASELINE, linewidth=2.0, alpha=0.9, label='Native Gemma')
 
-    ax1.set_xlabel("Problem Index", fontsize=11, color=COLOR_TEXT)
-    ax1.set_ylabel("Accuracy", fontsize=11, color=COLOR_TEXT)
-    ax1.set_title("Per-Problem Accuracy: Gemma vs OpenEvolve (iter 800)",
+    # OpenEvolve iterations (iter_100 through iter_800)
+    iter_cmap = plt.cm.YlOrRd(np.linspace(0.25, 0.95, len(ITER_KEYS)))
+    for idx, key in enumerate(ITER_KEYS):
+        iter_acc = []
+        for d in data:
+            oe = d.get("openevolve")
+            if oe == "skipped" or oe is None:
+                # If openevolve didn't run, use baseline accuracy for this problem
+                iter_acc.append(d["baseline"]["accuracy"])
+            else:
+                iter_acc.append(oe[key]["accuracy"])
+        cum_solved = np.cumsum([1 if a >= 1.0 else 0 for a in iter_acc])
+        label = key.replace("_", " ").title()
+        ax1.plot(x, cum_solved, color=iter_cmap[idx], linewidth=1.4, alpha=0.85, label=label)
+
+    ax1.set_xlabel("Total Problems Attempted", fontsize=11, color=COLOR_TEXT)
+    ax1.set_ylabel("Number of Problems Solved", fontsize=11, color=COLOR_TEXT)
+    ax1.set_title("Cumulative Problems Solved",
                   fontsize=13, fontweight='bold', color='white', pad=10)
-    ax1.set_ylim(-0.05, 1.15)
-    ax1.axhline(y=1.0, color=COLOR_WIN, linestyle=':', linewidth=0.8, alpha=0.5)
-    ax1.legend(fontsize=9, loc='lower left', framealpha=0.4)
+    ax1.set_ylim(0, n + 2)
+    ax1.legend(fontsize=8, loc='upper left', framealpha=0.4, ncol=2)
     ax1.grid(axis='y', color=COLOR_GRID, linestyle='--', alpha=0.5, zorder=0)
     ax1.tick_params(colors=COLOR_TEXT)
 
