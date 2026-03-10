@@ -4094,5 +4094,105 @@
     },
     "gemma_solved": false,
     "openevolve_solved": false
+  },
+  {
+    "problem": "Prob127_lemmings1",
+    "baseline": {
+      "score": 0.6637554585152838,
+      "accuracy": 0.6637554585152838,
+      "time": 9.543370723724365,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob127_lemmings1/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.6376,
+        "accuracy": 0.6376
+      },
+      "iter_200": {
+        "score": 0.6376,
+        "accuracy": 0.6376
+      },
+      "iter_300": {
+        "score": 0.6376,
+        "accuracy": 0.6376
+      },
+      "iter_400": {
+        "score": 0.6376,
+        "accuracy": 0.6376
+      },
+      "iter_500": {
+        "score": 0.6376,
+        "accuracy": 0.6376
+      },
+      "iter_600": {
+        "score": 0.6376,
+        "accuracy": 0.6376
+      },
+      "iter_700": {
+        "score": 0.6376,
+        "accuracy": 0.6376
+      },
+      "iter_800": {
+        "score": 1.044,
+        "accuracy": 1.0
+      },
+      "solved_iteration": 706,
+      "total_time": 3551.9279177188873,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob127_lemmings1_20260310_132954.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": true
+  },
+  {
+    "problem": "Prob128_fsm_ps2",
+    "baseline": {
+      "score": 0.39249999999999996,
+      "accuracy": 0.39249999999999996,
+      "time": 14.805746793746948,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob128_fsm_ps2/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.6925,
+        "accuracy": 0.6925
+      },
+      "iter_200": {
+        "score": 0.6925,
+        "accuracy": 0.6925
+      },
+      "iter_300": {
+        "score": 0.715,
+        "accuracy": 0.715
+      },
+      "iter_400": {
+        "score": 0.715,
+        "accuracy": 0.715
+      },
+      "iter_500": {
+        "score": 0.715,
+        "accuracy": 0.715
+      },
+      "iter_600": {
+        "score": 0.715,
+        "accuracy": 0.715
+      },
+      "iter_700": {
+        "score": 0.715,
+        "accuracy": 0.715
+      },
+      "iter_800": {
+        "score": 0.7150000000000001,
+        "accuracy": 0.7150000000000001
+      },
+      "solved_iteration": null,
+      "total_time": 5793.425278663635,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob128_fsm_ps2_20260310_142924.log"
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
   }
 ]

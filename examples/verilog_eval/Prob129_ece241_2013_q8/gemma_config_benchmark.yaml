@@ -9,7 +9,7 @@ database:
   programs_per_island: 10
   similarity_threshold: 0.95
 diff_based_evolution: false
-early_stopping_patience: 100
+early_stopping_patience: 99999
 evaluator:
   parallel_evaluations: 2
   timeout: 30
