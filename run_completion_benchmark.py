@@ -250,12 +250,13 @@ def run_openevolve(problem_dir: str, config_path: str, max_iterations: int, save
     else:
         initial_program = os.path.join(problem_dir, "initial_program.v")
 
+    remaining_iterations = max_iterations
+
     cmd = [
         sys.executable, "-m", "openevolve.cli",
         initial_program,
         evaluator_script,
         "--config", temp_config_path,
-        "--iterations", str(max_iterations),
         "--checkpoint-interval", str(save_freq),
         "--log-level", "DEBUG"
     ]
@@ -275,7 +276,17 @@ def run_openevolve(problem_dir: str, config_path: str, max_iterations: int, save
             # Use checkpoint path to resume
             cp_path = os.path.join(checkpoint_dir, latest_cp)
             cmd.extend(["--checkpoint", cp_path])
-            print(f"  Found existing checkpoint {latest_cp}. Resuming OpenEvolve from iteration {latest_iter}...")
+            
+            # Calculate remaining iterations to achieve total max_iterations
+            remaining_iterations = max(0, max_iterations - latest_iter)
+            print(f"  Found existing checkpoint {latest_cp}. Resuming OpenEvolve from iteration {latest_iter} (running {remaining_iterations} more)...")
+
+            if remaining_iterations == 0:
+                print(f"  Already reached {max_iterations} iterations at {latest_cp}. Not running OpenEvolve.")
+                # We can just return immediately or run for 0 iterations to parse the log. 
+                # OpenEvolve handles 0 iterations by just exiting gracefully.
+                
+    cmd.extend(["--iterations", str(remaining_iterations)])
 
     # Create timestamped log file
     os.makedirs(LOGS_DIR, exist_ok=True)

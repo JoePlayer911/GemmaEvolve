@@ -139,31 +139,49 @@ def main():
     ax1.grid(axis='y', color=COLOR_GRID, linestyle='--', alpha=0.5, zorder=0)
     ax1.tick_params(colors=COLOR_TEXT)
 
-    # ===== Panel 2: Line chart – Accuracy progression iter 100-800 =====
+    # ===== Panel 2: Cumulative problems solved by iteration =====
     ax2 = fig.add_subplot(gs[0, 1])
     ax2.set_facecolor(COLOR_PANEL)
 
-    ix = np.arange(len(iter_labels))
-    ax2.plot(ix, [a * 100 for a in iter_avg_acc],
+    # Count how many problems are solved (accuracy >= 1.0) at each iteration checkpoint
+    iter_nums = [int(k.replace("iter_", "")) for k in ITER_KEYS]
+    cum_solved_by_iter = []
+    for key in ITER_KEYS:
+        solved_count = 0
+        for d in data:
+            oe = d.get("openevolve")
+            if oe == "skipped" or oe is None:
+                # Use baseline accuracy for problems that didn't run OpenEvolve
+                if d["baseline"]["accuracy"] >= 1.0:
+                    solved_count += 1
+            else:
+                if key in oe and oe[key]["accuracy"] >= 1.0:
+                    solved_count += 1
+        cum_solved_by_iter.append(solved_count)
+
+    ix = np.arange(len(iter_nums))
+    ax2.plot(ix, cum_solved_by_iter,
              color=COLOR_EVOLVE, linewidth=2.5, marker='o', markersize=6,
              markerfacecolor='white', markeredgecolor=COLOR_EVOLVE, markeredgewidth=2,
-             zorder=5, label='Avg Accuracy (%)')
-    ax2.axhline(y=oe_baseline_avg * 100, color=COLOR_BASELINE, linestyle='--',
-                linewidth=1.5, alpha=0.8, label=f'Baseline avg ({oe_baseline_avg*100:.1f}%)')
+             zorder=5, label='OpenEvolve')
+
+    # Horizontal line for Native Gemma's total solved problems
+    ax2.axhline(y=b_solved, color=COLOR_BASELINE, linestyle='--',
+                linewidth=2.0, alpha=0.9, label=f'Native Gemma ({b_solved} solved)')
 
     # Annotate first and last points
-    ax2.annotate(f'{iter_avg_acc[0]*100:.1f}%', (ix[0], iter_avg_acc[0]*100),
+    ax2.annotate(f'{cum_solved_by_iter[0]}', (ix[0], cum_solved_by_iter[0]),
                  textcoords="offset points", xytext=(0, 12), ha='center',
                  fontsize=9, color=COLOR_TEXT, fontweight='bold')
-    ax2.annotate(f'{iter_avg_acc[-1]*100:.1f}%', (ix[-1], iter_avg_acc[-1]*100),
+    ax2.annotate(f'{cum_solved_by_iter[-1]}', (ix[-1], cum_solved_by_iter[-1]),
                  textcoords="offset points", xytext=(0, 12), ha='center',
                  fontsize=9, color=COLOR_TEXT, fontweight='bold')
 
     ax2.set_xticks(ix)
-    ax2.set_xticklabels(iter_labels, fontsize=9, color=COLOR_TEXT, rotation=45)
-    ax2.set_xlabel("Iteration Checkpoint", fontsize=11, color=COLOR_TEXT)
-    ax2.set_ylabel("Avg Accuracy (%)", fontsize=11, color=COLOR_TEXT)
-    ax2.set_title(f"OpenEvolve Accuracy Progression\n({len(oe_problems)} problems that ran OE)",
+    ax2.set_xticklabels([str(i) for i in iter_nums], fontsize=9, color=COLOR_TEXT, rotation=45)
+    ax2.set_xlabel("Number of Iterations", fontsize=11, color=COLOR_TEXT)
+    ax2.set_ylabel("Cumulative Problems Solved", fontsize=11, color=COLOR_TEXT)
+    ax2.set_title(f"Problems Solved by Iteration\n({n} total problems)",
                   fontsize=13, fontweight='bold', color='white', pad=10)
     ax2.legend(fontsize=9, loc='lower right', framealpha=0.4)
     ax2.grid(axis='y', color=COLOR_GRID, linestyle='--', alpha=0.5, zorder=0)
@@ -178,7 +196,6 @@ def main():
         ["Metric",      "Baseline",           "OpenEvolve"],
         ["Solved",      f"{b_solved}/{n}",     f"{e_solved}/{n}"],
         ["Pass Rate",   f"{b_pass:.1f}%",      f"{e_pass:.1f}%"],
-        ["Avg Acc",     f"{avg_b_acc:.1f}%",   f"{avg_e_acc:.1f}%"],
         ["W / T / L",   "—",                   f"{wins}/{ties}/{losses}"],
         ["OE Runs",     "—",                   f"{len(oe_problems)}"],
     ]
