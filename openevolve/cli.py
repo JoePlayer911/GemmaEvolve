@@ -56,6 +56,14 @@ def parse_args() -> argparse.Namespace:
         default=None,
     )
 
+    parser.add_argument(
+        "--checkpoint-interval",
+        "--checkpoint_interval",
+        help="How frequently to save checkpoints (number of iterations)",
+        type=int,
+        default=None,
+    )
+
     parser.add_argument("--api-base", help="Base URL for the LLM API", default=None)
 
     parser.add_argument("--primary-model", help="Primary LLM model name", default=None)
@@ -147,6 +155,10 @@ async def main_async() -> int:
     if args.target_score is not None:
         config.target_score = args.target_score
         print(f"Using target score: {config.target_score}")
+
+    if args.checkpoint_interval is not None:
+        config.checkpoint_interval = args.checkpoint_interval
+        print(f"Using checkpoint interval: {config.checkpoint_interval}")
 
     # Initialize OpenEvolve
     try:

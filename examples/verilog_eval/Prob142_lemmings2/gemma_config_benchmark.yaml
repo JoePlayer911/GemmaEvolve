@@ -40,12 +40,16 @@ prompt:
   num_diverse_programs: 0
   num_top_programs: 0
   system_message: "You are an expert Hardware Design Engineer. Your task is to implement\
-    \ a Verilog module.\n\nDescription:\nThe problem is to design a 3-state Mealy\
-    \ finite state machine that detects the sequence \"101\" on an input signal 'x'.\
-    \ The FSM should assert an output signal 'z' to logic-1 when the sequence is detected\
-    \ and includes a negative edge-triggered asynchronous reset. The FSM should also\
-    \ recognize overlapping sequences.\n\nInterface:\nmodule TopModule (\n  input\
-    \ clk,\n  input aresetn,\n  input x,\n  output reg z\n);\n\nRequirements:\n- Implement\
-    \ the module logic using `assign` statements where possible.\n- Follow Verilog-2001\
-    \ standards.\n- Output ONLY the Verilog module code.\n"
+    \ a Verilog module.\n\nDescription:\nThe Lemming circuit models a finite state\
+    \ machine that controls a Lemming's movement. The Lemming walks either left or\
+    \ right, switching directions upon receiving a bump from either the left or right.\
+    \ When the ground disappears (ground=0), the Lemming falls and outputs \"aaah!\"\
+    . When the ground reappears (ground=1), the Lemming resumes walking in its previous\
+    \ direction. Bumps or ground changes during a fall do not affect the walking direction.\
+    \ The circuit is reset asynchronously to walk left.\n\nInterface:\nmodule TopModule\
+    \ (\n  input clk,\n  input areset,\n  input bump_left,\n  input bump_right,\n\
+    \  input ground,\n  output walk_left,\n  output walk_right,\n  output aaah\n);\n\
+    \nRequirements:\n- Implement the module logic using `assign` statements where\
+    \ possible.\n- Follow Verilog-2001 standards.\n- Output ONLY the Verilog module\
+    \ code.\n"
 target_score: 1.0
