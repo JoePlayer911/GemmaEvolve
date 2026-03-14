@@ -4857,5 +4857,719 @@
     },
     "gemma_solved": false,
     "openevolve_solved": false
+  },
+  {
+    "problem": "Prob143_fsm_onehot",
+    "baseline": {
+      "score": 0.3883928571428571,
+      "accuracy": 0.3883928571428571,
+      "time": 45.041895389556885,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob143_fsm_onehot/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_200": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_300": {
+        "score": 0.4241,
+        "accuracy": 0.4241
+      },
+      "iter_400": {
+        "score": 0.4241,
+        "accuracy": 0.4241
+      },
+      "iter_500": {
+        "score": 0.4241,
+        "accuracy": 0.4241
+      },
+      "iter_600": {
+        "score": 0.4241,
+        "accuracy": 0.4241
+      },
+      "iter_700": {
+        "score": 0.4241,
+        "accuracy": 0.4241
+      },
+      "iter_800": {
+        "score": 0.4241071428571429,
+        "accuracy": 0.4241071428571429
+      },
+      "solved_iteration": null,
+      "total_time": 13572.091914653778,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob143_fsm_onehot_20260312_195946.log",
+      "start_iteration": 216
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob144_conwaylife",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 31.647581100463867,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob144_conwaylife/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_200": {
+        "score": 0.1,
+        "accuracy": 0.0
+      },
+      "iter_300": {
+        "score": 0.1,
+        "accuracy": 0.0
+      },
+      "iter_400": {
+        "score": 0.1,
+        "accuracy": 0.0
+      },
+      "iter_500": {
+        "score": 0.1,
+        "accuracy": 0.0
+      },
+      "iter_600": {
+        "score": 0.1,
+        "accuracy": 0.0
+      },
+      "iter_700": {
+        "score": 0.1,
+        "accuracy": 0.0
+      },
+      "iter_800": {
+        "score": 0.1,
+        "accuracy": 0.0
+      },
+      "solved_iteration": null,
+      "total_time": 13019.464103460312,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob144_conwaylife_20260312_234633.log",
+      "start_iteration": 133
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob145_circuit8",
+    "baseline": {
+      "score": 0.4,
+      "accuracy": 0.4,
+      "time": 6.45360803604126,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob145_circuit8/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_200": {
+        "score": 0.4,
+        "accuracy": 0.4
+      },
+      "iter_300": {
+        "score": 0.4,
+        "accuracy": 0.4
+      },
+      "iter_400": {
+        "score": 0.4,
+        "accuracy": 0.4
+      },
+      "iter_500": {
+        "score": 0.4,
+        "accuracy": 0.4
+      },
+      "iter_600": {
+        "score": 0.4,
+        "accuracy": 0.4
+      },
+      "iter_700": {
+        "score": 0.4,
+        "accuracy": 0.4
+      },
+      "iter_800": {
+        "score": 0.4,
+        "accuracy": 0.4
+      },
+      "solved_iteration": null,
+      "total_time": 3695.873121023178,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob145_circuit8_20260313_032343.log",
+      "start_iteration": 128
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob146_fsm_serialdata",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 34.80644369125366,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob146_fsm_serialdata/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_200": {
+        "score": 0.958,
+        "accuracy": 0.958
+      },
+      "iter_300": {
+        "score": 0.958,
+        "accuracy": 0.958
+      },
+      "iter_400": {
+        "score": 0.958,
+        "accuracy": 0.958
+      },
+      "iter_500": {
+        "score": 0.958,
+        "accuracy": 0.958
+      },
+      "iter_600": {
+        "score": 0.958,
+        "accuracy": 0.958
+      },
+      "iter_700": {
+        "score": 0.958,
+        "accuracy": 0.958
+      },
+      "iter_800": {
+        "score": 0.958011049723757,
+        "accuracy": 0.958011049723757
+      },
+      "solved_iteration": null,
+      "total_time": 14547.150059461594,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob146_fsm_serialdata_20260313_042557.log",
+      "start_iteration": 173
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob147_circuit10",
+    "baseline": {
+      "score": 0.43103448275862066,
+      "accuracy": 0.43103448275862066,
+      "time": 6.720211982727051,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob147_circuit10/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_200": {
+        "score": 0.8707,
+        "accuracy": 0.8707
+      },
+      "iter_300": {
+        "score": 0.8707,
+        "accuracy": 0.8707
+      },
+      "iter_400": {
+        "score": 0.8707,
+        "accuracy": 0.8707
+      },
+      "iter_500": {
+        "score": 0.8707,
+        "accuracy": 0.8707
+      },
+      "iter_600": {
+        "score": 0.8707,
+        "accuracy": 0.8707
+      },
+      "iter_700": {
+        "score": 0.8707,
+        "accuracy": 0.8707
+      },
+      "iter_800": {
+        "score": 0.9051724137931034,
+        "accuracy": 0.9051724137931034
+      },
+      "solved_iteration": null,
+      "total_time": 2823.611567735672,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob147_circuit10_20260313_082834.log",
+      "start_iteration": 163
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob148_2013_q2afsm",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 29.14638614654541,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob148_2013_q2afsm/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_200": {
+        "score": 0.9962,
+        "accuracy": 0.9962
+      },
+      "iter_300": {
+        "score": 0.9962,
+        "accuracy": 0.9962
+      },
+      "iter_400": {
+        "score": 0.9962,
+        "accuracy": 0.9962
+      },
+      "iter_500": {
+        "score": 0.9962,
+        "accuracy": 0.9962
+      },
+      "iter_600": {
+        "score": 0.9962,
+        "accuracy": 0.9962
+      },
+      "iter_700": {
+        "score": 0.9962,
+        "accuracy": 0.9962
+      },
+      "iter_800": {
+        "score": 0.9962049335863378,
+        "accuracy": 0.9962049335863378
+      },
+      "solved_iteration": null,
+      "total_time": 11554.316672086716,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob148_2013_q2afsm_20260313_091611.log",
+      "start_iteration": 140
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob149_ece241_2013_q4",
+    "baseline": {
+      "score": 0.3122549019607843,
+      "accuracy": 0.3122549019607843,
+      "time": 46.45445370674133,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob149_ece241_2013_q4/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_200": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_300": {
+        "score": 0.426,
+        "accuracy": 0.426
+      },
+      "iter_400": {
+        "score": 0.426,
+        "accuracy": 0.426
+      },
+      "iter_500": {
+        "score": 0.426,
+        "accuracy": 0.426
+      },
+      "iter_600": {
+        "score": 0.426,
+        "accuracy": 0.426
+      },
+      "iter_700": {
+        "score": 0.426,
+        "accuracy": 0.426
+      },
+      "iter_800": {
+        "score": 0.4259803921568628,
+        "accuracy": 0.4259803921568628
+      },
+      "solved_iteration": null,
+      "total_time": 7588.984448671341,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob149_ece241_2013_q4_20260313_122935.log",
+      "start_iteration": 230
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob150_review2015_fsmonehot",
+    "baseline": {
+      "score": 0.2366666666666667,
+      "accuracy": 0.2366666666666667,
+      "time": 39.86351704597473,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob150_review2015_fsmonehot/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.5433,
+        "accuracy": 0.5433
+      },
+      "iter_200": {
+        "score": 0.5433,
+        "accuracy": 0.5433
+      },
+      "iter_300": {
+        "score": 0.5433,
+        "accuracy": 0.5433
+      },
+      "iter_400": {
+        "score": 0.5433,
+        "accuracy": 0.5433
+      },
+      "iter_500": {
+        "score": 0.5433,
+        "accuracy": 0.5433
+      },
+      "iter_600": {
+        "score": 0.5433,
+        "accuracy": 0.5433
+      },
+      "iter_700": {
+        "score": 0.5433,
+        "accuracy": 0.5433
+      },
+      "iter_800": {
+        "score": 0.5433333333333333,
+        "accuracy": 0.5433333333333333
+      },
+      "solved_iteration": null,
+      "total_time": 19479.48241996765,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob150_review2015_fsmonehot_20260313_143648.log",
+      "start_iteration": 20
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob151_review2015_fsm",
+    "baseline": {
+      "score": 0.8327086210297889,
+      "accuracy": 0.8327086210297889,
+      "time": 47.35271430015564,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob151_review2015_fsm/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_200": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_300": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_400": {
+        "score": 0.8465,
+        "accuracy": 0.8465
+      },
+      "iter_500": {
+        "score": 0.8465,
+        "accuracy": 0.8465
+      },
+      "iter_600": {
+        "score": 0.8505,
+        "accuracy": 0.8505
+      },
+      "iter_700": {
+        "score": 0.8505,
+        "accuracy": 0.8505
+      },
+      "iter_800": {
+        "score": 0.8504636022884198,
+        "accuracy": 0.8504636022884198
+      },
+      "solved_iteration": null,
+      "total_time": 13518.858393192291,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob151_review2015_fsm_20260313_200218.log",
+      "start_iteration": 300
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob152_lemmings3",
+    "baseline": {
+      "score": 0.6749435665914221,
+      "accuracy": 0.6749435665914221,
+      "time": 31.021477937698364,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob152_lemmings3/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_200": {
+        "score": 0.6749,
+        "accuracy": 0.6749
+      },
+      "iter_300": {
+        "score": 0.6749,
+        "accuracy": 0.6749
+      },
+      "iter_400": {
+        "score": 0.6749,
+        "accuracy": 0.6749
+      },
+      "iter_500": {
+        "score": 0.6749,
+        "accuracy": 0.6749
+      },
+      "iter_600": {
+        "score": 0.6749,
+        "accuracy": 0.6749
+      },
+      "iter_700": {
+        "score": 0.6749,
+        "accuracy": 0.6749
+      },
+      "iter_800": {
+        "score": 0.6749435665914221,
+        "accuracy": 0.6749435665914221
+      },
+      "solved_iteration": null,
+      "total_time": 12803.795632839203,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob152_lemmings3_20260313_234811.log",
+      "start_iteration": 121
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob153_gshare",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 30.17994499206543,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob153_gshare/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_200": {
+        "score": 0.5679,
+        "accuracy": 0.5679
+      },
+      "iter_300": {
+        "score": 0.5679,
+        "accuracy": 0.5679
+      },
+      "iter_400": {
+        "score": 0.5679,
+        "accuracy": 0.5679
+      },
+      "iter_500": {
+        "score": 0.5679,
+        "accuracy": 0.5679
+      },
+      "iter_600": {
+        "score": 0.5679,
+        "accuracy": 0.5679
+      },
+      "iter_700": {
+        "score": 0.5679,
+        "accuracy": 0.5679
+      },
+      "iter_800": {
+        "score": 0.5678670360110804,
+        "accuracy": 0.5678670360110804
+      },
+      "solved_iteration": null,
+      "total_time": 15728.101286888123,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob153_gshare_20260314_032209.log",
+      "start_iteration": 182
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob154_fsm_ps2data",
+    "baseline": {
+      "score": 0.6133415688696726,
+      "accuracy": 0.6133415688696726,
+      "time": 26.592694520950317,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob154_fsm_ps2data/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_200": {
+        "score": 0.6973,
+        "accuracy": 0.6973
+      },
+      "iter_300": {
+        "score": 0.6973,
+        "accuracy": 0.6973
+      },
+      "iter_400": {
+        "score": 0.6973,
+        "accuracy": 0.6973
+      },
+      "iter_500": {
+        "score": 0.6973,
+        "accuracy": 0.6973
+      },
+      "iter_600": {
+        "score": 0.6973,
+        "accuracy": 0.6973
+      },
+      "iter_700": {
+        "score": 0.6973,
+        "accuracy": 0.6973
+      },
+      "iter_800": {
+        "score": 0.6973440395305744,
+        "accuracy": 0.6973440395305744
+      },
+      "solved_iteration": null,
+      "total_time": 9129.405463218689,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob154_fsm_ps2data_20260314_074447.log",
+      "start_iteration": 173
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob155_lemmings4",
+    "baseline": {
+      "score": 0.09371884346959125,
+      "accuracy": 0.09371884346959125,
+      "time": 22.906092166900635,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob155_lemmings4/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_200": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_300": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_400": {
+        "score": 0.7198,
+        "accuracy": 0.7198
+      },
+      "iter_500": {
+        "score": 0.7198,
+        "accuracy": 0.7198
+      },
+      "iter_600": {
+        "score": 0.7398,
+        "accuracy": 0.7398
+      },
+      "iter_700": {
+        "score": 0.7398,
+        "accuracy": 0.7398
+      },
+      "iter_800": {
+        "score": 0.7397806580259223,
+        "accuracy": 0.7397806580259223
+      },
+      "solved_iteration": null,
+      "total_time": 13374.162713766098,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob155_lemmings4_20260314_101723.log",
+      "start_iteration": 300
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
+  },
+  {
+    "problem": "Prob156_review2015_fancytimer",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 38.406283378601074,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob156_review2015_fancytimer/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_200": {
+        "score": 0.1,
+        "accuracy": 0.0
+      },
+      "iter_300": {
+        "score": 0.1,
+        "accuracy": 0.0
+      },
+      "iter_400": {
+        "score": 0.1,
+        "accuracy": 0.0
+      },
+      "iter_500": {
+        "score": 0.1,
+        "accuracy": 0.0
+      },
+      "iter_600": {
+        "score": 0.1,
+        "accuracy": 0.0
+      },
+      "iter_700": {
+        "score": 0.1,
+        "accuracy": 0.0
+      },
+      "iter_800": {
+        "score": 0.1,
+        "accuracy": 0.0
+      },
+      "solved_iteration": null,
+      "total_time": 22645.5646777153,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob156_review2015_fancytimer_20260314_140100.log",
+      "start_iteration": 122
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
   }
 ]
