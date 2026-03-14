@@ -111,7 +111,7 @@ def main():
     # Build cumulative solved for each model line
     # Native Gemma
     gemma_cum = np.cumsum([1 if a >= 1.0 else 0 for a in b_acc])
-    ax1.plot(x, gemma_cum, color=COLOR_BASELINE, linewidth=2.0, alpha=0.9, label='Native Gemma')
+    ax1.plot(x, gemma_cum, color=COLOR_BASELINE, linewidth=2.0, alpha=0.9, label='Baseline')
 
     # OpenEvolve iterations (iter_100 through iter_800)
     iter_cmap = plt.cm.rainbow(np.linspace(0, 1, len(ITER_KEYS)))
@@ -127,7 +127,7 @@ def main():
                 iter_acc.append(oe[key]["accuracy"])
         cum_solved = np.cumsum([1 if a >= 1.0 else 0 for a in iter_acc])
         max_solved = max(max_solved, int(cum_solved[-1]))
-        label = key.replace("_", " ").title()
+        label = key.replace("iter_", "i")
         ax1.plot(x, cum_solved, color=iter_cmap[idx], linewidth=1.4, alpha=0.85, label=label)
 
     ax1.set_xlabel("Total Problems Attempted", fontsize=11, color=COLOR_TEXT)
@@ -135,7 +135,7 @@ def main():
     ax1.set_title("Cumulative Problems Solved",
                   fontsize=13, fontweight='bold', color='white', pad=10)
     ax1.set_ylim(0, max_solved + 5)
-    ax1.legend(fontsize=8, loc='upper left', framealpha=0.4, ncol=2)
+    ax1.legend(fontsize=8, loc='upper left', framealpha=0.4, ncol=3)
     ax1.grid(axis='y', color=COLOR_GRID, linestyle='--', alpha=0.5, zorder=0)
     ax1.tick_params(colors=COLOR_TEXT)
 
@@ -144,8 +144,8 @@ def main():
     ax2.set_facecolor(COLOR_PANEL)
 
     # Count how many problems are solved (accuracy >= 1.0) at each iteration checkpoint
-    iter_nums = [int(k.replace("iter_", "")) for k in ITER_KEYS]
-    cum_solved_by_iter = []
+    iter_nums = [0] + [int(k.replace("iter_", "")) for k in ITER_KEYS]
+    cum_solved_by_iter = [b_solved]
     for key in ITER_KEYS:
         solved_count = 0
         for d in data:
@@ -167,7 +167,7 @@ def main():
 
     # Horizontal line for Native Gemma's total solved problems
     ax2.axhline(y=b_solved, color=COLOR_BASELINE, linestyle='--',
-                linewidth=2.0, alpha=0.9, label=f'Native Gemma ({b_solved} solved)')
+                linewidth=2.0, alpha=0.9, label=f'Baseline ({b_solved} solved)')
 
     # Annotate first and last points
     ax2.annotate(f'{cum_solved_by_iter[0]}', (ix[0], cum_solved_by_iter[0]),
@@ -177,6 +177,7 @@ def main():
                  textcoords="offset points", xytext=(0, 12), ha='center',
                  fontsize=9, color=COLOR_TEXT, fontweight='bold')
 
+    ax2.set_ylim(0, 156)
     ax2.set_xticks(ix)
     ax2.set_xticklabels([str(i) for i in iter_nums], fontsize=9, color=COLOR_TEXT, rotation=45)
     ax2.set_xlabel("Number of Iterations", fontsize=11, color=COLOR_TEXT)
