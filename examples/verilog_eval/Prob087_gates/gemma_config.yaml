@@ -51,9 +51,9 @@ prompt:
     - Follow Verilog-2001 standards.
     - Output ONLY the Verilog module code.
 
-  num_top_programs: 0
-  num_diverse_programs: 0
-  include_artifacts: false
+  num_top_programs: 2
+  num_diverse_programs: 1
+  include_artifacts: true
 
 # Database configuration
 database:

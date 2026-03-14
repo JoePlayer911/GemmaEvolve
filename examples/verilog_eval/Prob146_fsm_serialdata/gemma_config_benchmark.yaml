@@ -1,0 +1,54 @@
+checkpoint_interval: 10
+database:
+  archive_size: 5
+  elite_selection_ratio: 0.2
+  embedding_model: embedding_models/Nomic-Embed-Code/nomic-embed-code-q5_k_m.gguf
+  exploitation_ratio: 0.7
+  num_islands: 4
+  population_size: 40
+  programs_per_island: 10
+  similarity_threshold: 0.95
+diff_based_evolution: false
+early_stopping_patience: 99999
+evaluator:
+  parallel_evaluations: 2
+  timeout: 30
+file_suffix: .v
+language: verilog
+llm:
+  evaluator_models:
+  - max_tokens: 4096
+    model_path: /home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf
+    n_ctx: 8192
+    n_gpu_layers: -1
+    name: gemma-local
+    temperature: 0.7
+    top_p: 0.95
+  models:
+  - max_tokens: 4096
+    model_path: /home/jonathan13/GemmaEvolve/gemma-3-12b-it-Q8_0.gguf
+    n_ctx: 8192
+    n_gpu_layers: -1
+    name: gemma-local
+    temperature: 0.7
+    top_p: 0.95
+log_level: INFO
+max_code_length: 5000
+max_iterations: 50
+prompt:
+  include_artifacts: false
+  num_diverse_programs: 0
+  num_top_programs: 0
+  system_message: "You are an expert Hardware Design Engineer. Your task is to implement\
+    \ a Verilog module.\n\nDescription:\nThe problem is to design a finite state machine\
+    \ that receives serial data bytes (least significant bit first) transmitted with\
+    \ a start bit (0), 8 data bits, and a stop bit (1), following an idle state (logic\
+    \ 1). The FSM should identify the start bit, receive the 8 data bits, verify the\
+    \ stop bit, and output the correctly received 8-bit data byte when `done` is asserted.\
+    \ If the stop bit is incorrect, the FSM must wait for a valid stop bit before\
+    \ attempting to receive the next byte. The FSM also includes an active-high synchronous\
+    \ reset.\n\nInterface:\nmodule TopModule (\n  input clk,\n  input in,\n  input\
+    \ reset,\n  output [7:0] out_byte,\n  output done\n);\n\nRequirements:\n- Implement\
+    \ the module logic using `assign` statements where possible.\n- Follow Verilog-2001\
+    \ standards.\n- Output ONLY the Verilog module code.\n"
+target_score: 1.0

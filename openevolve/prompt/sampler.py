@@ -211,6 +211,17 @@ class PromptSampler:
                 )
                 improvement_areas.append(msg)
 
+        # Surface evaluator errors prominently so the LLM can fix them
+        error_value = metrics.get("error")
+        if error_value and str(error_value).strip() and str(error_value).strip() != "None":
+            error_str = str(error_value).strip()
+            # Truncate very long error messages to avoid filling the context
+            if len(error_str) > 800:
+                error_str = error_str[:800] + "\n... (truncated)"
+            improvement_areas.append(
+                f"CRITICAL ERROR from evaluator — you MUST fix this:\n{error_str}"
+            )
+
         # Code length check (configurable threshold)
         threshold = (
             self.config.suggest_simplification_after_chars or self.config.code_length_threshold

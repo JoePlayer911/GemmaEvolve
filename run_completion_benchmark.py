@@ -252,6 +252,8 @@ def run_openevolve(problem_dir: str, config_path: str, max_iterations: int, save
 
     remaining_iterations = max_iterations
 
+    evaluator_script = os.path.join(problem_dir, "evaluator.py")
+
     cmd = [
         sys.executable, "-m", "openevolve.cli",
         initial_program,

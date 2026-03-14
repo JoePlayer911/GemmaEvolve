@@ -4806,5 +4806,56 @@
     },
     "gemma_solved": false,
     "openevolve_solved": false
+  },
+  {
+    "problem": "Prob142_lemmings2",
+    "baseline": {
+      "score": 0.1,
+      "accuracy": 0.0,
+      "time": 22.71404767036438,
+      "mode": "pure_gemma",
+      "code_path": "examples/verilog_eval/Prob142_lemmings2/baseline_generated.v"
+    },
+    "openevolve": {
+      "iter_100": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_200": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_300": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_400": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_500": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_600": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_700": {
+        "score": 0.0,
+        "accuracy": 0.0
+      },
+      "iter_800": {
+        "score": 0.963718820861678,
+        "accuracy": 0.963718820861678
+      },
+      "solved_iteration": null,
+      "total_time": 894.1357324123383,
+      "mode": "openevolve",
+      "log": "logs/completion_Prob142_lemmings2_20260312_191214.log",
+      "start_iteration": 700
+    },
+    "gemma_solved": false,
+    "openevolve_solved": false
   }
 ]
