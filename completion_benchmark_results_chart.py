@@ -61,18 +61,18 @@ def main():
     e800_acc = []
     for d in data:
         oe = d.get("openevolve")
-        if oe == "skipped":
+        if not isinstance(oe, dict):
             e800_acc.append(d["baseline"]["accuracy"])
         else:
-            e800_acc.append(oe["iter_800"]["accuracy"])
+            e800_acc.append(oe["iter_800"]["accuracy"] if "iter_800" in oe else d["baseline"]["accuracy"])
 
     # --- Iteration progression (only for problems where openevolve actually ran) ---
     iter_labels = [str(i) for i in range(100, 900, 100)]
     # Collect per-iteration average accuracy across all problems that ran openevolve
-    oe_problems = [d for d in data if d.get("openevolve") not in (None, "skipped")]
+    oe_problems = [d for d in data if isinstance(d.get("openevolve"), dict)]
     iter_avg_acc = []
     for key in ITER_KEYS:
-        accs = [d["openevolve"][key]["accuracy"] for d in oe_problems]
+        accs = [d["openevolve"][key]["accuracy"] for d in oe_problems if key in d["openevolve"]]
         iter_avg_acc.append(np.mean(accs) if accs else 0.0)
 
     # Baseline average for the same subset
@@ -102,71 +102,80 @@ def main():
                            hspace=0.3, wspace=0.35,
                            left=0.05, right=0.98, top=0.85, bottom=0.12)
 
-    # ===== Panel 1: Number of Iterations Required per Solved Problem =====
+    # ===== Panel 1: Distribution of Iterations to Solve (Pie Chart) =====
     ax1 = fig.add_subplot(gs[0, 0])
     ax1.set_facecolor(COLOR_PANEL)
 
-    # Collect data specifically for the chart
-    oe_solved_probs = []
-    
-    unsolved_count = 0
-    gemma_zero_count = 0
-    
+    # Count how many problems fall into each category
+    counts = {
+        "0 iters (Baseline)": 0,
+        "1 - 200 iters": 0,
+        "201 - 400 iters": 0,
+        "401 - 600 iters": 0,
+        "601 - 800 iters": 0,
+        "> 800 (Unsolved)": 0
+    }
+
     for d in data:
         if d.get("gemma_solved"):
-            gemma_zero_count += 1
+            counts["0 iters (Baseline)"] += 1
         elif d.get("openevolve_solved"):
-            prob = d["problem"]
             oe = d.get("openevolve")
             iters = oe.get("solved_iteration", 800) if isinstance(oe, dict) else 800
             
-            # Formatting the problem name string to fit nicely (removing "Prob0xx_")
-            prob_short = prob.split('_', 1)[1] if '_' in prob else prob
-            oe_solved_probs.append((prob_short, iters))
+            if iters <= 200:
+                counts["1 - 200 iters"] += 1
+            elif iters <= 400:
+                counts["201 - 400 iters"] += 1
+            elif iters <= 600:
+                counts["401 - 600 iters"] += 1
+            else:
+                counts["601 - 800 iters"] += 1
         else:
-            unsolved_count += 1
+            counts["> 800 (Unsolved)"] += 1
 
-    # Sort array by iteration count (ascending), so that lower iterations appear lower on the Y-axis
-    oe_solved_probs.sort(key=lambda x: x[1])
+    # Extract non-zero segments for the pie chart
+    labels = []
+    sizes = []
+    colors = []
     
-    probs = [x[0] for x in oe_solved_probs]
-    iters = [x[1] for x in oe_solved_probs]
-    
-    y_pos = np.arange(len(probs))
-    
-    # Color the bars depending on their iteration count
-    bar_colors = []
-    for count in iters:
-        if count <= 10: bar_colors.append("#2ECC71")        # Green (fast)
-        elif count <= 100: bar_colors.append("#1ABC9C")     # Teal
-        elif count <= 300: bar_colors.append("#F1C40F")     # Yellow
-        elif count <= 600: bar_colors.append("#E67E22")     # Orange
-        else: bar_colors.append(COLOR_EVOLVE)               # Red/Coral (slow/hardest)
+    # Custom color palette for the pie chart
+    color_map = {
+        "0 iters (Baseline)": "#4A90D9",     # Blue
+        "1 - 200 iters": "#2ECC71",          # Green
+        "201 - 400 iters": "#F1C40F",        # Yellow
+        "401 - 600 iters": "#E67E22",        # Orange
+        "601 - 800 iters": "#E8573A",        # Coral/Red
+        "> 800 (Unsolved)": "#7F8C8D"        # Grey
+    }
 
-    bars = ax1.barh(y_pos, iters, color=bar_colors, zorder=3, alpha=0.9, height=0.6)
-    
-    # Add numbers to the end of bars
-    for i, count in enumerate(iters):
-        ax1.annotate(f" {count}", xy=(count, y_pos[i]), va='center', ha='left',
-                     fontsize=9, color='white', fontweight='bold')
-                     
-    ax1.set_yticks(y_pos)
-    ax1.set_yticklabels(probs, fontsize=9, color=COLOR_TEXT)
-    ax1.set_xlabel("Iterations Required for OpenEvolve to Solve", fontsize=11, color=COLOR_TEXT)
-    
-    # Also add a nice little legend/summary overlay explicitly highlighting what is NOT mapped here
-    ax1.set_title("Hardest Problems: Iterations to Solve",
-                  fontsize=13, fontweight='bold', color='white', pad=10)
-    
-    ax1.annotate(f"Problems omitted from left panel:\n"
-                 f" • Solved immediately by Gemma (0 iters): {gemma_zero_count}\n"
-                 f" • Unsolved by OpenEvolve after 800 iters: {unsolved_count}",
-                 xy=(0.95, 0.05), xycoords='axes fraction', ha='right', va='bottom',
-                 fontsize=9, color=COLOR_TEXT, bbox=dict(boxstyle="round,pad=0.5", facecolor=COLOR_BG, alpha=0.8, edgecolor=COLOR_GRID))
+    # Only add slices that have at least 1 problem
+    for label, count in counts.items():
+        if count > 0:
+            labels.append(f"{label}\n({count})")
+            sizes.append(count)
+            colors.append(color_map[label])
 
-    ax1.set_xlim(0, max(iters) * 1.15 if iters else 800)
-    ax1.grid(axis='x', color=COLOR_GRID, linestyle='--', alpha=0.5, zorder=0)
-    ax1.tick_params(colors=COLOR_TEXT)
+    # Plot the pie chart (Donut style)
+    wedges, texts, autotexts = ax1.pie(
+        sizes, 
+        labels=labels, 
+        colors=colors, 
+        autopct='%1.1f%%',
+        startangle=90, 
+        pctdistance=0.85,
+        wedgeprops=dict(width=0.4, edgecolor=COLOR_BG, linewidth=2),
+        textprops=dict(color=COLOR_TEXT, fontsize=10, fontweight='bold')
+    )
+    
+    # Style the percentages inside the donut slices
+    for autotext in autotexts:
+        autotext.set_color('white')
+        autotext.set_fontsize(9)
+        autotext.set_fontweight('bold')
+
+    ax1.set_title("Distribution of Iterations to Solve",
+                  fontsize=14, fontweight='bold', color='white', pad=15)
 
     # ===== Panel 2: Cumulative problems solved by iteration =====
     ax2 = fig.add_subplot(gs[0, 1])
