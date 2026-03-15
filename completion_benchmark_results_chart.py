@@ -121,7 +121,18 @@ def main():
             counts["0 iters (Baseline)"] += 1
         elif d.get("openevolve_solved"):
             oe = d.get("openevolve")
-            iters = oe.get("solved_iteration", 800) if isinstance(oe, dict) else 800
+            
+            # Infer solved iteration by checking iter_X strings if solved_iteration isn't directly present
+            iters = 800
+            if isinstance(oe, dict):
+                if "solved_iteration" in oe:
+                    iters = oe["solved_iteration"]
+                else:
+                    # Manually hunt for the first iteration that breached 1.0 accuracy
+                    for k in [f"iter_{i}" for i in range(100, 900, 100)]:
+                        if k in oe and oe[k]["accuracy"] >= 1.0:
+                            iters = int(k.replace("iter_", ""))
+                            break
             
             if iters <= 200:
                 counts["1 - 200 iters"] += 1
