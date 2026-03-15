@@ -1,13 +1,16 @@
 module TopModule (
-  input a,
-  input b,
-  input c,
-  input d,
-  output out,
-  output out_n
+    input a,
+    input b,
+    input c,
+    input d,
+    output out,
+    output out_n
 );
+    wire and_ab;
+    wire and_cd;
 
-  assign out = (a & b) | (c & d);
-  assign out_n = ~out;
-
+    assign and_ab = a & b;
+    assign and_cd = c & d;
+    assign out = and_ab | and_cd;
+    assign out_n = ~out;
 endmodule

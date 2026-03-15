@@ -1,11 +1,12 @@
-
 import os
 import shutil
-import glob
 import glob
 import re
 import yaml
 from llama_cpp import Llama
+
+# Ensure script runs from project root
+os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Configuration
 SOURCE_DIR = 'verilog-eval/dataset_code-complete-iccad2023'

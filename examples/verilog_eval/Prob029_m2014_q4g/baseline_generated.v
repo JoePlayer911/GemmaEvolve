@@ -4,10 +4,7 @@ module TopModule (
   input in3,
   output logic out
 );
-
-  logic xnor_out;
-
-  assign xnor_out = in1 == in2;
-  assign out = xnor_out ^ in3;
-
+  wire xnor_inter;
+  assign xnor_inter = in1 ~^ in2;
+  assign out = xnor_inter ^ in3;
 endmodule

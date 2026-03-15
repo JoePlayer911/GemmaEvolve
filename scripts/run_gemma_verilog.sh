@@ -1,7 +1,7 @@
 #!/bin/bash
 # Run GemmaEvolve Verilog optimization example
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 
 # Default iterations
 ITERATIONS=${1:-50}

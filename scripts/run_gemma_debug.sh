@@ -1,4 +1,5 @@
 #!/bin/bash
+cd "$(dirname "$0")/.."
 
 # Run OpenEvolve function minimization with local Gemma model (DEBUG MODE)
 # Shows detailed logging for tracking progress

@@ -1,12 +1,10 @@
 module TopModule (
-  input a,
-  input b,
-  input cin,
-  output cout,
-  output sum
+    input  a,
+    input  b,
+    input  cin,
+    output cout,
+    output sum
 );
-
-  assign sum = a ^ b ^ cin;
-  assign cout = (a & b) | (a & cin) | (b & cin);
-
+    assign sum  = a ^ b ^ cin;
+    assign cout = (a & b) | (b & cin) | (a & cin);
 endmodule

@@ -397,6 +397,9 @@ def main():
                         help="Auto-detect problems missing from results JSON and run only those.")
     parser.add_argument("--deduplicate", action="store_true", default=False,
                         help="Remove duplicate error entries from results JSON (keeps successful re-runs).")
+    parser.add_argument("--model", type=str, default=DEFAULT_MODEL_PATH, help="Path to the GGUF model")
+    parser.add_argument("--output", type=str, default=RESULTS_FILE, help="Path to the results JSON file")
+    parser.add_argument("--baseline-only", action="store_true", default=False, help="Only run baseline model, skip OpenEvolve")
     args = parser.parse_args()
 
     if not os.path.exists(DATASET_DIR):
@@ -405,18 +408,18 @@ def main():
 
     # Handle --deduplicate mode (standalone operation)
     if args.deduplicate:
-        if not os.path.exists(RESULTS_FILE):
-            print(f"Error: {RESULTS_FILE} not found.")
+        if not os.path.exists(args.output):
+            print(f"Error: {args.output} not found.")
             return
-        with open(RESULTS_FILE, 'r') as f:
+        with open(args.output, 'r') as f:
             existing = json.load(f)
         print(f"  Before dedup: {len(existing)} entries")
         deduped = deduplicate_results(existing)
         sorted_results = sort_results_by_problem_number(deduped)
         print(f"  After dedup:  {len(sorted_results)} entries")
-        with open(RESULTS_FILE, 'w') as f:
+        with open(args.output, 'w') as f:
             json.dump(sorted_results, f, indent=2)
-        print(f"  Saved to {RESULTS_FILE}")
+        print(f"  Saved to {args.output}")
         if not args.fill_gaps:
             return
 
@@ -427,11 +430,11 @@ def main():
 
     # Handle --fill-gaps mode: only run missing problems
     if args.fill_gaps:
-        if not os.path.exists(RESULTS_FILE):
-            print(f"No existing {RESULTS_FILE}. Running all problems instead.")
+        if not os.path.exists(args.output):
+            print(f"No existing {args.output}. Running all problems instead.")
             problems = all_problems
         else:
-            with open(RESULTS_FILE, 'r') as f:
+            with open(args.output, 'r') as f:
                 existing_results = json.load(f)
             # Deduplicate first
             existing_results = deduplicate_results(existing_results)
@@ -444,7 +447,7 @@ def main():
             # Filter to only missing problems
             problems = [p for p in all_problems if os.path.basename(p) not in completed_problems]
             if not problems:
-                print(f"  All problems already have results in {RESULTS_FILE}. Nothing to do.")
+                print(f"  All problems already have results in {args.output}. Nothing to do.")
                 return
             print(f"  Found {len(problems)} missing problems to fill:")
             for p in problems:
@@ -465,8 +468,8 @@ def main():
 
     # Resume support (only for non-fill-gaps mode): load existing results and reconstruct counters
     start_idx = args.start - 1 if not args.fill_gaps else 0  # fill-gaps handles its own filtering
-    if start_idx > 0 and os.path.exists(RESULTS_FILE):
-        with open(RESULTS_FILE, 'r') as f:
+    if start_idx > 0 and os.path.exists(args.output):
+        with open(args.output, 'r') as f:
             existing_results = json.load(f)
         # Keep results up to (but not including) the start index
         results = existing_results[:start_idx]
@@ -514,9 +517,9 @@ def main():
         print(f"  Running Native Gemma...")
         try:
             if llm is None:
-                print("  Loading Gemma model for Baseline...")
+                print(f"  Loading model from {args.model} for Baseline...")
                 llm = Llama(
-                    model_path=DEFAULT_MODEL_PATH,
+                    model_path=args.model,
                     n_ctx=32768,
                     n_gpu_layers=-1,  # GPU for fast inference
                     seed=args.seed,
@@ -535,15 +538,23 @@ def main():
             "baseline": baseline_res,
         }
 
-        # 2. Check if Gemma already solved it
-        if baseline_res['score'] >= SCORE_THRESHOLD:
+        # 2. Check if baseline solved it, or if we should skip OpenEvolve
+        if args.baseline_only:
+            entry["openevolve"] = "skipped_due_to_baseline_only"
+            entry["gemma_solved"] = (baseline_res['score'] >= SCORE_THRESHOLD)
+            if entry["gemma_solved"]:
+                gemma_solved += 1
+            else:
+                gemma_failed += 1
+            print(f"  ✓ Skipping OpenEvolve because --baseline-only is set.")
+        elif baseline_res['score'] >= SCORE_THRESHOLD:
             gemma_solved += 1
             entry["openevolve"] = "skipped"
             entry["gemma_solved"] = True
-            print(f"  ✓ Gemma solved it (score >= {SCORE_THRESHOLD}). Skipping OpenEvolve.")
+            print(f"  ✓ Baseline solved it (score >= {SCORE_THRESHOLD}). Skipping OpenEvolve.")
         else:
             gemma_failed += 1
-            print(f"  ✗ Gemma failed (score < {SCORE_THRESHOLD}). Running OpenEvolve ({args.iterations} iterations)...")
+            print(f"  ✗ Baseline failed (score < {SCORE_THRESHOLD}). Running OpenEvolve ({args.iterations} iterations)...")
 
             # Free up baseline LLM VRAM before spawning OpenEvolve
             if llm is not None:
@@ -606,18 +617,18 @@ def main():
         # Save incrementally (in case of crash)
         if args.fill_gaps:
             # In fill-gaps mode, merge new results into existing file
-            if os.path.exists(RESULTS_FILE):
-                with open(RESULTS_FILE, 'r') as f:
+            if os.path.exists(args.output):
+                with open(args.output, 'r') as f:
                     all_results = json.load(f)
             else:
                 all_results = []
             all_results.append(entry)
             all_results = deduplicate_results(all_results)
             all_results = sort_results_by_problem_number(all_results)
-            with open(RESULTS_FILE, 'w') as f:
+            with open(args.output, 'w') as f:
                 json.dump(all_results, f, indent=2)
         else:
-            with open(RESULTS_FILE, 'w') as f:
+            with open(args.output, 'w') as f:
                 json.dump(results, f, indent=2)
 
     # Final Summary
@@ -666,7 +677,7 @@ def main():
                 row += f" | {'N/A':>11}"
             print(row)
 
-    print(f"\nResults saved to {RESULTS_FILE}")
+    print(f"\nResults saved to {args.output}")
 
 
 if __name__ == "__main__":

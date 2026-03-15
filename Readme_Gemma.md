@@ -80,17 +80,17 @@ Verilog BENCHMARK run:
 python3 benchmark_verilog.py --limit 10 --patience 5
 
 Verilog evolve run:
-./run_gemma_verilog.sh
+./scripts/run_gemma_verilog.sh
 
 Use the provided shell script:
-./run_gemma_debug.sh
+./scripts/run_gemma_debug.sh
 
 To clear VRAM cache, run:
 pkill -9 python
 
 ### Windows
 Use the provided batch file:
-run_gemma_debug.bat
+scripts\run_gemma_debug.bat
 
 ### Manual Execution
 
@@ -119,7 +119,7 @@ The Gemma-specific configuration is in `examples/function_minimization/gemma_con
 - Run: `pip install llama-cpp-python`
 
 ### UnicodeEncodeError on Windows
-- The debug script (`run_gemma_debug.bat`) sets `PYTHONIOENCODING=utf-8` to handle emojis in logs
+- The debug script (`scripts\run_gemma_debug.bat`) sets `PYTHONIOENCODING=utf-8` to handle emojis in logs
 
 ### Slow performance
 - The model runs on CPU by default
@@ -136,8 +136,9 @@ GemmaEvolve/
 │       ├── initial_program.py        # Starting code
 │       └── evaluator.py              # Fitness evaluation
 ├── run_model.py                      # Test model loading
-├── run_gemma_debug.bat              # Windows quick-start script
-├── run_gemma_debug.sh               # Linux quick-start script
+├── scripts/
+│   ├── run_gemma_debug.bat           # Windows quick-start script
+│   └── run_gemma_debug.sh            # Linux quick-start script
 └── Readme_Gemma.md                  # This file
 
 ## Next Steps

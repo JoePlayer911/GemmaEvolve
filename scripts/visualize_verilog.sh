@@ -1,4 +1,5 @@
 #!/bin/bash
+cd "$(dirname "$0")/.."
 # Visualize Verilog simulation using GTKWave
 
 INPUT_FILE=${1:-"examples/verilog_optimization/openevolve_output/best/best_program.v"}

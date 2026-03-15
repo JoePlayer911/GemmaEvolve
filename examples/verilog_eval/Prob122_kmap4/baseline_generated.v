@@ -1,17 +1,17 @@
 module TopModule (
-  input a,
-  input b,
-  input c,
-  input d,
-  output reg out
+    input a,
+    input b,
+    input c,
+    input d,
+    output reg out
 );
+    wire eq_a_d;
+    wire eq_b_c;
 
-  always @(*) begin
-    if (a == d && b == c) begin
-      out = 1;
-    end else begin
-      out = 0;
+    assign eq_a_d = (a == d);
+    assign eq_b_c = (b == c);
+
+    always @(*) begin
+        out = eq_a_d && eq_b_c;
     end
-  end
-
 endmodule
