@@ -1,0 +1,626 @@
+Time needed for each problem (in seconds):
+
+Prob001_zero:
+  Baseline: 1.78s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob002_m2014_q4i:
+  Baseline: 1.65s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob003_step_one:
+  Baseline: 1.8s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob004_vector2:
+  Baseline: 6.08s
+  OpenEvolve: 51.88s
+
+Prob005_notgate:
+  Baseline: 1.91s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob006_vectorr:
+  Baseline: 7.03s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob007_wire:
+  Baseline: 1.87s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob008_m2014_q4h:
+  Baseline: 1.87s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob009_popcount3:
+  Baseline: 4.88s
+  OpenEvolve: 75.34s
+
+Prob010_mt2015_q4a:
+  Baseline: 2.44s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob011_norgate:
+  Baseline: 2.26s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob012_xnorgate:
+  Baseline: 2.29s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob013_m2014_q4e:
+  Baseline: 2.56s
+  OpenEvolve: 24.59s
+
+Prob014_andgate:
+  Baseline: 2.26s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob015_vector1:
+  Baseline: 4.3s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob016_m2014_q4j:
+  Baseline: 9.15s
+  OpenEvolve: 575.85s
+
+Prob017_mux2to1v:
+  Baseline: 3.72s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob018_mux256to1:
+  Baseline: 3.18s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob019_m2014_q4f:
+  Baseline: 2.6s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob020_mt2015_eq2:
+  Baseline: 3.69s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob021_mux256to1v:
+  Baseline: 3.89s
+  OpenEvolve: 1621.86s
+
+Prob022_mux2to1:
+  Baseline: 2.77s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob023_vector100r:
+  Baseline: 5.09s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob024_hadd:
+  Baseline: 3.03s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob025_reduction:
+  Baseline: 4.11s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob026_alwaysblock1:
+  Baseline: 5.19s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob027_fadd:
+  Baseline: 4.05s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob028_m2014_q4a:
+  Baseline: 2.42s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob029_m2014_q4g:
+  Baseline: 4.14s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob030_popcount255:
+  Baseline: 3.66s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob031_dff:
+  Baseline: 2.97s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob032_vector0:
+  Baseline: 5.18s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob033_ece241_2014_q1c:
+  Baseline: 4.99s
+  OpenEvolve: 23.61s
+
+Prob034_dff8:
+  Baseline: 3.49s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob035_count1to10:
+  Baseline: 7.0s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob036_ringer:
+  Baseline: 3.62s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob037_review2015_count1k:
+  Baseline: 6.89s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob038_count15:
+  Baseline: 5.2s
+  OpenEvolve: 1041.08s
+
+Prob039_always_if:
+  Baseline: 7.19s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob040_count10:
+  Baseline: 7.21s
+  OpenEvolve: 3536.2s
+
+Prob041_dff8r:
+  Baseline: 5.73s
+  OpenEvolve: 825.97s
+
+Prob042_vector4:
+  Baseline: 3.86s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob043_vector5:
+  Baseline: 21.42s
+  OpenEvolve: 5563.21s
+
+Prob044_vectorgates:
+  Baseline: 6.77s
+  OpenEvolve: 2801.09s
+
+Prob045_edgedetect2:
+  Baseline: 7.5s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob046_dff8p:
+  Baseline: 5.54s
+  OpenEvolve: 3116.1s
+
+Prob047_dff8ar:
+  Baseline: 5.88s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob048_m2014_q4c:
+  Baseline: 4.54s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob049_m2014_q4b:
+  Baseline: 4.72s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob050_kmap1:
+  Baseline: 2.58s
+  OpenEvolve: 1587.4s
+
+Prob051_gates4:
+  Baseline: 6.76s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob052_gates100:
+  Baseline: 4.23s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob053_m2014_q4d:
+  Baseline: 4.32s
+  OpenEvolve: 1574.37s
+
+Prob054_edgedetect:
+  Baseline: 10.29s
+  OpenEvolve: 61.81s
+
+Prob055_conditional:
+  Baseline: 9.23s
+  OpenEvolve: 34.34s
+
+Prob056_ece241_2013_q7:
+  Baseline: 9.12s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob057_kmap2:
+  Baseline: 4.76s
+  OpenEvolve: 2207.32s
+
+Prob058_alwaysblock2:
+  Baseline: 8.16s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob059_wire4:
+  Baseline: 4.4s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob060_m2014_q4k:
+  Baseline: 6.74s
+  OpenEvolve: 2923.75s
+
+Prob061_2014_q4a:
+  Baseline: 5.81s
+  OpenEvolve: 2361.1s
+
+Prob062_bugs_mux2:
+  Baseline: 5.12s
+  OpenEvolve: 1683.29s
+
+Prob063_review2015_shiftcount:
+  Baseline: 9.98s
+  OpenEvolve: 3355.9s
+
+Prob064_vector3:
+  Baseline: 16.76s
+  OpenEvolve: 36.88s
+
+Prob065_7420:
+  Baseline: 7.44s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob066_edgecapture:
+  Baseline: 9.86s
+  OpenEvolve: 3208.32s
+
+Prob067_countslow:
+  Baseline: 7.65s
+  OpenEvolve: 31.21s
+
+Prob068_countbcd:
+  Baseline: 29.47s
+  OpenEvolve: 9904.61s
+
+Prob069_truthtable1:
+  Baseline: 5.36s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob070_ece241_2013_q2:
+  Baseline: 7.07s
+  OpenEvolve: 2192.97s
+
+Prob071_always_casez:
+  Baseline: 5.41s
+  OpenEvolve: 53.61s
+
+Prob072_thermostat:
+  Baseline: 7.25s
+  OpenEvolve: 3965.97s
+
+Prob073_dff16e:
+  Baseline: 8.13s
+  OpenEvolve: 4456.21s
+
+Prob074_ece241_2014_q4:
+  Baseline: 5.84s
+  OpenEvolve: 2365.55s
+
+Prob075_counter_2bc:
+  Baseline: 12.78s
+  OpenEvolve: 7279.83s
+
+Prob076_always_case:
+  Baseline: 13.12s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob077_wire_decl:
+  Baseline: 4.11s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob078_dualedge:
+  Baseline: 3.18s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob079_fsm3onehot:
+  Baseline: 19.78s
+  OpenEvolve: 6278.9s
+
+Prob080_timer:
+  Baseline: 8.55s
+  OpenEvolve: 3606.96s
+
+Prob081_7458:
+  Baseline: 8.92s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob082_lfsr32:
+  Baseline: 42.61s
+  OpenEvolve: 4472.48s
+
+Prob083_mt2015_q4b:
+  Baseline: 3.2s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob084_ece241_2013_q12:
+  Baseline: 16.4s
+  OpenEvolve: 42.59s
+
+Prob085_shift4:
+  Baseline: 7.49s
+  OpenEvolve: 3118.07s
+
+Prob086_lfsr5:
+  Baseline: 9.75s
+  OpenEvolve: 3977.52s
+
+Prob087_gates:
+  Baseline: 8.7s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob088_ece241_2014_q5b:
+  Baseline: 17.7s
+  OpenEvolve: 5584.67s
+
+Prob089_ece241_2014_q5a:
+  Baseline: 20.27s
+  OpenEvolve: 4539.18s
+
+Prob090_circuit1:
+  Baseline: 2.18s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob091_2012_q2b:
+  Baseline: 8.9s
+  OpenEvolve: 4788.59s
+
+Prob092_gatesv100:
+  Baseline: 17.43s
+  OpenEvolve: 7226.75s
+
+Prob093_ece241_2014_q3:
+  Baseline: 5.42s
+  OpenEvolve: 3973.45s
+
+Prob094_gatesv:
+  Baseline: 15.83s
+  OpenEvolve: 6358.4s
+
+Prob095_review2015_fsmshift:
+  Baseline: 8.64s
+  OpenEvolve: 4650.74s
+
+Prob096_review2015_fsmseq:
+  Baseline: 26.57s
+  OpenEvolve: 5159.56s
+
+Prob097_mux9to1v:
+  Baseline: 16.71s
+  OpenEvolve: 81.19s
+
+Prob098_circuit7:
+  Baseline: 4.61s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob099_m2014_q6c:
+  Baseline: 3.47s
+  OpenEvolve: 1408.61s
+
+Prob100_fsm3comb:
+  Baseline: 13.76s
+  OpenEvolve: 5433.02s
+
+Prob101_circuit4:
+  Baseline: 3.43s
+  OpenEvolve: 1335.57s
+
+Prob102_circuit3:
+  Baseline: 3.07s
+  OpenEvolve: 1534.25s
+
+Prob103_circuit2:
+  Baseline: 4.12s
+  OpenEvolve: 1870.07s
+
+Prob104_mt2015_muxdff:
+  Baseline: 8.72s
+  OpenEvolve: 3132.26s
+
+Prob105_rotate100:
+  Baseline: 11.82s
+  OpenEvolve: 4189.71s
+
+Prob106_always_nolatches:
+  Baseline: 15.34s
+  OpenEvolve: 3674.67s
+
+Prob107_fsm1s:
+  Baseline: 11.35s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob108_rule90:
+  Baseline: 13.22s
+  OpenEvolve: 5856.18s
+
+Prob109_fsm1:
+  Baseline: 12.06s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob110_fsm2:
+  Baseline: 8.8s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob111_fsm2s:
+  Baseline: 12.61s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob112_always_case2:
+  Baseline: 8.35s
+  OpenEvolve: 2566.97s
+
+Prob113_2012_q1g:
+  Baseline: 4.64s
+  OpenEvolve: 2762.6s
+
+Prob114_bugs_case:
+  Baseline: 21.42s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob115_shift18:
+  Baseline: 15.81s
+  OpenEvolve: 6345.56s
+
+Prob116_m2014_q3:
+  Baseline: 5.1s
+  OpenEvolve: 2725.55s
+
+Prob117_circuit9:
+  Baseline: 4.87s
+  OpenEvolve: 2448.3s
+
+Prob118_history_shift:
+  Baseline: 11.43s
+  OpenEvolve: 4451.39s
+
+Prob119_fsm3:
+  Baseline: 18.69s
+  OpenEvolve: 5456.51s
+
+Prob120_fsm3s:
+  Baseline: 23.62s
+  OpenEvolve: 5172.96s
+
+Prob121_2014_q3bfsm:
+  Baseline: 16.73s
+  OpenEvolve: 6973.8s
+
+Prob122_kmap4:
+  Baseline: 4.38s
+  OpenEvolve: 1648.06s
+
+Prob123_bugs_addsubz:
+  Baseline: 9.42s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob124_rule110:
+  Baseline: 23.7s
+  OpenEvolve: 9251.49s
+
+Prob125_kmap3:
+  Baseline: 5.97s
+  OpenEvolve: 1362.42s
+
+Prob126_circuit6:
+  Baseline: 17.11s
+  OpenEvolve: 4928.23s
+
+Prob127_lemmings1:
+  Baseline: 9.54s
+  OpenEvolve: 3551.93s
+
+Prob128_fsm_ps2:
+  Baseline: 14.81s
+  OpenEvolve: 5793.43s
+
+Prob129_ece241_2013_q8:
+  Baseline: 23.93s
+  OpenEvolve: 7358.1s
+
+Prob130_circuit5:
+  Baseline: 11.89s
+  OpenEvolve: 4438.35s
+
+Prob131_mt2015_q4:
+  Baseline: 19.98s
+  OpenEvolve: 5632.72s
+
+Prob132_always_if2:
+  Baseline: 4.87s
+  OpenEvolve: Skipped (Solved by Gemma)
+
+Prob133_2014_q3fsm:
+  Baseline: 21.22s
+  OpenEvolve: 5950.3s
+
+Prob134_2014_q3c:
+  Baseline: 31.51s
+  OpenEvolve: 6992.04s
+
+Prob135_m2014_q6b:
+  Baseline: 17.14s
+  OpenEvolve: 6533.38s
+
+Prob136_m2014_q6:
+  Baseline: 23.9s
+  OpenEvolve: 8874.03s
+
+Prob137_fsm_serial:
+  Baseline: 29.98s
+  OpenEvolve: 10736.36s
+
+Prob138_2012_q2fsm:
+  Baseline: 32.09s
+  OpenEvolve: 8457.88s
+
+Prob139_2013_q2bfsm:
+  Baseline: 24.52s
+  OpenEvolve: 11518.45s
+
+Prob140_fsm_hdlc:
+  Baseline: 42.53s
+  OpenEvolve: 15821.76s
+
+Prob141_count_clock:
+  Baseline: 26.78s
+  OpenEvolve: 9490.18s
+
+Prob142_lemmings2:
+  Baseline: 22.71s
+  OpenEvolve: 894.14s
+
+Prob143_fsm_onehot:
+  Baseline: 45.04s
+  OpenEvolve: 13572.09s
+
+Prob144_conwaylife:
+  Baseline: 31.65s
+  OpenEvolve: 13019.46s
+
+Prob145_circuit8:
+  Baseline: 6.45s
+  OpenEvolve: 3695.87s
+
+Prob146_fsm_serialdata:
+  Baseline: 34.81s
+  OpenEvolve: 14547.15s
+
+Prob147_circuit10:
+  Baseline: 6.72s
+  OpenEvolve: 2823.61s
+
+Prob148_2013_q2afsm:
+  Baseline: 29.15s
+  OpenEvolve: 11554.32s
+
+Prob149_ece241_2013_q4:
+  Baseline: 46.45s
+  OpenEvolve: 7588.98s
+
+Prob150_review2015_fsmonehot:
+  Baseline: 39.86s
+  OpenEvolve: 19479.48s
+
+Prob151_review2015_fsm:
+  Baseline: 47.35s
+  OpenEvolve: 13518.86s
+
+Prob152_lemmings3:
+  Baseline: 31.02s
+  OpenEvolve: 12803.8s
+
+Prob153_gshare:
+  Baseline: 30.18s
+  OpenEvolve: 15728.1s
+
+Prob154_fsm_ps2data:
+  Baseline: 26.59s
+  OpenEvolve: 9129.41s
+
+Prob155_lemmings4:
+  Baseline: 22.91s
+  OpenEvolve: 13374.16s
+
+Prob156_review2015_fancytimer:
+  Baseline: 38.41s
+  OpenEvolve: 22645.56s
+

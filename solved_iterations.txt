@@ -1,0 +1,26 @@
+Problems solved by OpenEvolve (with iteration counts):
+----------------------------------------------------
+- Prob033_ece241_2014_q1c: 1 iterations
+- Prob055_conditional: 1 iterations
+- Prob064_vector3: 1 iterations
+- Prob067_countslow: 1 iterations
+- Prob084_ece241_2013_q12: 1 iterations
+- Prob004_vector2: 5 iterations
+- Prob013_m2014_q4e: 5 iterations
+- Prob054_edgedetect: 5 iterations
+- Prob097_mux9to1v: 5 iterations
+- Prob071_always_casez: 8 iterations
+- Prob009_popcount3: 18 iterations
+- Prob016_m2014_q4j: 66 iterations
+- Prob041_dff8r: 211 iterations
+- Prob038_count15: 275 iterations
+- Prob072_thermostat: 635 iterations
+- Prob127_lemmings1: 706 iterations
+- Prob129_ece241_2013_q8: 733 iterations
+
+Summary Statistics:
+----------------------------------------------------
+Total problems requiring 0 iterations (solved by Gemma baseline immediately): 59
+Total problems requiring >0 iterations (solved by OpenEvolve): 17
+Total problems remaining unsolved after 800 iterations: 80
+Total problems in benchmark: 156

@@ -2,8 +2,8 @@
 """
 Benchmark Results Chart Generator
 Converts completion_benchmark.json into publication-quality charts:
-  Panel 1 – Line chart: Native Gemma accuracy vs OpenEvolve iter_800 accuracy per problem
-  Panel 2 – Line chart: OpenEvolve accuracy progression (iter_100 … iter_800) averaged across problems
+  Panel 1 – Bar chart: Distribution of iterations required to solve problems
+  Panel 2 – Line chart: OpenEvolve cumulative solved progression (iter_100 … iter_800)
   Panel 3 – Summary metrics table
 """
 
@@ -102,41 +102,70 @@ def main():
                            hspace=0.3, wspace=0.35,
                            left=0.05, right=0.98, top=0.85, bottom=0.12)
 
-    # ===== Panel 1: Cumulative problems solved =====
+    # ===== Panel 1: Number of Iterations Required per Solved Problem =====
     ax1 = fig.add_subplot(gs[0, 0])
     ax1.set_facecolor(COLOR_PANEL)
 
-    x = np.arange(1, n + 1)  # 1-indexed: total problems attempted
-
-    # Build cumulative solved for each model line
-    # Native Gemma
-    gemma_cum = np.cumsum([1 if a >= 1.0 else 0 for a in b_acc])
-    ax1.plot(x, gemma_cum, color=COLOR_BASELINE, linewidth=2.0, alpha=0.9, label='Baseline')
-
-    # OpenEvolve iterations (iter_100 through iter_800)
-    iter_cmap = plt.cm.rainbow(np.linspace(0, 1, len(ITER_KEYS)))
-    max_solved = int(gemma_cum[-1])  # track max for y-axis
-    for idx, key in enumerate(ITER_KEYS):
-        iter_acc = []
-        for d in data:
+    # Collect data specifically for the chart
+    oe_solved_probs = []
+    
+    unsolved_count = 0
+    gemma_zero_count = 0
+    
+    for d in data:
+        if d.get("gemma_solved"):
+            gemma_zero_count += 1
+        elif d.get("openevolve_solved"):
+            prob = d["problem"]
             oe = d.get("openevolve")
-            if oe == "skipped" or oe is None:
-                # If openevolve didn't run, use baseline accuracy for this problem
-                iter_acc.append(d["baseline"]["accuracy"])
-            else:
-                iter_acc.append(oe[key]["accuracy"])
-        cum_solved = np.cumsum([1 if a >= 1.0 else 0 for a in iter_acc])
-        max_solved = max(max_solved, int(cum_solved[-1]))
-        label = key.replace("iter_", "i")
-        ax1.plot(x, cum_solved, color=iter_cmap[idx], linewidth=1.4, alpha=0.85, label=label)
+            iters = oe.get("solved_iteration", 800) if isinstance(oe, dict) else 800
+            
+            # Formatting the problem name string to fit nicely (removing "Prob0xx_")
+            prob_short = prob.split('_', 1)[1] if '_' in prob else prob
+            oe_solved_probs.append((prob_short, iters))
+        else:
+            unsolved_count += 1
 
-    ax1.set_xlabel("Total Problems Attempted", fontsize=11, color=COLOR_TEXT)
-    ax1.set_ylabel("Number of Problems Solved", fontsize=11, color=COLOR_TEXT)
-    ax1.set_title("Cumulative Problems Solved",
+    # Sort array by iteration count (ascending), so that lower iterations appear lower on the Y-axis
+    oe_solved_probs.sort(key=lambda x: x[1])
+    
+    probs = [x[0] for x in oe_solved_probs]
+    iters = [x[1] for x in oe_solved_probs]
+    
+    y_pos = np.arange(len(probs))
+    
+    # Color the bars depending on their iteration count
+    bar_colors = []
+    for count in iters:
+        if count <= 10: bar_colors.append("#2ECC71")        # Green (fast)
+        elif count <= 100: bar_colors.append("#1ABC9C")     # Teal
+        elif count <= 300: bar_colors.append("#F1C40F")     # Yellow
+        elif count <= 600: bar_colors.append("#E67E22")     # Orange
+        else: bar_colors.append(COLOR_EVOLVE)               # Red/Coral (slow/hardest)
+
+    bars = ax1.barh(y_pos, iters, color=bar_colors, zorder=3, alpha=0.9, height=0.6)
+    
+    # Add numbers to the end of bars
+    for i, count in enumerate(iters):
+        ax1.annotate(f" {count}", xy=(count, y_pos[i]), va='center', ha='left',
+                     fontsize=9, color='white', fontweight='bold')
+                     
+    ax1.set_yticks(y_pos)
+    ax1.set_yticklabels(probs, fontsize=9, color=COLOR_TEXT)
+    ax1.set_xlabel("Iterations Required for OpenEvolve to Solve", fontsize=11, color=COLOR_TEXT)
+    
+    # Also add a nice little legend/summary overlay explicitly highlighting what is NOT mapped here
+    ax1.set_title("Hardest Problems: Iterations to Solve",
                   fontsize=13, fontweight='bold', color='white', pad=10)
-    ax1.set_ylim(0, max_solved + 5)
-    ax1.legend(fontsize=8, loc='upper left', framealpha=0.4, ncol=3)
-    ax1.grid(axis='y', color=COLOR_GRID, linestyle='--', alpha=0.5, zorder=0)
+    
+    ax1.annotate(f"Problems omitted from left panel:\n"
+                 f" • Solved immediately by Gemma (0 iters): {gemma_zero_count}\n"
+                 f" • Unsolved by OpenEvolve after 800 iters: {unsolved_count}",
+                 xy=(0.95, 0.05), xycoords='axes fraction', ha='right', va='bottom',
+                 fontsize=9, color=COLOR_TEXT, bbox=dict(boxstyle="round,pad=0.5", facecolor=COLOR_BG, alpha=0.8, edgecolor=COLOR_GRID))
+
+    ax1.set_xlim(0, max(iters) * 1.15 if iters else 800)
+    ax1.grid(axis='x', color=COLOR_GRID, linestyle='--', alpha=0.5, zorder=0)
     ax1.tick_params(colors=COLOR_TEXT)
 
     # ===== Panel 2: Cumulative problems solved by iteration =====

@@ -5,6 +5,8 @@ OpenAI API interface for LLMs
 import asyncio
 import logging
 import time
+import os
+import json
 from typing import Any, Dict, List, Optional, Union
 
 import openai
@@ -165,8 +167,48 @@ class OpenAILLM(LLMInterface):
         response = await loop.run_in_executor(
             None, lambda: self.client.chat.completions.create(**params)
         )
+        content = response.choices[0].message.content
+        
         # Logging of system prompt, user message and response content
         logger = logging.getLogger(__name__)
         logger.debug(f"API parameters: {params}")
-        logger.debug(f"API response: {response.choices[0].message.content}")
-        return response.choices[0].message.content
+        logger.debug(f"API response: {content}")
+        
+        # --- DEEP LOGGING INTERCEPTOR ---
+        try:
+            os.makedirs("logs/evolve_generations", exist_ok=True)
+            timestamp = time.strftime("%Y%m%d_%H%M%S")
+            # Try to guess problem name from context
+            prob_name = "unknown"
+            if "messages" in params:
+                for msg in params["messages"]:
+                    if "role" in msg and "content" in msg:
+                        if "module" in msg["content"] and "eval" in msg["content"]:
+                            # Extremely rough heuristic
+                            prob_name = "evolution" 
+            
+            log_path = f"logs/evolve_generations/{timestamp}_{prob_name}.md"
+            with open(log_path, "w", encoding="utf-8") as f:
+                f.write(f"# OpenEvolve Generation Log - OpenAI API\n")
+                f.write(f"**Model:** {self.model}\n")
+                f.write(f"**Timestamp:** {timestamp}\n\n")
+                
+                f.write("## Input Context\n\n")
+                if "messages" in params:
+                    for msg in params["messages"]:
+                        role = msg.get("role", "unknown")
+                        msg_content = msg.get("content", "")
+                        f.write(f"### Role: `{role}`\n")
+                        f.write("```text\n")
+                        f.write(f"{msg_content}\n")
+                        f.write("```\n\n")
+                    
+                f.write("## LLM Raw Output\n\n")
+                f.write("```text\n")
+                f.write(f"{content}\n")
+                f.write("```\n")
+        except Exception as log_err:
+            logger.warning(f"Failed to write deep prompt log: {log_err}")
+        # --- END DEEP LOGGING ---
+        
+        return content

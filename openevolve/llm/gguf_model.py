@@ -5,6 +5,8 @@ GGUF (llama.cpp) interface for LLMs
 import asyncio
 import logging
 import os
+import time
+import json
 from typing import Any, Dict, List, Optional
 
 try:
@@ -102,6 +104,42 @@ class GGUFLLM(LLMInterface):
                 None, lambda: self.llm.create_chat_completion(**params)
             )
             content = response["choices"][0]["message"]["content"]
+            
+            # --- DEEP LOGGING INTERCEPTOR ---
+            try:
+                os.makedirs("logs/evolve_generations", exist_ok=True)
+                timestamp = time.strftime("%Y%m%d_%H%M%S")
+                # Try to guess problem name from context
+                prob_name = "unknown"
+                for msg in formatted_messages:
+                    if "role" in msg and "content" in msg:
+                        if "module" in msg["content"] and "eval" in msg["content"]:
+                            # Extremely rough heuristic, but gives us *something*
+                            prob_name = "evolution" 
+                
+                log_path = f"logs/evolve_generations/{timestamp}_{prob_name}.md"
+                with open(log_path, "w", encoding="utf-8") as f:
+                    f.write(f"# OpenEvolve Generation Log - GGUF\n")
+                    f.write(f"**Model:** {self.model}\n")
+                    f.write(f"**Timestamp:** {timestamp}\n\n")
+                    
+                    f.write("## Input Context\n\n")
+                    for msg in formatted_messages:
+                        role = msg.get("role", "unknown")
+                        msg_content = msg.get("content", "")
+                        f.write(f"### Role: `{role}`\n")
+                        f.write("```text\n")
+                        f.write(f"{msg_content}\n")
+                        f.write("```\n\n")
+                        
+                    f.write("## LLM Raw Output\n\n")
+                    f.write("```text\n")
+                    f.write(f"{content}\n")
+                    f.write("```\n")
+            except Exception as log_err:
+                logger.warning(f"Failed to write deep prompt log: {log_err}")
+            # --- END DEEP LOGGING ---
+
             return content
         except Exception as e:
             logger.error(f"Error generating with GGUF model: {e}")
